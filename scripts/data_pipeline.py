@@ -183,6 +183,9 @@ def strategy_b_hybrid_update(instruments):
 
     print(f"\n  ✅ Strategy B complete.")
 
+    # Auto-sync parquet → CSV so backtesting picks up fresh data
+    parquet_to_csv(instruments)
+
 
 def strategy_c_full_ib_build(instruments):
     """
@@ -258,6 +261,37 @@ def strategy_c_full_ib_build(instruments):
     print(f"\n  ✅ Strategy C complete.")
 
 
+def parquet_to_csv(instruments=None):
+    """Convert parquet adjusted prices to CSV for backtesting."""
+    import pandas as pd
+
+    parquet_dir = PROJECT_ROOT / "data" / "parquet_store" / "futures_adjusted_prices"
+    csv_dir = PROJECT_ROOT / "data" / "futures" / "adjusted_prices_csv"
+
+    if not parquet_dir.exists():
+        print(f"  ❌ No parquet data found at {parquet_dir}")
+        return
+
+    all_files = sorted(parquet_dir.glob("*.parquet"))
+    if instruments:
+        files = [f for f in all_files if f.stem in instruments]
+    else:
+        files = all_files
+
+    if not files:
+        print(f"  ⚠️  No parquet files found{' for ' + ','.join(instruments) if instruments else ''}")
+        return
+
+    print(f"\n  📦 Converting {len(files)} parquet file(s) → CSV...")
+    for f in files:
+        df = pd.read_parquet(f)
+        out = csv_dir / f"{f.stem}.csv"
+        df.to_csv(out)
+        print(f"    ✅ {f.stem}: {len(df):,} rows → {out.name}")
+
+    print(f"  ✅ Parquet → CSV sync complete.\n")
+
+
 def get_prices(instrument, start_date=None, output_dir=None):
     """Retrieve back-adjusted prices for an instrument."""
     from sysdata.sim.csv_futures_sim_data import csvFuturesSimData
@@ -317,6 +351,8 @@ Examples:
     parser.add_argument("--check-ib", action="store_true", help="Test IB Gateway connection")
     parser.add_argument("--strategy", choices=["A", "B", "C"], help="Data pipeline strategy")
     parser.add_argument("--instruments", type=str, help="Comma-separated instrument codes")
+    parser.add_argument("--parquet-to-csv", action="store_true",
+                        help="Convert parquet adjusted prices to CSV")
     parser.add_argument("--get-prices", type=str, metavar="INSTRUMENT", help="Get adjusted prices")
     parser.add_argument("--start", type=str, help="Start date filter (YYYY-MM-DD)")
     parser.add_argument("--output", type=str, help="Output directory for CSV export")
@@ -335,6 +371,8 @@ Examples:
         strategy_b_hybrid_update(instruments)
     elif args.strategy == "C":
         strategy_c_full_ib_build(instruments)
+    elif args.parquet_to_csv:
+        parquet_to_csv(instruments)
     elif args.get_prices:
         get_prices(args.get_prices, start_date=args.start, output_dir=args.output)
     else:
