@@ -1,0 +1,22 @@
+#YAML
+# Carry-only configuration: Pure roll yield carry
+# Usage: python scripts/backtest.py --config scripts/backtest_config/carry_only.yaml --instruments SP500_micro,CRUDE_W,GOLD,US10
+
+trading_rules:
+  carry:
+    function: systems.provided.rules.carry.carry
+    data:
+      - "rawdata.raw_carry"
+    other_args:
+      smooth_days: 90
+    forecast_scalar: 30
+
+forecast_cap: 20.0
+
+forecast_weights:
+  carry: 1.0
+forecast_div_multiplier: 1.0
+
+percentage_vol_target: 20.0
+notional_trading_capital: 250000
+base_currency: "USD"

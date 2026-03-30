@@ -1,0 +1,52 @@
+#YAML
+# Custom template — modify this for your own strategies
+# Usage: python scripts/backtest.py --config scripts/backtest_config/custom_template.yaml --instruments SP500_micro,CRUDE_W
+
+# === TRADING RULES ===
+# Each rule needs: function, data sources, other_args, and forecast_scalar
+trading_rules:
+  ewmac16_64:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+      - "rawdata.get_daily_prices"
+      - "rawdata.daily_returns_volatility"
+    other_args:
+      Lfast: 16
+      Lslow: 64
+    forecast_scalar: 3.75
+  carry:
+    function: systems.provided.rules.carry.carry
+    data:
+      - "rawdata.raw_carry"
+    other_args:
+      smooth_days: 90
+    forecast_scalar: 30
+
+# === FORECAST COMBINATION ===
+forecast_cap: 20.0
+forecast_weights:
+  ewmac16_64: 0.5
+  carry: 0.5
+forecast_div_multiplier: 1.1
+
+# === POSITION SIZING ===
+percentage_vol_target: 20.0
+notional_trading_capital: 250000
+base_currency: "USD"
+
+# === PORTFOLIO ===
+# instrument_weights and instrument_div_multiplier
+# If not specified, equal weights and 1.0 will be used
+# instrument_weights:
+#   SP500_micro: 0.25
+#   CRUDE_W: 0.25
+#   GOLD: 0.25
+#   US10: 0.25
+# instrument_div_multiplier: 1.5
+
+# === ESTIMATION (uncomment to enable) ===
+# use_forecast_scale_estimates: True
+# use_forecast_weight_estimates: True
+# use_forecast_div_mult_estimates: True
+# use_instrument_weight_estimates: True
+# use_instrument_div_mult_estimates: True
