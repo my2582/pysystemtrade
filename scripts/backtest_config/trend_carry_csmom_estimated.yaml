@@ -1,0 +1,184 @@
+#YAML
+# ======================================================================
+# 3-Factor Estimated System: Trend + Carry + CS Momentum + RelCarry
+# ======================================================================
+# All parameters (forecast scalars, weights, div multipliers) are
+# ESTIMATED from data rather than fixed. This is the most rigorous
+# backtesting approach pysystemtrade supports.
+#
+# Usage:
+#   python scripts/backtest.py --config scripts/backtest_config/trend_carry_csmom_estimated.yaml --capital 200000 --report full
+#   python scripts/run_dynamic_backtest.py --config scripts/backtest_config/trend_carry_csmom_estimated.yaml --capital 200000
+# ======================================================================
+
+# --- Trading Rules (12 rules across 4 categories) ---
+
+trading_rules:
+  # Trend-Following: EWMAC at 5 speeds
+  momentum4:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+      - "rawdata.get_daily_prices"
+      - "rawdata.daily_returns_volatility"
+    other_args:
+      Lfast: 4
+      Lslow: 16
+  momentum8:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+      - "rawdata.get_daily_prices"
+      - "rawdata.daily_returns_volatility"
+    other_args:
+      Lfast: 8
+      Lslow: 32
+  momentum16:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+      - "rawdata.get_daily_prices"
+      - "rawdata.daily_returns_volatility"
+    other_args:
+      Lfast: 16
+      Lslow: 64
+  momentum32:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+      - "rawdata.get_daily_prices"
+      - "rawdata.daily_returns_volatility"
+    other_args:
+      Lfast: 32
+      Lslow: 128
+  momentum64:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+      - "rawdata.get_daily_prices"
+      - "rawdata.daily_returns_volatility"
+    other_args:
+      Lfast: 64
+      Lslow: 256
+
+  # Carry: 3 speeds
+  carry30:
+    function: systems.provided.rules.carry.carry
+    data:
+      - "rawdata.raw_carry"
+    other_args:
+      smooth_days: 30
+  carry60:
+    function: systems.provided.rules.carry.carry
+    data:
+      - "rawdata.raw_carry"
+    other_args:
+      smooth_days: 60
+  carry125:
+    function: systems.provided.rules.carry.carry
+    data:
+      - "rawdata.raw_carry"
+    other_args:
+      smooth_days: 125
+
+  # Cross-Sectional Momentum: 3 horizons
+  relmomentum20:
+    function: systems.provided.rules.rel_mom.relative_momentum
+    data:
+      - "rawdata.get_cumulative_daily_vol_normalised_returns"
+      - "rawdata.normalised_price_for_asset_class"
+    other_args:
+      horizon: 20
+  relmomentum40:
+    function: systems.provided.rules.rel_mom.relative_momentum
+    data:
+      - "rawdata.get_cumulative_daily_vol_normalised_returns"
+      - "rawdata.normalised_price_for_asset_class"
+    other_args:
+      horizon: 40
+  relmomentum80:
+    function: systems.provided.rules.rel_mom.relative_momentum
+    data:
+      - "rawdata.get_cumulative_daily_vol_normalised_returns"
+      - "rawdata.normalised_price_for_asset_class"
+    other_args:
+      horizon: 80
+
+  # Cross-Sectional Carry (relative to asset class median)
+  relcarry:
+    function: systems.provided.rules.carry.relative_carry
+    data:
+      - "rawdata.smoothed_carry"
+      - "rawdata.median_carry_for_asset_class"
+
+# --- Volatility Attenuation ---
+# Applied to momentum and relmomentum rules (per Rob Carver's production system)
+use_attenuation:
+  - 'momentum4'
+  - 'momentum8'
+  - 'momentum16'
+  - 'momentum32'
+  - 'momentum64'
+  - 'relmomentum20'
+  - 'relmomentum40'
+  - 'relmomentum80'
+
+# --- Volatility calculation (Rob's mixed vol) ---
+volatility_calculation:
+  func: "sysquant.estimators.vol.mixed_vol_calc"
+  days: 35
+  min_periods: 10
+  vol_abs_min: 0.0000000001
+  slow_vol_years: 20
+  proportion_of_slow_vol: 0.35
+  backfill: True
+
+# --- ALL estimation enabled ---
+use_forecast_scale_estimates: True
+use_forecast_weight_estimates: True
+use_forecast_div_mult_estimates: True
+use_instrument_weight_estimates: True
+use_instrument_div_mult_estimates: True
+
+# --- Estimation parameters ---
+forecast_scalar_estimate:
+  pool_instruments: True
+
+forecast_correlation_estimate:
+  pool_instruments: True
+
+# Rules to include in weight estimation
+rule_variations:
+  - momentum4
+  - momentum8
+  - momentum16
+  - momentum32
+  - momentum64
+  - carry30
+  - carry60
+  - carry125
+  - relmomentum20
+  - relmomentum40
+  - relmomentum80
+  - relcarry
+
+# --- Position Sizing ---
+percentage_vol_target: 25.0
+notional_trading_capital: 200000
+base_currency: "USD"
+forecast_cap: 20.0
+
+# --- Buffering ---
+buffer_trade_to_edge: True
+buffer_method: forecast
+buffer_size: 0.10
+
+# --- Risk limits (from Rob's config) ---
+small_system:
+  shadow_cost: 50
+  cost_multiplier: 1.0
+  tracking_error_buffer: 0.0125
+  shrink_instrument_returns_correlation: 0.5
+
+# --- Instruments ---
+# If empty or absent, the system uses ALL available instruments.
+# Override with Phase 1 results for faster execution.
+# instruments:
+#   - SP500_micro
+#   - US10
+#   - ... (from static_instrument_selection.py output)
