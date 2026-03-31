@@ -286,6 +286,7 @@ def parquet_to_csv(instruments=None):
     for f in files:
         df = pd.read_parquet(f)
         out = csv_dir / f"{f.stem}.csv"
+        df.index.name = "DATETIME"
         df.to_csv(out)
         print(f"    ✅ {f.stem}: {len(df):,} rows → {out.name}")
 
