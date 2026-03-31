@@ -106,6 +106,84 @@ STRATEGY_PRESETS = {
         "forecast_weights": {"carry": 1.0},
         "forecast_div_multiplier": 1.0,
     },
+    "trend_carry_csmom": {
+        "description": "Trend-Following + Carry + Cross-Sectional Momentum (3-factor)",
+        "trading_rules": {
+            "momentum8": {
+                "function": "systems.provided.rules.ewmac.ewmac",
+                "data": ["rawdata.get_daily_prices", "rawdata.daily_returns_volatility"],
+                "other_args": {"Lfast": 8, "Lslow": 32},
+                "forecast_scalar": 5.95,
+            },
+            "momentum16": {
+                "function": "systems.provided.rules.ewmac.ewmac",
+                "data": ["rawdata.get_daily_prices", "rawdata.daily_returns_volatility"],
+                "other_args": {"Lfast": 16, "Lslow": 64},
+                "forecast_scalar": 4.10,
+            },
+            "momentum32": {
+                "function": "systems.provided.rules.ewmac.ewmac",
+                "data": ["rawdata.get_daily_prices", "rawdata.daily_returns_volatility"],
+                "other_args": {"Lfast": 32, "Lslow": 128},
+                "forecast_scalar": 2.79,
+            },
+            "momentum64": {
+                "function": "systems.provided.rules.ewmac.ewmac",
+                "data": ["rawdata.get_daily_prices", "rawdata.daily_returns_volatility"],
+                "other_args": {"Lfast": 64, "Lslow": 256},
+                "forecast_scalar": 1.91,
+            },
+            "carry30": {
+                "function": "systems.provided.rules.carry.carry",
+                "data": ["rawdata.raw_carry"],
+                "other_args": {"smooth_days": 30},
+                "forecast_scalar": 28.38,
+            },
+            "carry60": {
+                "function": "systems.provided.rules.carry.carry",
+                "data": ["rawdata.raw_carry"],
+                "other_args": {"smooth_days": 60},
+                "forecast_scalar": 28.40,
+            },
+            "carry125": {
+                "function": "systems.provided.rules.carry.carry",
+                "data": ["rawdata.raw_carry"],
+                "other_args": {"smooth_days": 125},
+                "forecast_scalar": 29.37,
+            },
+            "relmomentum20": {
+                "function": "systems.provided.rules.rel_mom.relative_momentum",
+                "data": ["rawdata.get_cumulative_daily_vol_normalised_returns", "rawdata.normalised_price_for_asset_class"],
+                "other_args": {"horizon": 20},
+                "forecast_scalar": 86.51,
+            },
+            "relmomentum40": {
+                "function": "systems.provided.rules.rel_mom.relative_momentum",
+                "data": ["rawdata.get_cumulative_daily_vol_normalised_returns", "rawdata.normalised_price_for_asset_class"],
+                "other_args": {"horizon": 40},
+                "forecast_scalar": 117.78,
+            },
+            "relmomentum80": {
+                "function": "systems.provided.rules.rel_mom.relative_momentum",
+                "data": ["rawdata.get_cumulative_daily_vol_normalised_returns", "rawdata.normalised_price_for_asset_class"],
+                "other_args": {"horizon": 80},
+                "forecast_scalar": 159.88,
+            },
+        },
+        "forecast_weights": {
+            "momentum8": 0.083,
+            "momentum16": 0.083,
+            "momentum32": 0.083,
+            "momentum64": 0.083,
+            "carry30": 0.111,
+            "carry60": 0.111,
+            "carry125": 0.111,
+            "relmomentum20": 0.111,
+            "relmomentum40": 0.111,
+            "relmomentum80": 0.111,
+        },
+        "forecast_div_multiplier": 1.35,
+    },
     "trend_and_carry": {
         "description": "Blended trend + carry (Chapter 15 style)",
         "trading_rules": {
@@ -426,9 +504,10 @@ Pre-built systems:
   rob           Rob Carver's full personal system
 
 Strategy presets:
-  trend_following   Pure EWMAC at 6 speeds
-  carry             Pure carry
-  trend_and_carry   Blended (default)
+  trend_following      Pure EWMAC at 6 speeds
+  carry                Pure carry
+  trend_carry_csmom    Trend + Carry + Cross-Sectional Momentum (3-factor)
+  trend_and_carry      Blended trend + carry (default)
 
 Examples:
   %(prog)s --system chapter15
