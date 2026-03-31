@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arki Backtest Analytics</title>
+  <meta name="description" content="Production-grade futures strategy backtest analytics dashboard">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+</head>
+<body>
+
+<!-- ════════ HEADER ════════ -->
+<header class="header" id="app-header">
+  <div class="header__brand">
+    <div class="header__logo">A</div>
+    <div>
+      <div class="header__title">Backtest Analytics</div>
+      <div class="header__subtitle">3-Factor Futures Strategy</div>
+    </div>
+  </div>
+  <div class="header__meta" id="header-meta">
+    <div class="header__meta-item">Capital <span class="header__meta-value" id="hm-capital">—</span></div>
+    <div class="header__meta-item">Period <span class="header__meta-value" id="hm-period">—</span></div>
+    <div class="header__meta-item">Instruments <span class="header__meta-value" id="hm-instruments">—</span></div>
+    <div class="header__meta-item">Mode <span class="header__meta-value" id="hm-mode">—</span></div>
+  </div>
+</header>
+
+<!-- ════════ TAB NAV ════════ -->
+<nav class="tab-nav" id="tab-nav">
+  <div class="tab-nav__item active" data-tab="summary">Executive Summary</div>
+  <div class="tab-nav__item" data-tab="attribution">Performance Attribution</div>
+  <div class="tab-nav__item" data-tab="positions">Position Analytics</div>
+  <div class="tab-nav__item" data-tab="risk">Risk Dashboard</div>
+  <div class="tab-nav__item" data-tab="instrument">Instrument Deep-Dive</div>
+  <div class="tab-nav__item" data-tab="comparison">Run Comparison</div>
+</nav>
+
+<!-- ════════ MAIN ════════ -->
+<main class="main">
+
+  <!-- ──── TAB 1: Executive Summary ──── -->
+  <section class="tab-content active" id="tab-summary">
+    <div class="grid grid-6" id="kpi-strip" style="margin-bottom:var(--space-lg)">
+      <!-- KPIs injected by JS -->
+    </div>
+
+    <div class="grid grid-2-1" style="margin-bottom:var(--space-lg)">
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Equity Curve</span>
+          <span class="card__badge" id="ec-years">—</span>
+        </div>
+        <div class="chart-wrap chart-wrap--tall">
+          <canvas id="chart-equity"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__header"><span class="card__title">Strategy Configuration</span></div>
+        <div class="config-panel" id="config-panel">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card__header"><span class="card__title">Drawdown</span></div>
+        <div class="chart-wrap chart-wrap--medium">
+          <canvas id="chart-drawdown"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__header"><span class="card__title">Rolling Sharpe Ratio</span></div>
+        <div class="chart-wrap chart-wrap--medium">
+          <canvas id="chart-rolling-sr"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:var(--space-lg)">
+      <div class="card__header"><span class="card__title">Annual Returns</span></div>
+      <div class="chart-wrap chart-wrap--medium">
+        <canvas id="chart-annual"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──── TAB 2: Performance Attribution ──── -->
+  <section class="tab-content" id="tab-attribution">
+    <div class="grid grid-2" style="margin-bottom:var(--space-lg)">
+      <div class="card">
+        <div class="card__header"><span class="card__title">Factor P&L Decomposition</span></div>
+        <div class="chart-wrap chart-wrap--tall">
+          <canvas id="chart-factor-pnl"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__header"><span class="card__title">Factor Contribution Summary</span></div>
+        <div class="table-wrap" id="factor-table">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card__header"><span class="card__title">Forecast Weight Allocation (Latest)</span></div>
+      <div class="chart-wrap chart-wrap--medium">
+        <canvas id="chart-forecast-weights"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──── TAB 3: Position Analytics ──── -->
+  <section class="tab-content" id="tab-positions">
+    <div class="card" style="margin-bottom:var(--space-lg)">
+      <div class="card__header"><span class="card__title">Position Snapshot (Latest)</span></div>
+      <div class="table-wrap" id="position-table" style="max-height:500px;overflow-y:auto">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card__header"><span class="card__title">Aggregate Long/Short Exposure</span></div>
+        <div class="chart-wrap chart-wrap--medium">
+          <canvas id="chart-exposure"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__header"><span class="card__title">Turnover by Instrument</span></div>
+        <div class="chart-wrap chart-wrap--medium">
+          <canvas id="chart-turnover"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──── TAB 4: Risk Dashboard ──── -->
+  <section class="tab-content" id="tab-risk">
+    <div class="grid grid-2" style="margin-bottom:var(--space-lg)">
+      <div class="card">
+        <div class="card__header"><span class="card__title">Rolling Volatility (Realized vs Target)</span></div>
+        <div class="chart-wrap chart-wrap--medium">
+          <canvas id="chart-rolling-vol"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__header"><span class="card__title">Asset Class Exposure</span></div>
+        <div class="chart-wrap chart-wrap--medium">
+          <canvas id="chart-asset-class"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card__header"><span class="card__title">Instrument Weight Evolution</span></div>
+      <div class="chart-wrap chart-wrap--tall">
+        <canvas id="chart-weight-evolution"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──── TAB 5: Instrument Deep-Dive ──── -->
+  <section class="tab-content" id="tab-instrument">
+    <div class="card" style="margin-bottom:var(--space-lg)">
+      <div class="card__header">
+        <span class="card__title">Select Instrument</span>
+      </div>
+      <div class="select-wrap" style="max-width:300px">
+        <select id="instrument-select">
+          <option value="">— Select —</option>
+        </select>
+      </div>
+    </div>
+    <div id="instrument-detail" style="display:none">
+      <div class="grid grid-4" id="inst-kpis" style="margin-bottom:var(--space-lg)"></div>
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="card__header"><span class="card__title">Equity Curve</span></div>
+          <div class="chart-wrap chart-wrap--medium">
+            <canvas id="chart-inst-equity"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card__header"><span class="card__title">Position History</span></div>
+          <div class="chart-wrap chart-wrap--medium">
+            <canvas id="chart-inst-position"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──── TAB 6: Run Comparison ──── -->
+  <section class="tab-content" id="tab-comparison">
+    <div class="card">
+      <div class="card__header"><span class="card__title">Registered Runs</span></div>
+      <div class="table-wrap" id="runs-table">
+        <p class="loading" id="runs-loading">Loading registry...</p>
+      </div>
+      <p style="margin-top:var(--space-md);font-size:12px;color:var(--text-muted)">
+        To add runs, use: <code style="font-family:var(--font-mono);background:var(--sand-light);padding:2px 6px;border-radius:4px">
+        python scripts/backtest_runner.py run --label "my_test" --capital 200000</code>
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
