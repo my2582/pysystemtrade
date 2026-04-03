@@ -1,0 +1,35 @@
+#!/bin/bash
+# ─────────────────────────────────────────────
+# Futures Monthly Returns Export
+# ─────────────────────────────────────────────
+# Usage:
+#   ./futures-returns              # Export from current data
+#   ./futures-returns --update     # IB update first, then export
+#   ./futures-returns --start 2000-01-01
+# ─────────────────────────────────────────────
+
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+cd "$ROOT" || exit 1
+source venv/bin/activate
+
+# Check for --update flag
+UPDATE=false
+EXTRA_ARGS=()
+for arg in "$@"; do
+    if [ "$arg" = "--update" ]; then
+        UPDATE=true
+    else
+        EXTRA_ARGS+=("$arg")
+    fi
+done
+
+if [ "$UPDATE" = true ]; then
+    echo "🔄 Updating prices from IB Gateway..."
+    echo "   (Requires IB Gateway running on port 4001)"
+    echo ""
+    python scripts/update_direct_ib.py --instruments SP500 DAX NIKKEI FTSE100 US10 BUND JGB GILT GOLD
+    echo ""
+fi
+
+echo "📊 Exporting monthly returns..."
+python scripts/export_monthly_returns.py "${EXTRA_ARGS[@]}"

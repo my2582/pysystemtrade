@@ -36,12 +36,13 @@ MULTI_CSV_DIR = Path('/Users/msyeom/Developer/pysystemtrade/data/futures/multipl
 INSTRUMENTS = [
     'AUD_micro', 'BOBL', 'BONO', 'BRENT-LAST', 'BUND', 'BUTTER', 'CHEESE',
     'CHFJPY', 'CLP', 'COCOA_LDN', 'COFFEE', 'COPPER-micro', 'COTTON',
-    'CRUDE_W', 'EU-BANKS', 'EU-DJ-OIL', 'EU-DJ-TELECOM', 'EURIBOR',
-    'EURIBOR-ICE', 'FED', 'FEEDCOW', 'FTSECHINAA', 'GASOIL', 'IBEX_mini',
-    'INR', 'LEANHOG', 'LIVECOW', 'LUMBER-new', 'MXP', 'NASDAQ_micro',
-    'OAT', 'OJ', 'PLN', 'REDWHEAT', 'RICE', 'SILVER', 'SPI200',
-    'SUGAR11', 'SUGAR_WHITE', 'TOPIX', 'TWD-mini', 'US-DISCRETE',
-    'US-STAPLES', 'US-UTILS', 'US5', 'YENEUR',
+    'CRUDE_W', 'DAX', 'EU-BANKS', 'EU-DJ-OIL', 'EU-DJ-TELECOM', 'EURIBOR',
+    'EURIBOR-ICE', 'FED', 'FEEDCOW', 'FTSE100', 'FTSECHINAA', 'GASOIL',
+    'GILT', 'GOLD', 'IBEX_mini', 'INR', 'JGB', 'LEANHOG', 'LIVECOW',
+    'LUMBER-new', 'MXP', 'NASDAQ_micro', 'NIKKEI', 'OAT', 'OJ', 'PLN',
+    'REDWHEAT', 'RICE', 'SILVER', 'SP500', 'SPI200', 'SUGAR11',
+    'SUGAR_WHITE', 'TOPIX', 'TWD-mini', 'US-DISCRETE', 'US-STAPLES',
+    'US-UTILS', 'US5', 'US10', 'YENEUR',
 ]
 
 # FX pairs needed for pysystemtrade (mapping instrument currency → XXXUSD)
