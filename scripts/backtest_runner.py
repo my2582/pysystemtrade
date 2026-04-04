@@ -196,7 +196,79 @@ def export_enhanced_data(system, instruments, run_dir):
     except Exception as e:
         print(f"❌ {e}")
 
-    # 6. Config snapshot as JSON (for dashboard)
+    # 6. Position snapshot (latest positions for dashboard tables)
+    print("    Position snapshot...", end=" ", flush=True)
+    try:
+        snapshot_rows = []
+        for code in instruments:
+            try:
+                notional = system.portfolio.get_notional_position(code)
+                rounded = notional.round()
+                iw = system.portfolio.get_instrument_weights()
+                weight = iw[code].iloc[-1] if code in iw.columns else 0
+                snapshot_rows.append({
+                    'Instrument': code,
+                    'Last Date': str(notional.index[-1].date()),
+                    'Notional Position': round(notional.iloc[-1], 4),
+                    'Rounded (Contracts)': int(rounded.iloc[-1]),
+                    'Avg |Position|': round(notional.abs().mean(), 4),
+                    'Instrument Weight': round(float(weight), 4),
+                })
+            except Exception:
+                pass
+        if snapshot_rows:
+            pd.DataFrame(snapshot_rows).to_csv(run_dir / "position_snapshot.csv", index=False)
+            print(f"✅ ({len(snapshot_rows)} instruments)")
+        else:
+            print("⚠️ no data")
+    except Exception as e:
+        print(f"❌ {e}")
+
+    # 7. Notional positions time series (for exposure charts)
+    print("    Notional positions...", end=" ", flush=True)
+    try:
+        notional_dict = {}
+        for code in instruments:
+            try:
+                notional_dict[code] = system.portfolio.get_notional_position(code)
+            except Exception:
+                pass
+        if notional_dict:
+            pd.DataFrame(notional_dict).to_csv(run_dir / "notional_positions.csv")
+            print(f"✅ ({len(notional_dict)} instruments)")
+        else:
+            print("⚠️ no data")
+    except Exception as e:
+        print(f"❌ {e}")
+
+    # 8. Instrument weights time series
+    print("    Instrument weights...", end=" ", flush=True)
+    try:
+        iw = system.portfolio.get_instrument_weights()
+        iw.to_csv(run_dir / "instrument_weights.csv")
+        print(f"✅")
+    except Exception as e:
+        print(f"❌ {e}")
+
+    # 9. Rounded positions (integer contracts over time)
+    print("    Rounded positions...", end=" ", flush=True)
+    try:
+        rounded_dict = {}
+        for code in instruments:
+            try:
+                pos = system.portfolio.get_notional_position(code)
+                rounded_dict[code] = pos.round()
+            except Exception:
+                pass
+        if rounded_dict:
+            pd.DataFrame(rounded_dict).to_csv(run_dir / "rounded_positions.csv")
+            print(f"✅ ({len(rounded_dict)} instruments)")
+        else:
+            print("⚠️ no data")
+    except Exception as e:
+        print(f"❌ {e}")
+
+    # 10. Config snapshot as JSON (for dashboard)
     print("    Config JSON...", end=" ", flush=True)
     try:
         with open(run_dir / "stats.yaml") as f:

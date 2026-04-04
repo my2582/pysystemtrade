@@ -36,25 +36,19 @@ const FACTOR_COLORS = {
 };
 
 const ASSET_CLASSES = {
-  'Equity Index':  ['NASDAQ_micro','SPI200','FTSECHINAA','TOPIX','IBEX_mini'],
-  'Equity Sector': ['EU-DJ-OIL','US-UTILS','US-STAPLES','EU-DJ-TELECOM','EU-BANKS','US-DISCRETE'],
-  'Fixed Income':  ['EURIBOR-ICE','EURIBOR','FED','BONO','BUND','OAT','BOBL','US5'],
-  'FX':            ['MXP','CHFJPY','CLP','TWD-mini','INR','PLN','AUD_micro','YENEUR'],
-  'Agriculture':   ['RICE','OJ','LEANHOG','COTTON','COFFEE','SUGAR11','LIVECOW','BUTTER','CHEESE','REDWHEAT','FEEDCOW','SUGAR_WHITE'],
-  'Metals':        ['SILVER','COPPER-micro'],
-  'Energy':        ['GASOIL','BRENT-LAST','CRUDE_W'],
-  'Softs/Other':   ['LUMBER-new','COCOA_LDN'],
+  'Equity':       ['SP500','NASDAQ_micro','DAX','NIKKEI','FTSE100'],
+  'Fixed Income': ['US10','US5','BUND','GILT','JGB'],
+  'Metals':       ['GOLD','SILVER','COPPER-micro'],
+  'Energy':       ['CRUDE_W','BRENT-LAST'],
+  'FX':           ['AUD_micro'],
 };
 
 const AC_COLORS = {
-  'Equity Index':  PALETTE.forest,
-  'Equity Sector': '#3B916E',
-  'Fixed Income':  PALETTE.green,
-  'FX':            '#C4B68A',
-  'Agriculture':   PALETTE.sand,
-  'Metals':        PALETTE.charcoal70,
-  'Energy':        '#42A47C',
-  'Softs/Other':   PALETTE.charcoal50,
+  'Equity':       PALETTE.forest,
+  'Fixed Income': PALETTE.green,
+  'Metals':       PALETTE.charcoal70,
+  'Energy':       '#42A47C',
+  'FX':           '#C4B68A',
 };
 
 // ── Chart.js Global Defaults ──
