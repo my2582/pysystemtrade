@@ -36,7 +36,7 @@ syslogging.logging_configured = True
 
 def build_3factor_system_fixed():
     """Build a system with FIXED forecast weights for fast static optimization."""
-    from sysdata.sim.csv_futures_sim_data import csvFuturesSimData
+    from sysdata.sim.db_futures_sim_data import dbFuturesSimData
     from sysdata.config.configdata import Config
     from systems.forecasting import Rules
     from systems.basesystem import System
@@ -47,7 +47,7 @@ def build_3factor_system_fixed():
     from systems.portfolio import Portfolios
     from systems.accounts.accounts_stage import Account
 
-    data = csvFuturesSimData()
+    data = dbFuturesSimData()
 
     # Use pre-computed forecast scalars from Rob's system (no estimation needed)
     config_dict = {

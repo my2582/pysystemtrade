@@ -53,7 +53,7 @@ syslogging.logging_configured = True
 
 def build_estimated_system(config_path, capital, instruments=None):
     """Build an estimated system (Phase 2) — no dynamic optimizer."""
-    from sysdata.sim.csv_futures_sim_data import csvFuturesSimData
+    from sysdata.sim.db_futures_sim_data import dbFuturesSimData
     from sysdata.config.configdata import Config
     from systems.forecasting import Rules
     from systems.basesystem import System
@@ -66,7 +66,7 @@ def build_estimated_system(config_path, capital, instruments=None):
         volAttenForecastScaleCap,
     )
 
-    data = csvFuturesSimData()
+    data = dbFuturesSimData()
     config = Config(config_path)
     config.notional_trading_capital = capital
 
@@ -91,7 +91,7 @@ def build_estimated_system(config_path, capital, instruments=None):
 
 def build_dynamic_system(config_path, capital, instruments=None):
     """Build a dynamic optimised system (Phase 3) — with Mr. Greedy."""
-    from sysdata.sim.csv_futures_sim_data import csvFuturesSimData
+    from sysdata.sim.db_futures_sim_data import dbFuturesSimData
     from sysdata.config.configdata import Config
     from systems.forecasting import Rules
     from systems.basesystem import System
@@ -110,7 +110,7 @@ def build_dynamic_system(config_path, capital, instruments=None):
         accountForOptimisedStage,
     )
 
-    data = csvFuturesSimData()
+    data = dbFuturesSimData()
     config = Config(config_path)
     config.notional_trading_capital = capital
 
