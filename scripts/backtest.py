@@ -293,6 +293,38 @@ def build_system(args):
         )
         return system
 
+    elif args.system == "arki":
+        # Arki production system: 3-factor (Trend+Carry+CS Mom) with
+        # dynamic_small_system_optimise for integer position sizing
+        from systems.provided.dynamic_small_system_optimise.optimised_positions_stage import optimisedPositions
+        from systems.provided.dynamic_small_system_optimise.accounts_stage import accountForOptimisedStage
+        from systems.risk import Risk
+
+        config = Config(str(PROJECT_ROOT / "scripts" / "backtest_config" / "arki_production.yaml"))
+        if args.capital:
+            config.notional_trading_capital = args.capital
+        if args.currency:
+            config.base_currency = args.currency
+        if args.vol_target:
+            config.percentage_vol_target = args.vol_target
+
+        system = System(
+            [
+                Risk(),
+                accountForOptimisedStage(),
+                optimisedPositions(),
+                Portfolios(),
+                PositionSizing(),
+                RawData(),
+                ForecastCombine(),
+                ForecastScaleCap(),
+                Rules(),
+            ],
+            data,
+            config,
+        )
+        return system
+
     elif args.config:
         config = Config(args.config)
         if args.capital:
@@ -518,7 +550,7 @@ Examples:
         """,
     )
 
-    parser.add_argument("--system", choices=["chapter15", "estimated", "rob"],
+    parser.add_argument("--system", choices=["chapter15", "estimated", "rob", "arki"],
                         help="Pre-built system to use")
     parser.add_argument("--strategy", choices=list(STRATEGY_PRESETS.keys()),
                         help="Strategy preset")
