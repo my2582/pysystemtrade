@@ -73,6 +73,7 @@ const state = {
   forecastWeights: null,
   positionSnapshot: null,
   notionalPositions: null,
+  roundedPositions: null,
   instrumentWeights: null,
   turnover: null,
   registry: null,
@@ -126,12 +127,13 @@ async function loadData() {
       loadFile('data/notional_positions.csv').catch(() => null),
     ]);
 
-    const [factorText, fwText, turnoverText, iwText, registryText] = await Promise.all([
+    const [factorText, fwText, turnoverText, iwText, registryText, rpText] = await Promise.all([
       loadFile('data/factor_returns.csv').catch(() => null),
       loadFile('data/forecast_weights.csv').catch(() => null),
       loadFile('data/turnover.csv').catch(() => null),
       loadFile('data/instrument_weights.csv').catch(() => null),
       loadFile('../../../results/runs/registry.yaml').catch(() => loadFile('data/registry.yaml').catch(() => null)),
+      loadFile('data/rounded_positions.csv').catch(() => null),
     ]);
 
     if (metaText) state.meta = JSON.parse(metaText);
@@ -143,6 +145,7 @@ async function loadData() {
     if (fwText) state.forecastWeights = parseCSV(fwText);
     if (turnoverText) state.turnover = parseCSV(turnoverText);
     if (iwText) state.instrumentWeights = parseNumericCSV(iwText);
+    if (rpText) state.roundedPositions = parseNumericCSV(rpText);
 
     if (registryText) {
       // Simple YAML parser for registry (flat structure)
@@ -187,6 +190,7 @@ function renderAll() {
   renderFactorTable();
   renderForecastWeights();
   renderPositionTable();
+  renderActivityTable();
   renderExposure();
   renderTurnover();
   renderRollingVol();
@@ -547,6 +551,40 @@ function renderPositionTable() {
       </tr>`;
     }).join('')}</tbody></table>`;
   document.getElementById('position-table').innerHTML = html;
+}
+
+// ── Historical Activity Table ──
+function renderActivityTable() {
+  if (!state.roundedPositions || state.roundedPositions.length === 0) return;
+  const cols = Object.keys(state.roundedPositions[0]).filter(k => k !== 'index' && k !== '');
+
+  const stats = cols.map(inst => {
+    let nonZero = 0, total = 0, maxPos = 0;
+    state.roundedPositions.forEach(row => {
+      const v = row[inst];
+      if (isNaN(v)) return;
+      total++;
+      if (Math.abs(v) > 0) nonZero++;
+      if (Math.abs(v) > maxPos) maxPos = Math.abs(v);
+    });
+    const pct = total > 0 ? (nonZero / total * 100) : 0;
+    let badge = '';
+    if (pct >= 80) badge = '<span style="color:var(--forest);font-weight:600">● Active</span>';
+    else if (pct >= 30) badge = '<span style="color:#C4B68A;font-weight:600">● Moderate</span>';
+    else badge = '<span style="color:#B85C4A;font-weight:600">● Low</span>';
+    return { inst, nonZero, total, pct, maxPos: Math.round(maxPos), badge };
+  }).sort((a, b) => b.pct - a.pct);
+
+  const html = `<table>
+    <thead><tr><th>Instrument</th><th>Trading Days</th><th>Active %</th><th style="text-align:center">Max Contracts</th><th>Status</th></tr></thead>
+    <tbody>${stats.map(s => `<tr>
+      <td class="td-name">${s.inst}</td>
+      <td>${s.nonZero.toLocaleString()} / ${s.total.toLocaleString()}</td>
+      <td><div style="display:flex;align-items:center;gap:8px"><div style="width:60px;height:6px;border-radius:3px;background:var(--bg-tertiary);overflow:hidden"><div style="width:${Math.min(s.pct,100)}%;height:100%;background:var(--forest);border-radius:3px"></div></div>${s.pct.toFixed(1)}%</div></td>
+      <td style="text-align:center;font-weight:600">${s.maxPos}</td>
+      <td>${s.badge}</td>
+    </tr>`).join('')}</tbody></table>`;
+  document.getElementById('activity-table').innerHTML = html;
 }
 
 // ── Exposure ──
