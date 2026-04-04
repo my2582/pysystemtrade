@@ -36,9 +36,9 @@ const FACTOR_COLORS = {
 };
 
 const ASSET_CLASSES = {
-  'Equity':       ['SP500','NASDAQ_micro','DAX','NIKKEI','FTSE100'],
+  'Equity':       ['SP500_micro','NASDAQ_micro','DAX','NIKKEI','FTSE100'],
   'Fixed Income': ['US10','US5','BUND','GILT','JGB'],
-  'Metals':       ['GOLD','SILVER','COPPER-micro'],
+  'Metals':       ['GOLD_micro','SILVER','COPPER-micro'],
   'Energy':       ['CRUDE_W','BRENT-LAST'],
   'FX':           ['AUD_micro'],
 };

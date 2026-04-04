@@ -15,7 +15,7 @@
 # === INSTRUMENTS ===
 instruments:
   # Equity (5)
-  - SP500
+  - SP500_micro
   - NASDAQ_micro
   - DAX
   - NIKKEI
@@ -27,7 +27,7 @@ instruments:
   - GILT
   - JGB
   # Metals (3)
-  - GOLD
+  - GOLD_micro
   - SILVER
   - COPPER-micro
   # Energy (2)
@@ -172,7 +172,7 @@ base_currency: "USD"
 # Equity 30%, Bond 30%, Metals 15%, Energy 15%, FX 10%
 use_instrument_weight_estimates: False
 instrument_weights:
-  SP500: 0.060
+  SP500_micro: 0.060
   NASDAQ_micro: 0.060
   DAX: 0.060
   NIKKEI: 0.060
@@ -182,7 +182,7 @@ instrument_weights:
   BUND: 0.060
   GILT: 0.060
   JGB: 0.060
-  GOLD: 0.050
+  GOLD_micro: 0.050
   SILVER: 0.050
   COPPER-micro: 0.050
   CRUDE_W: 0.075
