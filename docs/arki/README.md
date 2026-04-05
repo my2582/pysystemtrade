@@ -83,4 +83,4 @@ Every `arki_*.yaml` is **self-contained** — instruments, rules, weights all in
 | 1 | [backtest_process.md](backtest_process.md) | 5-step backtesting process + data source explanation |
 | 2 | [strategy_evolution.md](strategy_evolution.md) | v1→v5 history, decisions, and key findings |
 | 3 | [instrument_universe.md](instrument_universe.md) | Universe criteria, contract size analysis, expansion log |
-
+| 4 | [config_knowledge_map.md](config_knowledge_map.md) | Complete config file map, run management, quick reference |
