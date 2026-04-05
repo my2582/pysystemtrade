@@ -1116,7 +1116,11 @@ function renderInstrumentDetail(inst) {
         scales: {
           x: { grid: { color: PALETTE.gridLine }, ticks: { maxTicksLimit: 8 } },
           y: { grid: { color: PALETTE.gridLine }, title: { display: true, text: 'Contracts' },
-            ticks: isRounded ? { stepSize: 1 } : {}
+            ticks: isRounded ? (() => {
+              const vals = posSampled.map(r => r.v);
+              const range = Math.max(...vals) - Math.min(...vals);
+              return range <= 10 ? { stepSize: 1 } : {};
+            })() : {}
           }
         }
       }
