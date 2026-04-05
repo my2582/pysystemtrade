@@ -39,10 +39,48 @@ When a directory is exclusively ours, no prefix is needed — the directory itse
 | Config | YAML | `scripts/backtest_config/` |
 | Results registry | YAML | `results/runs/registry.yaml` |
 
+## Config Quick Reference
+
+### Config Priority (in backtest_runner.py)
+
+```
+CLI --instruments-from  >  config YAML instruments:  >  ALL available
+```
+
+Every `arki_*.yaml` is **self-contained** — instruments, rules, weights all in one file.
+
+### Active Configs
+
+| File | Status | Key Trait |
+|------|--------|-----------|
+| **`arki_production.yaml`** | ⭐ **PRODUCTION** | 25 instruments, all estimations ON, risk overlay |
+| `arki_v5_dynamic.yaml` | Experiment | Dynamic instrument weights + 35/20/45 factor tilt |
+| `arki_v5b_factor_tilt.yaml` | Experiment | Equal weights + 30/15/55 aggressive CS Momentum |
+| `arki_v5c_combined.yaml` | Experiment | v5a + v5b combined (underperformed) |
+
+### Legacy (reference only)
+
+| File | Purpose |
+|------|---------|
+| `trend_carry_csmom.yaml` | Original Carver-style fixed weights (v4 simple baseline) |
+| `trend_carry_csmom_estimated.yaml` | Early estimated variant (pre-arki naming) |
+| `arki_v3_25inst.yaml` | 25-instrument expansion experiment |
+| `arki_v4_optimized.yaml` | Intermediate optimization |
+
+### What Controls Estimation
+
+| Feature | Fixed Config | Production Config |
+|---------|-------------|-------------------|
+| Instrument weights | Equal 4% | `use_instrument_weight_estimates: True` |
+| Forecast weights | Manual fractions | `use_forecast_weight_estimates: True` |
+| Forecast scalars | Book values | `use_forecast_scale_estimates: True` |
+| Risk overlay | None | Enabled |
+
 ## Documents
 
 | # | Document | Description |
 |---|---|---|
 | 1 | [backtest_process.md](backtest_process.md) | 5-step backtesting process + data source explanation |
-| 2 | [strategy_evolution.md](strategy_evolution.md) | v1→v4 history, decisions, and key findings |
+| 2 | [strategy_evolution.md](strategy_evolution.md) | v1→v5 history, decisions, and key findings |
 | 3 | [instrument_universe.md](instrument_universe.md) | Universe criteria, contract size analysis, expansion log |
+
