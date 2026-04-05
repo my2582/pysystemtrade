@@ -199,6 +199,21 @@ def export_enhanced_data(system, instruments, run_dir):
     # 6. Position snapshot (latest positions for dashboard tables)
     print("    Position snapshot...", end=" ", flush=True)
     try:
+        # Asset class mapping for 25-instrument universe
+        AC_MAP = {
+            'SP500_micro': 'Equity', 'NASDAQ_micro': 'Equity', 'DAX': 'Equity',
+            'NIKKEI': 'Equity', 'FTSE100': 'Equity', 'IBEX_mini': 'Equity',
+            'FTSECHINAA': 'Equity',
+            'US10': 'Fixed Income', 'US5': 'Fixed Income', 'BUND': 'Fixed Income',
+            'GILT': 'Fixed Income', 'JGB': 'Fixed Income',
+            'GOLD_micro': 'Metals', 'SILVER': 'Metals', 'COPPER-micro': 'Metals',
+            'CRUDE_W': 'Energy', 'BRENT-LAST': 'Energy', 'GASOIL': 'Energy',
+            'AUD_micro': 'FX', 'MXP': 'FX', 'YENEUR': 'FX',
+            'SUGAR11': 'Agricultural', 'COTTON': 'Agricultural',
+            'LEANHOG': 'Agricultural', 'COCOA_LDN': 'Agricultural',
+        }
+        capital = system.config.notional_trading_capital if hasattr(system.config, 'notional_trading_capital') else 200000
+
         snapshot_rows = []
         for code in instruments:
             try:
@@ -206,11 +221,38 @@ def export_enhanced_data(system, instruments, run_dir):
                 rounded = notional.round()
                 iw = system.portfolio.get_instrument_weights()
                 weight = iw[code].iloc[-1] if code in iw.columns else 0
+
+                # Contract value (USD-converted)
+                try:
+                    multiplier = system.data.get_value_of_block_price_move(code)
+                    raw_price = system.data.get_raw_price(code)
+                    last_price = float(raw_price.iloc[-1]) if raw_price is not None and len(raw_price) > 0 else 0
+                    contract_value_local = abs(last_price * multiplier)
+                    # FX conversion to USD
+                    try:
+                        fx = system.data.get_fx_for_instrument(code, "USD")
+                        fx_rate = float(fx.iloc[-1]) if fx is not None and len(fx) > 0 else 1.0
+                    except Exception:
+                        fx_rate = 1.0
+                    contract_value = contract_value_local * fx_rate
+                except Exception:
+                    contract_value = 0
+
+                contracts = int(rounded.iloc[-1])
+                exposure_usd = contracts * contract_value
+                exposure_nav_pct = (exposure_usd / capital * 100) if capital > 0 else 0
+                direction = 'Long' if contracts > 0 else ('Short' if contracts < 0 else 'Flat')
+
                 snapshot_rows.append({
                     'Instrument': code,
+                    'Asset Class': AC_MAP.get(code, 'Other'),
+                    'Direction': direction,
                     'Last Date': str(notional.index[-1].date()),
                     'Notional Position': round(notional.iloc[-1], 4),
-                    'Rounded (Contracts)': int(rounded.iloc[-1]),
+                    'Rounded (Contracts)': contracts,
+                    'Contract Value ($)': round(contract_value, 0),
+                    'Exposure ($)': round(exposure_usd, 0),
+                    'Exposure (% NAV)': round(exposure_nav_pct, 1),
                     'Avg |Position|': round(notional.abs().mean(), 4),
                     'Instrument Weight': round(float(weight), 4),
                 })

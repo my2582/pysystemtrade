@@ -477,4 +477,167 @@ tbody tr:hover {
   .header { position: static; }
   .tab-nav { display: none; }
   .tab-content { display: block !important; page-break-before: always; }
+  .sim-banner { display: none; }
+}
+
+/* ── Simulated Banner ── */
+.sim-banner {
+  background: #D4A24E;
+  color: #3D2E11;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 6px var(--space-xl);
+  text-transform: uppercase;
+}
+
+/* ── Info Tooltips ── */
+.info-tip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--sand-light);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-style: normal;
+  cursor: help;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.info-tip:hover::after {
+  content: attr(title);
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 280px;
+  padding: 10px 12px;
+  background: var(--charcoal);
+  color: var(--cream);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  pointer-events: none;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* ── Card Hints ── */
+.card__hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: -8px 0 12px 0;
+  font-style: italic;
+}
+
+/* ── Period Selector ── */
+.period-selector {
+  display: flex;
+  gap: 2px;
+  background: var(--sand-light);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+}
+
+.period-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.period-btn:hover {
+  color: var(--forest);
+  background: var(--cream);
+}
+
+.period-btn.active {
+  background: var(--forest);
+  color: var(--cream);
+}
+
+/* ── Clickable Table Rows ── */
+tr.clickable-row {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+tr.clickable-row:hover {
+  background: var(--forest-15) !important;
+}
+
+/* ── Position Summary Strip ── */
+.grid-5 { grid-template-columns: repeat(5, 1fr); }
+
+@media (max-width: 1200px) {
+  .grid-5 { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .grid-5 { grid-template-columns: 1fr; }
+}
+
+/* ── Asset Class Badge ── */
+.ac-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.03em;
+  font-family: var(--font-sans);
+}
+
+.ac-badge--equity { background: #265844; color: #fff; }
+.ac-badge--fixed-income { background: #55B786; color: #fff; }
+.ac-badge--metals { background: #6B6B6B; color: #fff; }
+.ac-badge--energy { background: #42A47C; color: #fff; }
+.ac-badge--fx { background: #C4B68A; color: #3D2E11; }
+.ac-badge--agricultural { background: #8B7355; color: #fff; }
+
+/* ── Direction Badge ── */
+.dir-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.dir-badge--long { color: var(--green); }
+.dir-badge--short { color: #B85C4A; }
+.dir-badge--flat { color: var(--text-muted); }
+
+/* ── Flat Positions Collapsible ── */
+.flat-section {
+  margin-top: var(--space-md);
+  border-top: 1px dashed var(--border-subtle);
+  padding-top: var(--space-sm);
+}
+
+.flat-toggle {
+  appearance: none;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  padding: var(--space-xs) 0;
+  font-family: var(--font-sans);
+}
+
+.flat-toggle:hover {
+  color: var(--forest);
 }

@@ -11,6 +11,11 @@
 </head>
 <body>
 
+<!-- ════════ SIMULATED BANNER ════════ -->
+<div class="sim-banner" id="sim-banner">
+  ⚠ SIMULATED BACKTEST — NOT LIVE TRADING RESULTS
+</div>
+
 <!-- ════════ HEADER ════════ -->
 <header class="header" id="app-header">
   <div class="header__brand">
@@ -92,20 +97,38 @@
   <section class="tab-content" id="tab-attribution">
     <div class="grid grid-2" style="margin-bottom:var(--space-lg)">
       <div class="card">
-        <div class="card__header"><span class="card__title">Factor P&L Decomposition</span></div>
+        <div class="card__header">
+          <span class="card__title">Factor P&L Decomposition</span>
+          <div class="period-selector" id="factor-period-selector">
+            <button class="period-btn" data-period="ytd">YTD</button>
+            <button class="period-btn" data-period="1y">1Y</button>
+            <button class="period-btn" data-period="3y">3Y</button>
+            <button class="period-btn" data-period="5y">5Y</button>
+            <button class="period-btn" data-period="10y">10Y</button>
+            <button class="period-btn" data-period="20y">20Y</button>
+            <button class="period-btn active" data-period="all">All</button>
+          </div>
+        </div>
+        <p class="card__hint">Cumulative P&L contribution by factor group (simulated)</p>
         <div class="chart-wrap chart-wrap--tall">
           <canvas id="chart-factor-pnl"></canvas>
         </div>
       </div>
       <div class="card">
-        <div class="card__header"><span class="card__title">Factor Contribution Summary</span></div>
+        <div class="card__header">
+          <span class="card__title">Factor Contribution Summary</span>
+          <span class="info-tip" title="Annualized return, volatility, and Sharpe ratio for each trading rule across the full backtest period.">ⓘ</span>
+        </div>
         <div class="table-wrap" id="factor-table">
           <!-- Injected by JS -->
         </div>
       </div>
     </div>
     <div class="card">
-      <div class="card__header"><span class="card__title">Forecast Weight Allocation (Latest)</span></div>
+      <div class="card__header">
+        <span class="card__title">Forecast Weight Allocation (Latest)</span>
+        <span class="info-tip" title="How the system distributes forecast weight across trading rules for each instrument. Estimated from historical performance.">ⓘ</span>
+      </div>
       <div class="chart-wrap chart-wrap--medium">
         <canvas id="chart-forecast-weights"></canvas>
       </div>
@@ -114,27 +137,46 @@
 
   <!-- ──── TAB 3: Position Analytics ──── -->
   <section class="tab-content" id="tab-positions">
+    <!-- Position Summary Strip -->
+    <div class="grid grid-5" id="position-summary" style="margin-bottom:var(--space-lg)">
+      <!-- Injected by JS -->
+    </div>
+
     <div class="card" style="margin-bottom:var(--space-lg)">
-      <div class="card__header"><span class="card__title">Position Snapshot (Latest)</span></div>
-      <div class="table-wrap" id="position-table" style="max-height:500px;overflow-y:auto">
+      <div class="card__header">
+        <span class="card__title">Position Snapshot (Latest)</span>
+        <span class="info-tip" title="Latest simulated portfolio positions. 'Data Through' = last available price date for each instrument. Flat positions are instruments where the integer-rounded contract count is zero despite a non-zero fractional (notional) position.">ⓘ</span>
+      </div>
+      <div class="table-wrap" id="position-table" style="max-height:600px;overflow-y:auto">
         <!-- Injected by JS -->
       </div>
     </div>
     <div class="card" style="margin-bottom:var(--space-lg)">
-      <div class="card__header"><span class="card__title">Historical Activity (Full Backtest Period)</span></div>
+      <div class="card__header">
+        <span class="card__title">Historical Activity (Full Backtest Period)</span>
+        <span class="info-tip" title="Click any row to view the instrument's full equity curve and position history in the Deep-Dive tab.">ⓘ</span>
+      </div>
+      <p class="card__hint">Click a row to open Instrument Deep-Dive</p>
       <div class="table-wrap" id="activity-table" style="max-height:500px;overflow-y:auto">
         <!-- Injected by JS -->
       </div>
     </div>
     <div class="grid grid-2">
       <div class="card">
-        <div class="card__header"><span class="card__title">Aggregate Long/Short Exposure</span></div>
+        <div class="card__header">
+          <span class="card__title">Aggregate Long/Short Exposure</span>
+          <span class="info-tip" title="Total long and short exposure as a percentage of NAV (capital). Calculated as sum of (contracts × contract value) / capital.">ⓘ</span>
+        </div>
         <div class="chart-wrap chart-wrap--medium">
           <canvas id="chart-exposure"></canvas>
         </div>
       </div>
       <div class="card">
-        <div class="card__header"><span class="card__title">Turnover by Instrument</span></div>
+        <div class="card__header">
+          <span class="card__title">Turnover by Instrument</span>
+          <span class="info-tip" title="Average number of full position turnovers per year. A value of 10 means the instrument's average position is fully replaced ~10 times annually.">ⓘ</span>
+        </div>
+        <p class="card__hint">Full-position replacements per year (annualized)</p>
         <div class="chart-wrap chart-wrap--medium">
           <canvas id="chart-turnover"></canvas>
         </div>
@@ -159,7 +201,10 @@
       </div>
     </div>
     <div class="card">
-      <div class="card__header"><span class="card__title">Instrument Weight Evolution</span></div>
+      <div class="card__header">
+        <span class="card__title">Instrument Weight Evolution</span>
+        <span class="info-tip" title="Estimated instrument weights over time, derived from correlation structure. Shows how the optimizer shifts allocation as correlations change.">ⓘ</span>
+      </div>
       <div class="chart-wrap chart-wrap--tall">
         <canvas id="chart-weight-evolution"></canvas>
       </div>
