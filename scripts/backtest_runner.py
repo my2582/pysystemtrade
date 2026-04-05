@@ -465,15 +465,28 @@ def cmd_run(args):
     print(f"{'='*70}")
 
     # Load instruments
-    instruments = None
-    instruments_file = args.instruments_from or "results/optimal_instruments_200k.yaml"
-    if os.path.exists(instruments_file):
-        with open(instruments_file) as f:
-            data = yaml.safe_load(f)
-        instruments = data.get("instruments", [])
-        print(f"  Instruments: {len(instruments)} from {instruments_file}")
-
+    # Priority: CLI --instruments-from > config YAML instruments: > all available
     config_path = args.config or "scripts/backtest_config/trend_carry_csmom_estimated.yaml"
+    instruments = None
+
+    if args.instruments_from:
+        # Explicit CLI override
+        if os.path.exists(args.instruments_from):
+            with open(args.instruments_from) as f:
+                data = yaml.safe_load(f)
+            instruments = data.get("instruments", [])
+            print(f"  Instruments: {len(instruments)} from {args.instruments_from} (CLI override)")
+        else:
+            print(f"  ⚠️  Instruments file not found: {args.instruments_from}")
+    else:
+        # Read from config YAML itself (self-contained)
+        with open(config_path) as f:
+            cfg_data = yaml.safe_load(f)
+        if cfg_data and "instruments" in cfg_data:
+            instruments = cfg_data["instruments"]
+            print(f"  Instruments: {len(instruments)} from config YAML")
+        else:
+            print(f"  Instruments: ALL available (no filter — none specified in config or CLI)")
     capital = args.capital
     mode = args.mode
     vol_target = args.vol_target

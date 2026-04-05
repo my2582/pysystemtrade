@@ -11,6 +11,34 @@
 # Usage:
 #   python scripts/backtest_runner.py run --label "arki_v5c_combined" --capital 200000 --mode dynamic --config scripts/backtest_config/arki_v5c_combined.yaml
 
+# === INSTRUMENT UNIVERSE ===
+instruments:
+- SP500_micro
+- NASDAQ_micro
+- DAX
+- NIKKEI
+- FTSE100
+- IBEX_mini
+- FTSECHINAA
+- US10
+- US5
+- BUND
+- GILT
+- JGB
+- GOLD_micro
+- SILVER
+- COPPER-micro
+- CRUDE_W
+- BRENT-LAST
+- GASOIL
+- AUD_micro
+- MXP
+- YENEUR
+- SUGAR11
+- COTTON
+- LEANHOG
+- COCOA_LDN
+
 # === TRADING RULES ===
 
 trading_rules:
