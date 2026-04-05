@@ -288,7 +288,15 @@
           </div>
         </div>
         <div class="card">
-          <div class="card__header"><span class="card__title">Position History</span></div>
+          <div class="card__header">
+            <span class="card__title">Position History (Integer Contracts)</span>
+            <div class="period-btns" id="inst-period-btns">
+              <button class="period-btn" data-period="1y" onclick="setInstPeriod('1y')">1Y</button>
+              <button class="period-btn" data-period="3y" onclick="setInstPeriod('3y')">3Y</button>
+              <button class="period-btn" data-period="5y" onclick="setInstPeriod('5y')">5Y</button>
+              <button class="period-btn active" data-period="all" onclick="setInstPeriod('all')">All</button>
+            </div>
+          </div>
           <div class="chart-wrap chart-wrap--medium">
             <canvas id="chart-inst-position"></canvas>
           </div>

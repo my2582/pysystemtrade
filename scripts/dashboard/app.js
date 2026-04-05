@@ -85,6 +85,8 @@ const state = {
   charts: {},
   factorPeriod: 'all',
   positionSort: { col: 'Exposure (% NAV)', asc: false },
+  selectedInstrument: null,
+  instPeriod: 'all',
 };
 
 // ── CSV Parser ──
@@ -1033,6 +1035,7 @@ function renderInstrumentSelect() {
 
 function renderInstrumentDetail(inst) {
   if (!state.dailyReturns) return;
+  state.selectedInstrument = inst;
 
   const vals = state.dailyReturns.map(r => r[inst]).filter(v => !isNaN(v));
   const mean = vals.reduce((a,b) => a+b, 0) / vals.length;
@@ -1075,27 +1078,56 @@ function renderInstrumentDetail(inst) {
     }
   });
 
-  if (state.notionalPositions) {
-    const posData = state.notionalPositions.map(r => r[inst]).filter(v => !isNaN(v));
-    const posDates = state.notionalPositions.filter(r => !isNaN(r[inst])).map(r => r.index || r['']);
-    const posSampled = posDates.map((d, i) => ({ d, v: posData[i] })).filter((_, i) => i % 5 === 0);
+  if (state.roundedPositions || state.notionalPositions) {
+    const src = state.roundedPositions || state.notionalPositions;
+    const isRounded = !!state.roundedPositions;
+    let posData = src.map(r => ({ d: r.index || r[''], v: r[inst] })).filter(p => !isNaN(p.v));
+    
+    // Apply period filter
+    const period = state.instPeriod || 'all';
+    if (period !== 'all' && posData.length > 0) {
+      const lastDate = posData[posData.length - 1].d;
+      const cutoff = new Date(lastDate);
+      const years = period === '1y' ? 1 : period === '3y' ? 3 : 5;
+      cutoff.setFullYear(cutoff.getFullYear() - years);
+      const cutoffStr = cutoff.toISOString().substring(0, 10);
+      posData = posData.filter(p => p.d >= cutoffStr);
+    }
+    
+    // Sample for performance (keep more data for short periods)
+    const step = period === '1y' ? 1 : period === '3y' ? 2 : period === '5y' ? 3 : 5;
+    const posSampled = posData.filter((_, i) => i % step === 0 || i === posData.length - 1);
+
+    // Update period button active state
+    document.querySelectorAll('#inst-period-btns .period-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.period === period);
+    });
 
     destroyChart('chart-inst-position');
     state.charts['chart-inst-position'] = new Chart(document.getElementById('chart-inst-position'), {
       type: 'line',
       data: {
         labels: posSampled.map(r => r.d),
-        datasets: [{ data: posSampled.map(r => r.v), borderColor: PALETTE.green, borderWidth: 1, pointRadius: 0, fill: { target: 'origin', above: PALETTE.greenLight, below: PALETTE.charcoal30 + '22' } }]
+        datasets: [{ data: posSampled.map(r => r.v), borderColor: PALETTE.green, borderWidth: 1, pointRadius: 0, fill: { target: 'origin', above: PALETTE.greenLight, below: PALETTE.charcoal30 + '22' }, stepped: isRounded }]
       },
       options: {
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: false } },
         scales: {
-          x: { grid: { color: PALETTE.gridLine }, ticks: { maxTicksLimit: 6 } },
-          y: { grid: { color: PALETTE.gridLine }, title: { display: true, text: 'Contracts' } }
+          x: { grid: { color: PALETTE.gridLine }, ticks: { maxTicksLimit: 8 } },
+          y: { grid: { color: PALETTE.gridLine }, title: { display: true, text: 'Contracts' },
+            ticks: isRounded ? { stepSize: 1 } : {}
+          }
         }
       }
     });
+  }
+}
+
+function setInstPeriod(period) {
+  state.instPeriod = period;
+  if (state.selectedInstrument) {
+    renderInstrumentDetail(state.selectedInstrument);
   }
 }
 
