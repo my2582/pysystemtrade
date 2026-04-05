@@ -38,6 +38,7 @@
   <div class="tab-nav__item active" data-tab="summary">Executive Summary</div>
   <div class="tab-nav__item" data-tab="attribution">Performance Attribution</div>
   <div class="tab-nav__item" data-tab="positions">Position Analytics</div>
+  <div class="tab-nav__item" data-tab="methodology">Methodology</div>
   <div class="tab-nav__item" data-tab="risk">Risk Dashboard</div>
   <div class="tab-nav__item" data-tab="instrument">Instrument Deep-Dive</div>
   <div class="tab-nav__item" data-tab="comparison">Run Comparison</div>
@@ -180,6 +181,60 @@
         <div class="chart-wrap chart-wrap--medium">
           <canvas id="chart-turnover"></canvas>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──── TAB: Methodology ──── -->
+  <section class="tab-content" id="tab-methodology">
+    <!-- Pipeline Flow -->
+    <div class="card" style="margin-bottom:var(--space-lg)">
+      <div class="card__header">
+        <span class="card__title">Strategy Pipeline</span>
+        <span class="info-tip" title="End-to-end backtest pipeline from raw price data to final integer positions. Each stage transforms data down the chain.">ⓘ</span>
+      </div>
+      <p class="card__hint">How raw prices become integer contract positions — every stage shown with live config values</p>
+      <div id="methodology-pipeline"></div>
+    </div>
+
+    <div class="grid grid-2" style="margin-bottom:var(--space-lg)">
+      <!-- Cost Model -->
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Cost Model & Trade Friction</span>
+          <span class="info-tip" title="The system uses a multi-layer cost model to prevent unnecessary trading. Shadow cost inflates real costs in the optimizer; tracking error buffer creates a no-trade zone.">ⓘ</span>
+        </div>
+        <div id="methodology-costs"></div>
+      </div>
+      <!-- Risk Controls -->
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Risk Controls</span>
+          <span class="info-tip" title="Four independent risk limits, each producing a multiplier between 0 and 1. The most conservative (lowest) is applied to all positions simultaneously.">ⓘ</span>
+        </div>
+        <div id="methodology-risk"></div>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <!-- Spread Cost Chart -->
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Trading Cost per Instrument</span>
+          <span class="info-tip" title="Estimated half-spread cost (one-way) for a single contract, converted to USD. Lower is cheaper to trade.">ⓘ</span>
+        </div>
+        <p class="card__hint">One-way half-spread cost per contract (USD)</p>
+        <div class="chart-wrap chart-wrap--medium">
+          <canvas id="chart-spread-costs"></canvas>
+        </div>
+      </div>
+      <!-- Trading Rules -->
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Trading Rules Configuration</span>
+          <span class="info-tip" title="The 11 trading rules grouped into 3 factor families. Parameters show the lookback windows used for signal generation.">ⓘ</span>
+        </div>
+        <div id="methodology-rules"></div>
       </div>
     </div>
   </section>

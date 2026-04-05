@@ -641,3 +641,227 @@ tr.clickable-row:hover {
 .flat-toggle:hover {
   color: var(--forest);
 }
+
+/* ── Position Sections (Long/Short) ── */
+.position-section {
+  margin-bottom: var(--space-md);
+}
+
+.position-section__header {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: 6px 6px 0 0;
+  margin-bottom: 0;
+}
+
+.position-section--long .position-section__header {
+  background: #55B78618;
+  color: var(--green);
+  border-left: 3px solid var(--green);
+}
+
+.position-section--short .position-section__header {
+  background: #B85C4A18;
+  color: #B85C4A;
+  border-left: 3px solid #B85C4A;
+}
+
+.position-section__count {
+  font-weight: 400;
+  opacity: 0.7;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+/* ── Sortable Table Headers ── */
+.sortable-th {
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.sortable-th:hover {
+  background: var(--sand-light, #f5e8c133);
+}
+
+/* ── Clickable Row ── */
+.clickable-row {
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.clickable-row:hover {
+  background: #26584410;
+}
+
+/* ── Pipeline Flow ── */
+.pipeline-flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  align-items: stretch;
+  padding: var(--space-md) 0;
+}
+
+.pipeline-stage {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--cream, #FDF9EE);
+  border: 1px solid var(--border-subtle, #E8DFC8);
+  border-radius: 8px;
+  flex: 1 1 180px;
+  min-width: 180px;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.pipeline-stage:hover {
+  box-shadow: 0 2px 12px rgba(38, 88, 68, 0.12);
+  transform: translateY(-1px);
+}
+
+.pipeline-stage__icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pipeline-stage__content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pipeline-stage__title {
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--forest, #265844);
+}
+
+.pipeline-stage__desc {
+  font-size: 11px;
+  color: var(--text-secondary, #232220B3);
+  line-height: 1.4;
+}
+
+.pipeline-stage__detail {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--text-muted, #23222080);
+  margin-top: 2px;
+}
+
+.pipeline-arrow {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  color: var(--forest, #265844);
+  padding: 0 6px;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+/* ── Methodology Info Cards ── */
+.methodology-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-sm) 0;
+}
+
+.methodology-extras {
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px dashed var(--border-subtle, #E8DFC8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.methodology-item {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: 6px;
+  background: var(--cream, #FDF9EE);
+  border: 1px solid var(--border-subtle, #E8DFC8);
+}
+
+.methodology-item__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.methodology-item__name {
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--forest, #265844);
+}
+
+.methodology-item__value {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green, #55B786);
+  background: #55B78618;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.methodology-item__desc {
+  font-size: 11px;
+  color: var(--text-secondary, #232220B3);
+  line-height: 1.45;
+}
+
+.methodology-callout {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--forest, #265844);
+  background: #26584412;
+  border-left: 3px solid var(--forest, #265844);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: 0 6px 6px 0;
+  margin-bottom: var(--space-sm);
+}
+
+/* ── Trading Rules Table ── */
+.methodology-family {
+  margin-bottom: var(--space-md);
+}
+
+.methodology-family__title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--forest, #265844);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-xs);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid var(--border-subtle, #E8DFC8);
+}
+
+.methodology-rules-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.methodology-rules-table th {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #23222080);
+  text-align: left;
+  padding: 4px 8px;
+}
+
+.methodology-rules-table td {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--border-subtle, #E8DFC8);
+}

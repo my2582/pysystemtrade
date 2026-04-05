@@ -334,6 +334,114 @@ def export_enhanced_data(system, instruments, run_dir):
     except Exception as e:
         print(f"❌ {e}")
 
+    # 11. Contract value time-series (weekly-sampled, USD-converted)
+    print("    Contract value time-series...", end=" ", flush=True)
+    try:
+        cv_dict = {}
+        for code in instruments:
+            try:
+                multiplier = system.data.get_value_of_block_price_move(code)
+                raw_price = system.data.get_raw_price(code)
+                try:
+                    fx = system.data.get_fx_for_instrument(code, "USD")
+                    fx = fx.reindex(raw_price.index, method="ffill").fillna(1.0)
+                except Exception:
+                    fx = pd.Series(1.0, index=raw_price.index)
+                cv_ts = (raw_price.abs() * multiplier * fx).ffill()
+                cv_dict[code] = cv_ts
+            except Exception:
+                pass
+        if cv_dict:
+            cv_df = pd.DataFrame(cv_dict)
+            # Weekly sampling to keep file manageable
+            cv_weekly = cv_df.resample('W').last().dropna(how='all')
+            cv_weekly.to_csv(run_dir / "contract_values.csv")
+            print(f"✅ ({len(cv_dict)} instruments, {len(cv_weekly)} weeks)")
+        else:
+            print("⚠️ no data")
+    except Exception as e:
+        print(f"❌ {e}")
+
+    # 12. Spread costs per instrument (for methodology tab)
+    print("    Spread costs...", end=" ", flush=True)
+    try:
+        cost_data = []
+        for code in instruments:
+            try:
+                raw_cost = system.accounts.get_raw_cost_data(code)
+                spread = float(raw_cost.price_slippage)
+                multiplier = system.data.get_value_of_block_price_move(code)
+                raw_price = system.data.get_raw_price(code)
+                last_price = float(raw_price.ffill().iloc[-1])
+                try:
+                    fx = system.data.get_fx_for_instrument(code, "USD")
+                    fx_rate = float(fx.iloc[-1])
+                except Exception:
+                    fx_rate = 1.0
+                cost_usd = spread * multiplier * fx_rate
+                cost_data.append({
+                    "instrument": code,
+                    "spread_points": spread,
+                    "cost_usd": round(cost_usd, 2),
+                    "cost_bps": round(cost_usd / (last_price * multiplier * fx_rate) * 10000, 2) if last_price > 0 else 0,
+                })
+            except Exception:
+                pass
+        if cost_data:
+            pd.DataFrame(cost_data).to_csv(run_dir / "spread_costs.csv", index=False)
+            print(f"✅ ({len(cost_data)} instruments)")
+        else:
+            print("⚠️ no data")
+    except Exception as e:
+        print(f"❌ {e}")
+
+    # 13. Methodology JSON (strategy config for methodology tab)
+    print("    Methodology config...", end=" ", flush=True)
+    try:
+        config = system.config
+        small_sys = dict(config.small_system) if hasattr(config, 'small_system') else {}
+        risk_ov = dict(config.get_element_or_default("risk_overlay", {}))
+        vol_calc = dict(config.get_element_or_default("volatility_calculation", {}))
+
+        # Trading rules with parameters
+        rules_info = {}
+        tr = config.trading_rules if hasattr(config, 'trading_rules') else {}
+        for name, rule_def in tr.items():
+            rules_info[name] = {
+                "function": rule_def.get("function", ""),
+                "params": rule_def.get("other_args", {}),
+            }
+
+        methodology = {
+            "vol_target_pct": float(config.percentage_vol_target),
+            "capital": float(config.notional_trading_capital),
+            "base_currency": config.base_currency,
+            "forecast_cap": float(config.get_element_or_default("forecast_cap", 20.0)),
+            "shadow_cost": float(small_sys.get("shadow_cost", 10)),
+            "tracking_error_buffer": float(small_sys.get("tracking_error_buffer", 0.12)),
+            "cost_multiplier": float(small_sys.get("cost_multiplier", 1.0)),
+            "correlation_shrinkage": float(small_sys.get("shrink_instrument_returns_correlation", 0.5)),
+            "risk_overlay": {
+                "max_risk_fraction_normal": float(risk_ov.get("max_risk_fraction_normal_risk", 2.0)),
+                "max_risk_fraction_stdev": float(risk_ov.get("max_risk_fraction_stdev_risk", 4.0)),
+                "max_risk_limit_sum_abs": float(risk_ov.get("max_risk_limit_sum_abs_risk", 5.0)),
+                "max_risk_leverage": float(risk_ov.get("max_risk_leverage", 15.0)),
+            },
+            "volatility_calculation": {
+                "lookback_days": int(vol_calc.get("days", 35)),
+                "slow_vol_years": int(vol_calc.get("slow_vol_years", 20)),
+                "proportion_slow_vol": float(vol_calc.get("proportion_of_slow_vol", 0.35)),
+            },
+            "trading_rules": rules_info,
+            "instrument_count": len(instruments),
+            "mode": "dynamic",
+        }
+        with open(run_dir / "methodology.json", "w") as f:
+            json.dump(methodology, f, indent=2)
+        print("✅")
+    except Exception as e:
+        print(f"❌ {e}")
+
 
 # ──────────────────────────────────────────────────────────────────
 # Core Commands

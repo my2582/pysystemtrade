@@ -79,8 +79,12 @@ const state = {
   instrumentWeights: null,
   turnover: null,
   registry: null,
+  contractValues: null,
+  spreadCosts: null,
+  methodology: null,
   charts: {},
   factorPeriod: 'all',
+  positionSort: { col: 'Exposure (% NAV)', asc: false },
 };
 
 // ── CSV Parser ──
@@ -138,6 +142,12 @@ async function loadData() {
       loadFile('data/rounded_positions.csv').catch(() => null),
     ]);
 
+    const [cvText, scText, methText] = await Promise.all([
+      loadFile('data/contract_values.csv').catch(() => null),
+      loadFile('data/spread_costs.csv').catch(() => null),
+      loadFile('data/methodology.json').catch(() => null),
+    ]);
+
     if (metaText) state.meta = JSON.parse(metaText);
     if (rollingText) state.rollingStats = parseNumericCSV(rollingText);
     if (returnsText) state.dailyReturns = parseNumericCSV(returnsText);
@@ -148,6 +158,9 @@ async function loadData() {
     if (turnoverText) state.turnover = parseCSV(turnoverText);
     if (iwText) state.instrumentWeights = parseNumericCSV(iwText);
     if (rpText) state.roundedPositions = parseNumericCSV(rpText);
+    if (cvText) state.contractValues = parseNumericCSV(cvText);
+    if (scText) state.spreadCosts = parseCSV(scText);
+    if (methText) state.methodology = JSON.parse(methText);
 
     if (registryText) {
       try {
@@ -192,6 +205,7 @@ function renderAll() {
   renderActivityTable();
   renderExposure();
   renderTurnover();
+  renderMethodology();
   renderRollingVol();
   renderAssetClass();
   renderWeightEvolution();
@@ -596,25 +610,40 @@ function renderPositionSummary() {
   `).join('');
 }
 
-// ── Position Table (Bloomberg-level) ──
+// ── Position Table (Bloomberg-level w/ Long/Short sections + sortable) ──
 function renderPositionTable() {
   if (!state.positionSnapshot) return;
 
-  // Check if new columns exist
   const hasAC = state.positionSnapshot[0]?.['Asset Class'] !== undefined;
   const hasExpNav = state.positionSnapshot[0]?.['Exposure (% NAV)'] !== undefined;
 
-  // Split active vs flat
-  const active = [];
-  const flat = [];
+  // Split into Long/Short/Flat
+  const longs = [], shorts = [], flat = [];
   state.positionSnapshot.forEach(r => {
     const contracts = parseInt(r['Rounded (Contracts)'] || '0');
-    if (contracts !== 0) active.push(r);
+    if (contracts > 0) longs.push(r);
+    else if (contracts < 0) shorts.push(r);
     else flat.push(r);
   });
 
-  // Sort active by |Exposure| desc
-  active.sort((a, b) => Math.abs(parseFloat(b['Exposure (% NAV)'] || b['Avg |Position|'] || '0')) - Math.abs(parseFloat(a['Exposure (% NAV)'] || a['Avg |Position|'] || '0')));
+  // Sort function
+  const { col, asc } = state.positionSort;
+  function sortRows(arr) {
+    return [...arr].sort((a, b) => {
+      let va = a[col] ?? a['Instrument'] ?? '';
+      let vb = b[col] ?? b['Instrument'] ?? '';
+      // Try numeric
+      const na = parseFloat(String(va).replace(/[%$,]/g, ''));
+      const nb = parseFloat(String(vb).replace(/[%$,]/g, ''));
+      if (!isNaN(na) && !isNaN(nb)) {
+        return asc ? na - nb : nb - na;
+      }
+      return asc ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+    });
+  }
+
+  const sortedLongs = sortRows(longs);
+  const sortedShorts = sortRows(shorts);
 
   function acBadge(ac) {
     const cls = (ac || '').toLowerCase().replace(/\s+/g, '-');
@@ -634,7 +663,7 @@ function renderPositionTable() {
     const expNav = parseFloat(r['Exposure (% NAV)'] || '0');
     const direction = r['Direction'] || (contracts > 0 ? 'Long' : contracts < 0 ? 'Short' : 'Flat');
 
-    return `<tr>
+    return `<tr class="clickable-row" onclick="navigateToInstrument('${r.Instrument}')">
       ${hasAC ? `<td>${acBadge(r['Asset Class'])}</td>` : ''}
       <td class="td-name">${r.Instrument}</td>
       <td>${dirBadge(direction)}</td>
@@ -648,23 +677,39 @@ function renderPositionTable() {
     </tr>`;
   }
 
-  const headers = `<tr>
-    ${hasAC ? '<th>Class</th>' : ''}
-    <th>Instrument</th>
-    <th>Direction</th>
-    <th style="text-align:center">Contracts</th>
-    ${hasExpNav ? '<th style="text-align:right">Exposure (% NAV)</th>' : ''}
-    ${hasExpNav ? '<th style="text-align:right">Contract $</th>' : ''}
-    <th style="text-align:right">Notional (Optimal)</th>
-    <th style="text-align:right">Avg |Pos| (full period)</th>
-    <th style="text-align:right">Weight</th>
-    <th>Data Through</th>
-  </tr>`;
+  // Column definitions for sortable headers
+  const colDefs = [
+    ...(hasAC ? [{ key: 'Asset Class', label: 'Class', align: '' }] : []),
+    { key: 'Instrument', label: 'Instrument', align: '' },
+    { key: 'Direction', label: 'Direction', align: '' },
+    { key: 'Rounded (Contracts)', label: 'Contracts', align: 'center' },
+    ...(hasExpNav ? [{ key: 'Exposure (% NAV)', label: 'Exposure (% NAV)', align: 'right' }] : []),
+    ...(hasExpNav ? [{ key: 'Contract Value ($)', label: 'Contract $', align: 'right' }] : []),
+    { key: 'Notional Position', label: 'Notional (Optimal)', align: 'right' },
+    { key: 'Avg |Position|', label: 'Avg |Pos| (full period)', align: 'right' },
+    { key: 'Instrument Weight', label: 'Weight', align: 'right' },
+    { key: 'Last Date', label: 'Data Through', align: '' },
+  ];
 
-  let html = `<table>
-    <thead>${headers}</thead>
-    <tbody>${active.map(buildRow).join('')}</tbody>
-  </table>`;
+  const headers = `<tr>${colDefs.map(c => {
+    const arrow = col === c.key ? (asc ? ' ▲' : ' ▼') : '';
+    const style = c.align ? `text-align:${c.align}` : '';
+    return `<th class="sortable-th" style="${style}" onclick="handlePositionSort('${c.key}')">${c.label}${arrow}</th>`;
+  }).join('')}</tr>`;
+
+  function sectionHtml(title, rows, accentClass) {
+    if (rows.length === 0) return '';
+    return `<div class="position-section ${accentClass}">
+      <div class="position-section__header">${title} <span class="position-section__count">${rows.length}</span></div>
+      <table>
+        <thead>${headers}</thead>
+        <tbody>${rows.map(buildRow).join('')}</tbody>
+      </table>
+    </div>`;
+  }
+
+  let html = sectionHtml('Long Positions', sortedLongs, 'position-section--long');
+  html += sectionHtml('Short Positions', sortedShorts, 'position-section--short');
 
   // Flat positions collapsible
   if (flat.length > 0) {
@@ -680,6 +725,16 @@ function renderPositionTable() {
   }
 
   document.getElementById('position-table').innerHTML = html;
+}
+
+function handlePositionSort(colKey) {
+  if (state.positionSort.col === colKey) {
+    state.positionSort.asc = !state.positionSort.asc;
+  } else {
+    state.positionSort.col = colKey;
+    state.positionSort.asc = false;
+  }
+  renderPositionTable();
 }
 
 // ── Historical Activity Table (Interactive) ──
@@ -738,55 +793,72 @@ function navigateToInstrument(inst) {
   select.dispatchEvent(new Event('change'));
 }
 
-// ── Exposure (NAV %) ──
+// ── Exposure (NAV %) — uses time-series contract values for accuracy ──
 function renderExposure() {
   if (!state.notionalPositions) return;
   const cols = Object.keys(state.notionalPositions[0]).filter(k => k !== 'index' && k !== '');
-  const sampled = state.notionalPositions.filter((_, i) => i % 20 === 0);
   const capital = state.meta?.meta?.capital || 200000;
 
-  // Try to get contract values from snapshot
-  const contractValues = {};
+  // Build contract value lookup: date -> { instrument -> USD value }
+  const cvByDate = {};
+  const hasCV = state.contractValues && state.contractValues.length > 0;
+  if (hasCV) {
+    state.contractValues.forEach(row => {
+      const d = row.index || row[''];
+      if (d) cvByDate[d] = row;
+    });
+  }
+  // Fallback: latest snapshot values
+  const latestCV = {};
   if (state.positionSnapshot) {
     state.positionSnapshot.forEach(r => {
       const cv = parseFloat(r['Contract Value ($)'] || '0');
-      if (cv > 0) contractValues[r.Instrument] = cv;
+      if (cv > 0) latestCV[r.Instrument] = cv;
     });
   }
 
-  const hasContractValues = Object.keys(contractValues).length > 0;
+  // Find nearest CV date for a position date
+  const cvDates = Object.keys(cvByDate).sort();
+  function findNearestCV(dateStr) {
+    // Binary search for nearest date <= dateStr
+    let lo = 0, hi = cvDates.length - 1, best = -1;
+    while (lo <= hi) {
+      const mid = (lo + hi) >> 1;
+      if (cvDates[mid] <= dateStr) { best = mid; lo = mid + 1; }
+      else hi = mid - 1;
+    }
+    return best >= 0 ? cvByDate[cvDates[best]] : null;
+  }
+
+  const sampled = state.notionalPositions.filter((_, i) => i % 20 === 0);
 
   const longData = sampled.map(row => {
+    const dateStr = row.index || row[''];
+    const cvRow = hasCV ? findNearestCV(dateStr) : null;
     let sum = 0;
     cols.forEach(c => {
       const v = row[c];
       if (!isNaN(v) && v > 0) {
-        if (hasContractValues && contractValues[c]) {
-          sum += (v * contractValues[c] / capital * 100);
-        } else {
-          sum += v; // Fallback to contracts
-        }
+        const cv = (cvRow && !isNaN(cvRow[c])) ? cvRow[c] : (latestCV[c] || 0);
+        sum += cv > 0 ? (v * cv / capital * 100) : 0;
       }
     });
     return sum;
   });
 
   const shortData = sampled.map(row => {
+    const dateStr = row.index || row[''];
+    const cvRow = hasCV ? findNearestCV(dateStr) : null;
     let sum = 0;
     cols.forEach(c => {
       const v = row[c];
       if (!isNaN(v) && v < 0) {
-        if (hasContractValues && contractValues[c]) {
-          sum += (v * contractValues[c] / capital * 100);
-        } else {
-          sum += v;
-        }
+        const cv = (cvRow && !isNaN(cvRow[c])) ? cvRow[c] : (latestCV[c] || 0);
+        sum += cv > 0 ? (v * cv / capital * 100) : 0;
       }
     });
     return sum;
   });
-
-  const yLabel = hasContractValues ? '% of NAV' : 'Contracts';
 
   destroyChart('chart-exposure');
   state.charts['chart-exposure'] = new Chart(document.getElementById('chart-exposure'), {
@@ -804,13 +876,13 @@ function renderExposure() {
         legend: { position: 'top', align: 'end' },
         tooltip: {
           callbacks: {
-            label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(1)}${hasContractValues ? '%' : ''}`
+            label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(1)}%`
           }
         }
       },
       scales: {
         x: { grid: { color: PALETTE.gridLine }, ticks: { maxTicksLimit: 8, font: { size: 10 } } },
-        y: { grid: { color: PALETTE.gridLine }, title: { display: true, text: yLabel } }
+        y: { grid: { color: PALETTE.gridLine }, title: { display: true, text: '% of NAV' } }
       }
     }
   });
@@ -1089,6 +1161,183 @@ function buildRunsTable(el, yamlText) {
         <td>${r.mode || '—'}</td>
       </tr>`).join('')}
     </tbody></table>`;
+}
+
+// ── Methodology Tab ──
+function renderMethodology() {
+  renderMethodologyPipeline();
+  renderMethodologyCosts();
+  renderMethodologyRisk();
+  renderMethodologyRules();
+  renderSpreadCostChart();
+}
+
+function renderMethodologyPipeline() {
+  const m = state.methodology || {};
+  const stages = [
+    { icon: '📊', title: 'Raw Price Data', desc: `${m.instrument_count || 25} instruments, daily adjusted prices`, detail: `Currency: ${m.base_currency || 'USD'}` },
+    { icon: '📐', title: 'Volatility Estimation', desc: `Blended ${m.volatility_calculation?.lookback_days || 35}-day + ${m.volatility_calculation?.slow_vol_years || 20}-year average`, detail: `Slow vol weight: ${((m.volatility_calculation?.proportion_slow_vol || 0.35)*100).toFixed(0)}%` },
+    { icon: '📈', title: 'Signal Generation', desc: '11 trading rules across 3 factor families', detail: `Trend (5) + Carry (3) + CS Momentum (3)` },
+    { icon: '⚖️', title: 'Forecast Scaling & Capping', desc: `Scaled to avg absolute forecast of 10, capped at ±${m.forecast_cap || 20}`, detail: 'Pre-estimated scalars applied' },
+    { icon: '🔀', title: 'Forecast Combination', desc: 'Weighted blend of all rule forecasts per instrument', detail: 'Weights estimated from performance' },
+    { icon: '📏', title: 'Position Sizing', desc: `Vol target: ${m.vol_target_pct || 25}%, Capital: $${((m.capital||200000)/1000).toFixed(0)}K`, detail: 'Notional (fractional) positions' },
+    { icon: '🤖', title: 'Dynamic Optimization (Mr. Greedy)', desc: 'Integer-position greedy algorithm minimizing tracking error + trade costs', detail: `Shadow cost: ${m.shadow_cost || 10}×, Buffer: ${((m.tracking_error_buffer||0.12)*100).toFixed(0)}%` },
+    { icon: '🛡️', title: 'Risk Overlay', desc: '4-factor risk multiplier (0 to 1) applied to entire portfolio', detail: 'Normal risk, Jump vol, Shock corr, Leverage' },
+    { icon: '📋', title: 'Final Orders', desc: 'Integer contract positions per instrument', detail: 'Daily evaluation, trade only when needed' },
+  ];
+
+  const el = document.getElementById('methodology-pipeline');
+  if (!el) return;
+  el.innerHTML = `<div class="pipeline-flow">${stages.map((s, i) => `
+    <div class="pipeline-stage">
+      <div class="pipeline-stage__icon">${s.icon}</div>
+      <div class="pipeline-stage__content">
+        <div class="pipeline-stage__title">${s.title}</div>
+        <div class="pipeline-stage__desc">${s.desc}</div>
+        <div class="pipeline-stage__detail">${s.detail}</div>
+      </div>
+    </div>
+    ${i < stages.length - 1 ? '<div class="pipeline-arrow">→</div>' : ''}
+  `).join('')}</div>`;
+}
+
+function renderMethodologyCosts() {
+  const m = state.methodology || {};
+  const el = document.getElementById('methodology-costs');
+  if (!el) return;
+
+  const layers = [
+    { name: 'Spread Cost', value: 'Per instrument', desc: 'Estimated bid-ask half-spread from instrumentconfig.csv. Applied to every simulated trade.' },
+    { name: 'Shadow Cost Multiplier', value: `${m.shadow_cost || 10}×`, desc: 'Real trading costs are multiplied by this factor in the optimizer\'s objective function. Prevents trades unless the improvement clearly exceeds friction.' },
+    { name: 'Tracking Error Buffer', value: `${((m.tracking_error_buffer||0.12)*100).toFixed(0)}% TE`, desc: 'If tracking error between current & optimal positions is below this threshold, NO trades are executed (no-trade zone).' },
+    { name: 'Adjustment Factor', value: 'Proportional', desc: 'When TE exceeds buffer: adj = (TE − buffer) / TE. Only this fraction of desired trades is executed. Prevents over-trading.' },
+    { name: 'Cost Multiplier', value: `${m.cost_multiplier || 1.0}×`, desc: 'Global multiplier on all transaction cost estimates. Set to 1.0 for realistic costs, >1.0 for conservative backtesting.' },
+    { name: 'Cost Deflator', value: 'Time-varying', desc: 'Adjusts spread costs for historical price levels. Older periods when prices were lower effectively had higher percentage costs.' },
+  ];
+
+  el.innerHTML = `<div class="methodology-list">${layers.map(l => `
+    <div class="methodology-item">
+      <div class="methodology-item__header">
+        <span class="methodology-item__name">${l.name}</span>
+        <span class="methodology-item__value">${l.value}</span>
+      </div>
+      <div class="methodology-item__desc">${l.desc}</div>
+    </div>
+  `).join('')}</div>`;
+}
+
+function renderMethodologyRisk() {
+  const m = state.methodology || {};
+  const ro = m.risk_overlay || {};
+  const el = document.getElementById('methodology-risk');
+  if (!el) return;
+
+  const controls = [
+    { name: 'Normal Risk', limit: `${ro.max_risk_fraction_normal || 2.0}× vol target`, desc: `If portfolio risk > ${ro.max_risk_fraction_normal || 2.0}× the ${m.vol_target_pct || 25}% target (=${((ro.max_risk_fraction_normal || 2.0) * (m.vol_target_pct || 25)).toFixed(0)}%), positions are scaled down.` },
+    { name: 'Jump Volatility', limit: `${ro.max_risk_fraction_stdev || 4.0}× vol target`, desc: 'Uses shocked (higher) volatility estimates. Protects against non-stationary vol spikes.' },
+    { name: 'Shock Correlation', limit: `${ro.max_risk_limit_sum_abs || 5.0}× vol target`, desc: 'Sum of absolute position risks. Catches extreme concentrated bets that could blow up if correlations spike to 1.' },
+    { name: 'Max Leverage', limit: `${ro.max_risk_leverage || 15.0}×`, desc: 'Hard cap on total notional exposure / capital. Prevents excessive leverage regardless of risk estimates.' },
+  ];
+
+  el.innerHTML = `
+    <div class="methodology-callout">The most conservative (lowest) multiplier from all 4 checks is applied to ALL positions simultaneously.</div>
+    <div class="methodology-list">${controls.map(c => `
+    <div class="methodology-item">
+      <div class="methodology-item__header">
+        <span class="methodology-item__name">${c.name}</span>
+        <span class="methodology-item__value">${c.limit}</span>
+      </div>
+      <div class="methodology-item__desc">${c.desc}</div>
+    </div>
+  `).join('')}</div>
+  <div class="methodology-extras">
+    <div class="methodology-item">
+      <div class="methodology-item__header">
+        <span class="methodology-item__name">Forecast Cap</span>
+        <span class="methodology-item__value">±${m.forecast_cap || 20}</span>
+      </div>
+      <div class="methodology-item__desc">All forecasts clamped to [-${m.forecast_cap || 20}, +${m.forecast_cap || 20}]. Prevents extreme signals from creating outsized positions.</div>
+    </div>
+    <div class="methodology-item">
+      <div class="methodology-item__header">
+        <span class="methodology-item__name">Correlation Shrinkage</span>
+        <span class="methodology-item__value">${((m.correlation_shrinkage || 0.5)*100).toFixed(0)}%</span>
+      </div>
+      <div class="methodology-item__desc">Off-diagonal correlations shrunk toward zero by ${((m.correlation_shrinkage || 0.5)*100).toFixed(0)}%. Reduces impact of noisy correlation estimates.</div>
+    </div>
+  </div>`;
+}
+
+function renderMethodologyRules() {
+  const m = state.methodology || {};
+  const rules = m.trading_rules || {};
+  const el = document.getElementById('methodology-rules');
+  if (!el) return;
+
+  const families = {
+    'Trend (EWMAC)': Object.entries(rules).filter(([k]) => k.startsWith('momentum')).sort((a,b) => {
+      const pa = parseInt(a[0].replace('momentum','')); const pb = parseInt(b[0].replace('momentum',''));
+      return pa - pb;
+    }),
+    'Carry': Object.entries(rules).filter(([k]) => k.startsWith('carry')).sort((a,b) => {
+      const pa = parseInt(a[0].replace('carry','')); const pb = parseInt(b[0].replace('carry',''));
+      return pa - pb;
+    }),
+    'Cross-Sectional Momentum': Object.entries(rules).filter(([k]) => k.startsWith('relmomentum')).sort((a,b) => {
+      const pa = parseInt(a[0].replace('relmomentum','')); const pb = parseInt(b[0].replace('relmomentum',''));
+      return pa - pb;
+    }),
+  };
+
+  el.innerHTML = Object.entries(families).map(([family, entries]) => `
+    <div class="methodology-family">
+      <div class="methodology-family__title">${family}</div>
+      <table class="methodology-rules-table">
+        <thead><tr><th>Rule</th><th>Parameters</th></tr></thead>
+        <tbody>${entries.map(([name, info]) => {
+          const params = info.params || {};
+          const paramStr = Object.entries(params).map(([k,v]) => `${k}=${v}`).join(', ');
+          return `<tr><td class="td-name">${name}</td><td style="font-family:var(--font-mono);font-size:11px">${paramStr || '—'}</td></tr>`;
+        }).join('')}</tbody>
+      </table>
+    </div>
+  `).join('');
+}
+
+function renderSpreadCostChart() {
+  if (!state.spreadCosts) return;
+  const sorted = [...state.spreadCosts].sort((a,b) => parseFloat(b.cost_usd) - parseFloat(a.cost_usd));
+
+  destroyChart('chart-spread-costs');
+  state.charts['chart-spread-costs'] = new Chart(document.getElementById('chart-spread-costs'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(r => r.instrument),
+      datasets: [{
+        data: sorted.map(r => parseFloat(r.cost_usd)),
+        backgroundColor: PALETTE.forest50,
+        borderColor: PALETTE.forest,
+        borderWidth: 1,
+        borderRadius: 3,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => `$${ctx.raw.toFixed(2)} per contract`
+          }
+        }
+      },
+      scales: {
+        x: { grid: { color: PALETTE.gridLine }, title: { display: true, text: 'Cost per Contract (USD)' } },
+        y: { grid: { display: false }, ticks: { font: { size: 9 } } }
+      }
+    }
+  });
 }
 
 // ── Helpers ──
