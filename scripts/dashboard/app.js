@@ -1079,9 +1079,14 @@ function renderInstrumentDetail(inst) {
   });
 
   if (state.roundedPositions || state.notionalPositions) {
-    const src = state.roundedPositions || state.notionalPositions;
+    const hasBoth = state.roundedPositions && state.notionalPositions;
+    const primarySrc = state.roundedPositions || state.notionalPositions;
     const isRounded = !!state.roundedPositions;
-    let posData = src.map(r => ({ d: r.index || r[''], v: r[inst] })).filter(p => !isNaN(p.v));
+    
+    let posData = primarySrc.map(r => ({ d: r.index || r[''], v: r[inst] })).filter(p => !isNaN(p.v));
+    let idealData = hasBoth
+      ? state.notionalPositions.map(r => ({ d: r.index || r[''], v: r[inst] })).filter(p => !isNaN(p.v))
+      : [];
     
     // Apply period filter
     const period = state.instPeriod || 'all';
@@ -1092,27 +1097,59 @@ function renderInstrumentDetail(inst) {
       cutoff.setFullYear(cutoff.getFullYear() - years);
       const cutoffStr = cutoff.toISOString().substring(0, 10);
       posData = posData.filter(p => p.d >= cutoffStr);
+      idealData = idealData.filter(p => p.d >= cutoffStr);
     }
     
-    // Sample for performance (keep more data for short periods)
+    // Sample for performance
     const step = period === '1y' ? 1 : period === '3y' ? 2 : period === '5y' ? 3 : 5;
     const posSampled = posData.filter((_, i) => i % step === 0 || i === posData.length - 1);
+    const idealSampled = idealData.filter((_, i) => i % step === 0 || i === idealData.length - 1);
 
     // Update period button active state
     document.querySelectorAll('#inst-period-btns .period-btn').forEach(b => {
       b.classList.toggle('active', b.dataset.period === period);
     });
 
+    // Build datasets
+    const datasets = [];
+    
+    // Primary: Rounded integer positions (solid stepped)
+    datasets.push({
+      label: 'Actual (Integer)',
+      data: posSampled.map(r => r.v),
+      borderColor: PALETTE.green,
+      borderWidth: 1.5,
+      pointRadius: 0,
+      fill: { target: 'origin', above: PALETTE.greenLight, below: PALETTE.charcoal30 + '22' },
+      stepped: isRounded,
+      order: 1,
+    });
+    
+    // Secondary: Ideal fractional positions (faded smooth dashed)
+    if (hasBoth && idealSampled.length > 0) {
+      datasets.push({
+        label: 'Ideal (Fractional)',
+        data: idealSampled.map(r => r.v),
+        borderColor: PALETTE.forest + '55',
+        borderWidth: 1,
+        borderDash: [4, 3],
+        pointRadius: 0,
+        fill: false,
+        stepped: false,
+        order: 2,
+      });
+    }
+
     destroyChart('chart-inst-position');
     state.charts['chart-inst-position'] = new Chart(document.getElementById('chart-inst-position'), {
       type: 'line',
       data: {
         labels: posSampled.map(r => r.d),
-        datasets: [{ data: posSampled.map(r => r.v), borderColor: PALETTE.green, borderWidth: 1, pointRadius: 0, fill: { target: 'origin', above: PALETTE.greenLight, below: PALETTE.charcoal30 + '22' }, stepped: isRounded }]
+        datasets
       },
       options: {
         responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        plugins: { legend: { display: hasBoth, position: 'top', labels: { font: { size: 10 }, boxWidth: 20, padding: 8 } } },
         scales: {
           x: { grid: { color: PALETTE.gridLine }, ticks: { maxTicksLimit: 8 } },
           y: { grid: { color: PALETTE.gridLine }, title: { display: true, text: 'Contracts' },
