@@ -1,0 +1,131 @@
+#YAML
+# Arki v5c: Dynamic Weights + Aggressive CSMom Tilt (Combined Best)
+# ==================================================================
+# Combines the two winning levers:
+#   1. Dynamic instrument weights (from v5a — best 2020-26: SR 0.75)
+#   2. Aggressive factor tilt 30/15/55 (from v5b — best Last 1Y: SR 0.77)
+#
+# This should give the strongest recent performance while letting the
+# system downweight persistently losing instruments.
+#
+# Usage:
+#   python scripts/backtest_runner.py run --label "arki_v5c_combined" --capital 200000 --mode dynamic --config scripts/backtest_config/arki_v5c_combined.yaml
+
+# === TRADING RULES ===
+
+trading_rules:
+  # --- Trend-Following (EWMAC) ---
+  momentum4:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+      - "rawdata.get_daily_prices"
+      - "rawdata.daily_returns_volatility"
+    other_args:
+      Lfast: 4
+      Lslow: 16
+  momentum8:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+      - "rawdata.get_daily_prices"
+      - "rawdata.daily_returns_volatility"
+    other_args:
+      Lfast: 8
+      Lslow: 32
+  momentum16:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+      - "rawdata.get_daily_prices"
+      - "rawdata.daily_returns_volatility"
+    other_args:
+      Lfast: 16
+      Lslow: 64
+  momentum32:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+      - "rawdata.get_daily_prices"
+      - "rawdata.daily_returns_volatility"
+    other_args:
+      Lfast: 32
+      Lslow: 128
+  momentum64:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+      - "rawdata.get_daily_prices"
+      - "rawdata.daily_returns_volatility"
+    other_args:
+      Lfast: 64
+      Lslow: 256
+
+  # --- Carry ---
+  carry30:
+    function: systems.provided.rules.carry.carry
+    data:
+      - "rawdata.raw_carry"
+    other_args:
+      smooth_days: 30
+  carry60:
+    function: systems.provided.rules.carry.carry
+    data:
+      - "rawdata.raw_carry"
+    other_args:
+      smooth_days: 60
+  carry125:
+    function: systems.provided.rules.carry.carry
+    data:
+      - "rawdata.raw_carry"
+    other_args:
+      smooth_days: 125
+
+  # --- Cross-Sectional Momentum ---
+  relmomentum20:
+    function: systems.provided.rules.rel_mom.relative_momentum
+    data:
+      - "rawdata.get_cumulative_daily_vol_normalised_returns"
+      - "rawdata.normalised_price_for_asset_class"
+    other_args:
+      horizon: 20
+  relmomentum40:
+    function: systems.provided.rules.rel_mom.relative_momentum
+    data:
+      - "rawdata.get_cumulative_daily_vol_normalised_returns"
+      - "rawdata.normalised_price_for_asset_class"
+    other_args:
+      horizon: 40
+  relmomentum80:
+    function: systems.provided.rules.rel_mom.relative_momentum
+    data:
+      - "rawdata.get_cumulative_daily_vol_normalised_returns"
+      - "rawdata.normalised_price_for_asset_class"
+    other_args:
+      horizon: 80
+
+# === FORECAST SCALARS ===
+use_forecast_scale_estimates: True
+
+# === FORECAST COMBINATION ===
+# Aggressive: 30% Trend / 15% Carry / 55% CS Momentum
+forecast_cap: 20.0
+forecast_weights:
+  momentum4: 0.060     # 30% / 5
+  momentum8: 0.060
+  momentum16: 0.060
+  momentum32: 0.060
+  momentum64: 0.060
+  carry30: 0.050       # 15% / 3
+  carry60: 0.050
+  carry125: 0.050
+  relmomentum20: 0.183 # 55% / 3
+  relmomentum40: 0.183
+  relmomentum80: 0.183
+
+forecast_div_multiplier: 1.35
+
+# === INSTRUMENT WEIGHTS ===
+# Dynamic: system estimates optimal allocation
+use_instrument_weight_estimates: True
+use_instrument_div_mult_estimates: True
+
+# === POSITION SIZING ===
+percentage_vol_target: 25.0
+notional_trading_capital: 200000
+base_currency: "USD"
