@@ -8,7 +8,8 @@
 | v2 (micro) | 2026-04-04 | 16 | 0.62 | 12.2% | -16.0% | SP500→SP500_micro, GOLD→GOLD_micro |
 | v2-db | 2026-04-05 | 16 | 0.62 | 12.2% | -16.0% | csvFuturesSimData → dbFuturesSimData |
 | v3 (expanded) | 2026-04-05 | 25 | 0.84 | 20.7% | -14.9% | +9 instruments (Agri, FX, Equity) |
-| **v4 (optimized)** | **2026-04-05** | **25** | **1.08** | **23.1%** | **-14.7%** | **Estimated IDM + forecast weights** |
+| v4 (optimized) | 2026-04-05 | 25 | 1.08 | 23.1% | -14.7% | Estimated IDM + forecast weights |
+| **v4-fresh** | **2026-04-05** | **25** | **1.07** | **22.9%** | **-17.0%** | **IB data refreshed to 2026-04** |
 
 ## Config Files
 
