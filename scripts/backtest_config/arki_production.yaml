@@ -122,7 +122,7 @@ use_forecast_weight_estimates: true
 percentage_vol_target: 25.0
 notional_trading_capital: 200000
 base_currency: USD
-use_instrument_weight_estimates: false
+use_instrument_weight_estimates: true
 instrument_weights:
   SP500_micro: 0.04
   NASDAQ_micro: 0.04

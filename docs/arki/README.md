@@ -85,3 +85,4 @@ Every `arki_*.yaml` is **self-contained** — instruments, rules, weights all in
 | 3 | [instrument_universe.md](instrument_universe.md) | Universe criteria, contract size analysis, expansion log |
 | 4 | [config_knowledge_map.md](config_knowledge_map.md) | Complete config file map, run management, quick reference |
 | 5 | [estimation_reference.md](estimation_reference.md) | All 7 estimation flags explained with code traces |
+| 6 | [handcraft_deep_dive.md](handcraft_deep_dive.md) | Handcraft algorithm: clustering, DM, SR adjustment with numerical examples |
