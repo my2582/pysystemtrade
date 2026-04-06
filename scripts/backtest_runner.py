@@ -522,7 +522,7 @@ def cmd_run(args):
         "vol_target": vol_target,
         "mode": mode,
         "config_file": config_path,
-        "instruments_file": instruments_file,
+        "instruments_file": None,
         "instruments": actual_instruments,
         "run_id": run_id,
         "label": args.label,
