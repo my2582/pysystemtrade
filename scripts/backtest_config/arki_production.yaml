@@ -119,6 +119,40 @@ forecast_scalars:
 use_forecast_scale_estimates: false
 forecast_cap: 20.0
 use_forecast_weight_estimates: true
+forecast_weight_estimate:
+  func: sysquant.optimisation.generic_optimiser.genericOptimiser
+  method: handcraft
+  pool_gross_returns: true
+  equalise_gross: false
+  cost_multiplier: 2.0
+  apply_cost_weight: false
+  ceiling_cost_SR: 9999
+  frequency: W
+  date_method: expanding
+  rollyears: 20
+  cleaning: true
+  equalise_SR: false
+  ann_target_SR: 0.5
+  equalise_vols: true
+  shrinkage_SR: 0.9
+  shrinkage_corr: 0.5
+  correlation_estimate:
+    func: sysquant.estimators.correlation_estimator.correlationEstimator
+    using_exponent: true
+    ew_lookback: 2500
+    min_periods: 10
+    cleaning: false
+    floor_at_zero: false
+  mean_estimate:
+    func: sysquant.estimators.mean_estimator.meanEstimator
+    using_exponent: true
+    ew_lookback: 2500
+    min_periods: 5
+  vol_estimate:
+    func: sysquant.estimators.stdev_estimator.stdevEstimator
+    using_exponent: true
+    ew_lookback: 2500
+    min_periods: 5
 percentage_vol_target: 25.0
 notional_trading_capital: 200000
 base_currency: USD
