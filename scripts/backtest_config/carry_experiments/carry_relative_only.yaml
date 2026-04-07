@@ -1,0 +1,156 @@
+instruments:
+- SP500_micro
+- NASDAQ_micro
+- DAX
+- NIKKEI
+- FTSE100
+- IBEX_mini
+- FTSECHINAA
+- US10
+- US5
+- BUND
+- GILT
+- JGB
+- GOLD_micro
+- SILVER
+- COPPER-micro
+- CRUDE_W
+- BRENT-LAST
+- GASOIL
+- AUD_micro
+- MXP
+- YENEUR
+- SUGAR11
+- COTTON
+- LEANHOG
+- COCOA_LDN
+trading_rules:
+  momentum4:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+    - rawdata.get_daily_prices
+    - rawdata.daily_returns_volatility
+    other_args:
+      Lfast: 4
+      Lslow: 16
+  momentum8:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+    - rawdata.get_daily_prices
+    - rawdata.daily_returns_volatility
+    other_args:
+      Lfast: 8
+      Lslow: 32
+  momentum16:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+    - rawdata.get_daily_prices
+    - rawdata.daily_returns_volatility
+    other_args:
+      Lfast: 16
+      Lslow: 64
+  momentum32:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+    - rawdata.get_daily_prices
+    - rawdata.daily_returns_volatility
+    other_args:
+      Lfast: 32
+      Lslow: 128
+  momentum64:
+    function: systems.provided.rules.ewmac.ewmac
+    data:
+    - rawdata.get_daily_prices
+    - rawdata.daily_returns_volatility
+    other_args:
+      Lfast: 64
+      Lslow: 256
+  relmomentum20:
+    function: systems.provided.rules.rel_mom.relative_momentum
+    data:
+    - rawdata.get_cumulative_daily_vol_normalised_returns
+    - rawdata.normalised_price_for_asset_class
+    other_args:
+      horizon: 20
+  relmomentum40:
+    function: systems.provided.rules.rel_mom.relative_momentum
+    data:
+    - rawdata.get_cumulative_daily_vol_normalised_returns
+    - rawdata.normalised_price_for_asset_class
+    other_args:
+      horizon: 40
+  relmomentum80:
+    function: systems.provided.rules.rel_mom.relative_momentum
+    data:
+    - rawdata.get_cumulative_daily_vol_normalised_returns
+    - rawdata.normalised_price_for_asset_class
+    other_args:
+      horizon: 80
+  relcarry:
+    function: systems.provided.rules.carry.relative_carry
+    data:
+    - rawdata.smoothed_carry
+    - rawdata.median_carry_for_asset_class
+forecast_scalars:
+  momentum4: 8.54
+  momentum8: 5.95
+  momentum16: 4.1
+  momentum32: 2.79
+  momentum64: 1.91
+  relmomentum20: 86.51
+  relmomentum40: 117.78
+  relmomentum80: 159.88
+  relcarry: 49.44
+use_forecast_scale_estimates: false
+forecast_cap: 20.0
+use_forecast_weight_estimates: true
+percentage_vol_target: 25.0
+notional_trading_capital: 200000
+base_currency: USD
+use_instrument_weight_estimates: true
+instrument_weights:
+  SP500_micro: 0.04
+  NASDAQ_micro: 0.04
+  DAX: 0.04
+  NIKKEI: 0.04
+  FTSE100: 0.04
+  IBEX_mini: 0.04
+  FTSECHINAA: 0.04
+  US10: 0.04
+  US5: 0.04
+  BUND: 0.04
+  GILT: 0.04
+  JGB: 0.04
+  GOLD_micro: 0.04
+  SILVER: 0.04
+  COPPER-micro: 0.04
+  CRUDE_W: 0.04
+  BRENT-LAST: 0.04
+  GASOIL: 0.04
+  AUD_micro: 0.04
+  MXP: 0.04
+  YENEUR: 0.04
+  SUGAR11: 0.04
+  COTTON: 0.04
+  LEANHOG: 0.04
+  COCOA_LDN: 0.04
+use_instrument_div_mult_estimates: true
+volatility_calculation:
+  func: sysquant.estimators.vol.mixed_vol_calc
+  days: 35
+  min_periods: 10
+  vol_abs_min: 1.0e-10
+  slow_vol_years: 20
+  proportion_of_slow_vol: 0.35
+  backfill: true
+small_system:
+  shadow_cost: 10
+  tracking_error_buffer: 0.12
+  cost_multiplier: 1.0
+  shrink_instrument_returns_correlation: 0.5
+risk_overlay:
+  max_risk_fraction_normal_risk: 2.0
+  max_risk_fraction_stdev_risk: 4.0
+  max_risk_limit_sum_abs_risk: 5.0
+  max_risk_leverage: 15.0
+use_forecast_div_mult_estimates: true
