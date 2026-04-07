@@ -41,6 +41,7 @@
   <div class="tab-nav__item" data-tab="methodology">Methodology</div>
   <div class="tab-nav__item" data-tab="risk">Risk Dashboard</div>
   <div class="tab-nav__item" data-tab="instrument">Instrument Deep-Dive</div>
+  <div class="tab-nav__item" data-tab="sweep">Universe Sweep</div>
   <div class="tab-nav__item" data-tab="comparison">Run Comparison</div>
 </nav>
 
@@ -303,6 +304,68 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ──── TAB: Universe Sweep ──── -->
+  <section class="tab-content" id="tab-sweep">
+
+    <!-- Sweep KPI Strip -->
+    <div class="card" id="sweep-overview">
+      <div class="card__header">
+        <span class="card__title">Universe Sweep — Asset Class Impact Analysis</span>
+        <span class="info-tip" title="Systematic comparison of 8 universe configurations. Fixed: Equity + Bond. Variable: Ags, FX, Metals. OilGas excluded.">ⓘ</span>
+      </div>
+      <p style="color:var(--text-secondary);font-size:13px;margin-bottom:var(--space-lg)">
+        Each configuration keeps Equity (7) + Bond (5) fixed and toggles Agricultural, FX, and Metals inclusion.
+        The Production baseline includes all classes plus OilGas.
+      </p>
+      <div class="table-wrap" id="sweep-metrics-table">
+        <p class="loading" id="sweep-loading">Loading sweep data...</p>
+      </div>
+    </div>
+
+    <!-- Equity Curves -->
+    <div class="card">
+      <div class="card__header">
+        <span class="card__title">Cumulative P&L Comparison</span>
+        <span class="info-tip" title="Cumulative weekly P&L for each universe configuration. Toggle visibility by clicking legend items.">ⓘ</span>
+      </div>
+      <div class="chart-wrap chart-wrap--wide">
+        <canvas id="sweep-equity-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Rolling Sharpe -->
+    <div class="card">
+      <div class="card__header">
+        <span class="card__title">Rolling 3-Year Sharpe Ratio</span>
+        <span class="info-tip" title="Rolling 3-year annualized Sharpe Ratio for each universe. Shows performance stability over time.">ⓘ</span>
+      </div>
+      <div class="chart-wrap chart-wrap--wide">
+        <canvas id="sweep-rolling-sr-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Marginal Contribution -->
+    <div class="grid grid--2">
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Marginal SR Contribution by Asset Class</span>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="sweep-marginal-chart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Instruments per Universe</span>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="sweep-count-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
   </section>
 
   <!-- ──── TAB 6: Run Comparison ──── -->

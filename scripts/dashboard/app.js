@@ -87,6 +87,7 @@ const state = {
   positionSort: { col: 'Exposure (% NAV)', asc: false },
   selectedInstrument: null,
   instPeriod: 'all',
+  sweepData: null,
 };
 
 // ── CSV Parser ──
@@ -144,10 +145,11 @@ async function loadData() {
       loadFile('data/rounded_positions.csv').catch(() => null),
     ]);
 
-    const [cvText, scText, methText] = await Promise.all([
+    const [cvText, scText, methText, sweepText] = await Promise.all([
       loadFile('data/contract_values.csv').catch(() => null),
       loadFile('data/spread_costs.csv').catch(() => null),
       loadFile('data/methodology.json').catch(() => null),
+      loadFile('data/sweep_summary.json').catch(() => null),
     ]);
 
     if (metaText) state.meta = JSON.parse(metaText);
@@ -163,6 +165,7 @@ async function loadData() {
     if (cvText) state.contractValues = parseNumericCSV(cvText);
     if (scText) state.spreadCosts = parseCSV(scText);
     if (methText) state.methodology = JSON.parse(methText);
+    if (sweepText) { try { state.sweepData = JSON.parse(sweepText); } catch {} }
 
     if (registryText) {
       try {
@@ -214,6 +217,7 @@ function renderAll() {
   renderInstrumentSelect();
   renderRunsTable();
   initPeriodSelector();
+  renderSweep();
 }
 
 // ── Header ──
@@ -1416,6 +1420,286 @@ function renderSpreadCostChart() {
 // ── Helpers ──
 function destroyChart(id) {
   if (state.charts[id]) { state.charts[id].destroy(); delete state.charts[id]; }
+}
+
+// ── Sweep Tab ──
+const SWEEP_COLORS = [
+  '#265844',   // Production (baseline) — forest
+  '#55B786',   // Ags+FX+Metals
+  '#42A47C',   // Ags+Metals
+  '#6CC494',   // Ags+FX
+  '#C4B68A',   // Ags only
+  '#8B7355',   // FX+Metals
+  '#AC9C72',   // FX only
+  '#6B6B6B',   // Metals only
+  '#B8A97E',   // Base
+];
+
+async function renderSweep() {
+  // Load sweep data if not in state
+  if (!state.sweepData) {
+    try {
+      const text = await loadFile('data/sweep_summary.json');
+      state.sweepData = JSON.parse(text);
+    } catch {
+      const el = document.getElementById('sweep-loading');
+      if (el) el.textContent = 'No sweep data available. Run: python scripts/generate_sweep_dashboard.py';
+      return;
+    }
+  }
+
+  const data = state.sweepData;
+  renderSweepMetricsTable(data.runs);
+  renderSweepEquityChart(data.runs);
+  renderSweepRollingSR(data.runs);
+  renderSweepMarginalChart(data.marginal_contributions);
+  renderSweepCountChart(data.runs);
+}
+
+function renderSweepMetricsTable(runs) {
+  const container = document.getElementById('sweep-metrics-table');
+  if (!container) return;
+
+  const bestSR = Math.max(...runs.map(r => r.sharpe));
+  const worstDD = Math.min(...runs.map(r => r.avg_drawdown));
+
+  let html = `<table class="data-table">
+    <thead><tr>
+      <th>Rank</th><th>Universe</th><th>#Inst</th><th>Sharpe</th>
+      <th>Return</th><th>Vol</th><th>Avg DD</th><th>Sortino</th><th>Skew</th>
+      <th>Asset Classes</th>
+    </tr></thead><tbody>`;
+
+  runs.forEach((r, i) => {
+    const isBest = r.sharpe === bestSR;
+    const rowCls = r.is_baseline ? ' style="background:var(--mint)"' : '';
+    const srCls = isBest ? ' style="color:var(--forest);font-weight:700"' : '';
+    const skewCls = r.skew > 0 ? ' style="color:var(--forest)"' : r.skew < -0.5 ? ' style="color:#8B4513"' : '';
+    const star = isBest ? ' ★' : '';
+    const tag = r.is_baseline ? ' <span style="background:var(--forest);color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;margin-left:4px">BASELINE</span>' : '';
+
+    html += `<tr${rowCls}>
+      <td>${i + 1}</td>
+      <td>${r.label}${tag}</td>
+      <td>${r.n_instruments}</td>
+      <td${srCls}>${r.sharpe.toFixed(3)}${star}</td>
+      <td>${r.ann_return.toFixed(1)}%</td>
+      <td>${r.ann_vol.toFixed(1)}%</td>
+      <td>${r.avg_drawdown.toFixed(1)}%</td>
+      <td>${r.sortino.toFixed(3)}</td>
+      <td${skewCls}>${r.skew > 0 ? '+' : ''}${r.skew.toFixed(2)}</td>
+      <td style="font-size:10px">${r.classes.join(', ')}</td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+function renderSweepEquityChart(runs) {
+  destroyChart('sweepEquity');
+  const ctx = document.getElementById('sweep-equity-chart');
+  if (!ctx) return;
+
+  const datasets = runs.map((r, i) => ({
+    label: `${r.label} (SR ${r.sharpe.toFixed(2)})`,
+    data: r.equity_weekly.map(([t, v]) => ({ x: t, y: v })),
+    borderColor: SWEEP_COLORS[i % SWEEP_COLORS.length],
+    borderWidth: r.is_baseline ? 2.5 : 1.5,
+    pointRadius: 0,
+    borderDash: r.is_baseline ? [] : (i > 4 ? [4, 2] : []),
+    hidden: i > 4 && !r.is_baseline,  // show top 5 + baseline by default
+  }));
+
+  state.charts.sweepEquity = new Chart(ctx, {
+    type: 'line',
+    data: { datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { boxWidth: 12, padding: 8, font: { size: 10 } }
+        },
+        tooltip: {
+          callbacks: {
+            title: ctx => new Date(ctx[0].parsed.x).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }),
+            label: ctx => `${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'time',
+          time: { unit: 'year' },
+          grid: { color: PALETTE.gridLine },
+          ticks: { maxTicksLimit: 12 }
+        },
+        y: {
+          grid: { color: PALETTE.gridLine },
+          title: { display: true, text: 'Cumulative P&L ($)' },
+          ticks: { callback: v => '$' + (v / 1000).toFixed(0) + 'k' }
+        }
+      }
+    }
+  });
+}
+
+function renderSweepRollingSR(runs) {
+  destroyChart('sweepRollingSR');
+  const ctx = document.getElementById('sweep-rolling-sr-chart');
+  if (!ctx) return;
+
+  const datasets = runs
+    .filter(r => r.rolling_sharpe_3y && r.rolling_sharpe_3y.length > 0)
+    .map((r, i) => ({
+      label: r.label,
+      data: r.rolling_sharpe_3y.map(([t, v]) => ({ x: t, y: v })),
+      borderColor: SWEEP_COLORS[i % SWEEP_COLORS.length],
+      borderWidth: r.is_baseline ? 2.5 : 1.2,
+      pointRadius: 0,
+      hidden: i > 4 && !r.is_baseline,
+    }));
+
+  // Add zero line
+  state.charts.sweepRollingSR = new Chart(ctx, {
+    type: 'line',
+    data: { datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { boxWidth: 12, padding: 8, font: { size: 10 } }
+        },
+        tooltip: {
+          callbacks: {
+            title: ctx => new Date(ctx[0].parsed.x).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }),
+            label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'time',
+          time: { unit: 'year' },
+          grid: { color: PALETTE.gridLine },
+          ticks: { maxTicksLimit: 12 }
+        },
+        y: {
+          grid: { color: PALETTE.gridLine },
+          title: { display: true, text: 'Sharpe Ratio (3Y Rolling)' }
+        }
+      }
+    }
+  });
+}
+
+function renderSweepMarginalChart(marginal) {
+  destroyChart('sweepMarginal');
+  const ctx = document.getElementById('sweep-marginal-chart');
+  if (!ctx || !marginal) return;
+
+  const labels = marginal.map(m => m.class);
+  const values = marginal.map(m => m.contribution);
+  const colors = marginal.map(m =>
+    m.class === 'Ags' ? PALETTE.forest :
+    m.class === 'FX' ? '#C4B68A' : '#6B6B6B'
+  );
+
+  state.charts.sweepMarginal = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors,
+        borderRadius: 4,
+        barThickness: 36,
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => `+${ctx.raw.toFixed(3)} SR`
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: PALETTE.gridLine },
+          title: { display: true, text: 'Marginal SR Contribution vs Base (Eq+Bond)' },
+          ticks: { callback: v => '+' + v.toFixed(2) }
+        },
+        y: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+function renderSweepCountChart(runs) {
+  destroyChart('sweepCount');
+  const ctx = document.getElementById('sweep-count-chart');
+  if (!ctx) return;
+
+  const sorted = [...runs].sort((a, b) => a.sharpe - b.sharpe);
+  const labels = sorted.map(r => r.label.replace('Production (25, Handcraft)', 'Prod (25)'));
+  const counts = sorted.map(r => r.n_instruments);
+  const srs = sorted.map(r => r.sharpe);
+
+  state.charts.sweepCount = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: '# Instruments',
+          data: counts,
+          backgroundColor: sorted.map(r => r.is_baseline ? PALETTE.forest : PALETTE.green + '99'),
+          borderRadius: 4,
+          barThickness: 24,
+          yAxisID: 'y',
+        },
+        {
+          label: 'Sharpe Ratio',
+          data: srs,
+          type: 'line',
+          borderColor: PALETTE.forest,
+          borderWidth: 2,
+          pointRadius: 4,
+          pointBackgroundColor: PALETTE.forest,
+          yAxisID: 'y1',
+        }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+      },
+      scales: {
+        x: { display: false },
+        y: { grid: { display: false }, ticks: { font: { size: 9 } } },
+        y1: {
+          position: 'right',
+          grid: { display: false },
+          title: { display: true, text: 'SR' },
+          min: 0,
+        }
+      }
+    }
+  });
 }
 
 // ── Tab Navigation ──
