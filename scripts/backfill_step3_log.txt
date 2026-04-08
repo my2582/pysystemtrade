@@ -1,0 +1,157 @@
+Loading config from /Users/msyeom/Developer/pysystemtrade/private/private_config.yaml
+
+============================================================
+STEP 3: Rebuild multiple + adjusted prices
+============================================================
+Configuring sim logging
+2026-04-09 00:29:58 DEBUG backfill_rebuild {'instrument_code': 'SP500_micro'} Updating log attributes
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'SP500_micro'} Wrote 35898 lines of prices for SP500_micro to parquetFuturesMultiplePricesData
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'SP500_micro'} Added data for instrument SP500_micro
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'SP500_micro'} Wrote 36149 lines of prices for SP500_micro to parquetFuturesAdjustedPrices
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'SP500_micro'} Added data for instrument SP500_micro
+    ✅ SP500_micro
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'instrument_code': 'NASDAQ_micro'} Updating log attributes
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'NASDAQ_micro'} Wrote 52577 lines of prices for NASDAQ_micro to parquetFuturesMultiplePricesData
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'NASDAQ_micro'} Added data for instrument NASDAQ_micro
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'NASDAQ_micro'} Wrote 52828 lines of prices for NASDAQ_micro to parquetFuturesAdjustedPrices
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'NASDAQ_micro'} Added data for instrument NASDAQ_micro
+    ✅ NASDAQ_micro
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'instrument_code': 'DAX'} Updating log attributes
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'DAX'} Wrote 60445 lines of prices for DAX to parquetFuturesMultiplePricesData
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'DAX'} Added data for instrument DAX
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'DAX'} Wrote 60445 lines of prices for DAX to parquetFuturesAdjustedPrices
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'DAX'} Added data for instrument DAX
+    ✅ DAX
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'instrument_code': 'NIKKEI'} Updating log attributes
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'NIKKEI'} Wrote 17452 lines of prices for NIKKEI to parquetFuturesMultiplePricesData
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'NIKKEI'} Added data for instrument NIKKEI
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'NIKKEI'} Wrote 17437 lines of prices for NIKKEI to parquetFuturesAdjustedPrices
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'NIKKEI'} Added data for instrument NIKKEI
+    ✅ NIKKEI
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'instrument_code': 'FTSE100'} Updating log attributes
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'FTSE100'} Wrote 54367 lines of prices for FTSE100 to parquetFuturesMultiplePricesData
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'FTSE100'} Added data for instrument FTSE100
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'FTSE100'} Wrote 54367 lines of prices for FTSE100 to parquetFuturesAdjustedPrices
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'FTSE100'} Added data for instrument FTSE100
+    ✅ FTSE100
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'instrument_code': 'IBEX_mini'} Updating log attributes
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'IBEX_mini'} Wrote 10189 lines of prices for IBEX_mini to parquetFuturesMultiplePricesData
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'IBEX_mini'} Added data for instrument IBEX_mini
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'IBEX_mini'} Wrote 10302 lines of prices for IBEX_mini to parquetFuturesAdjustedPrices
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'IBEX_mini'} Added data for instrument IBEX_mini
+    ✅ IBEX_mini
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'instrument_code': 'FTSECHINAA'} Updating log attributes
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'FTSECHINAA'} Wrote 16825 lines of prices for FTSECHINAA to parquetFuturesMultiplePricesData
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'FTSECHINAA'} Added data for instrument FTSECHINAA
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'FTSECHINAA'} Wrote 17090 lines of prices for FTSECHINAA to parquetFuturesAdjustedPrices
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'FTSECHINAA'} Added data for instrument FTSECHINAA
+    ✅ FTSECHINAA
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'instrument_code': 'US10'} Updating log attributes
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'US10'} Wrote 50125 lines of prices for US10 to parquetFuturesMultiplePricesData
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'US10'} Added data for instrument US10
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'US10'} Wrote 50125 lines of prices for US10 to parquetFuturesAdjustedPrices
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'US10'} Added data for instrument US10
+    ✅ US10
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'instrument_code': 'US5'} Updating log attributes
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'US5'} Wrote 47491 lines of prices for US5 to parquetFuturesMultiplePricesData
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'US5'} Added data for instrument US5
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'US5'} Wrote 47741 lines of prices for US5 to parquetFuturesAdjustedPrices
+2026-04-09 00:29:59 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'US5'} Added data for instrument US5
+    ✅ US5
+2026-04-09 00:29:59 DEBUG backfill_rebuild {'instrument_code': 'BUND'} Updating log attributes
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'BUND'} Wrote 183166 lines of prices for BUND to parquetFuturesMultiplePricesData
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'BUND'} Added data for instrument BUND
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'BUND'} Wrote 183166 lines of prices for BUND to parquetFuturesAdjustedPrices
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'BUND'} Added data for instrument BUND
+    ✅ BUND
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'instrument_code': 'GILT'} Updating log attributes
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'GILT'} Wrote 37234 lines of prices for GILT to parquetFuturesMultiplePricesData
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'GILT'} Added data for instrument GILT
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'GILT'} Wrote 37234 lines of prices for GILT to parquetFuturesAdjustedPrices
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'GILT'} Added data for instrument GILT
+    ✅ GILT
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'instrument_code': 'JGB'} Updating log attributes
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'JGB'} Wrote 19265 lines of prices for JGB to parquetFuturesMultiplePricesData
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'JGB'} Added data for instrument JGB
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'JGB'} Wrote 19248 lines of prices for JGB to parquetFuturesAdjustedPrices
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'JGB'} Added data for instrument JGB
+    ✅ JGB
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'instrument_code': 'GOLD_micro'} Updating log attributes
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'GOLD_micro'} Wrote 51854 lines of prices for GOLD_micro to parquetFuturesMultiplePricesData
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'GOLD_micro'} Added data for instrument GOLD_micro
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'GOLD_micro'} Wrote 52105 lines of prices for GOLD_micro to parquetFuturesAdjustedPrices
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'GOLD_micro'} Added data for instrument GOLD_micro
+    ✅ GOLD_micro
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'instrument_code': 'SILVER'} Updating log attributes
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'SILVER'} Wrote 82261 lines of prices for SILVER to parquetFuturesMultiplePricesData
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'SILVER'} Added data for instrument SILVER
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'SILVER'} Wrote 82512 lines of prices for SILVER to parquetFuturesAdjustedPrices
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'SILVER'} Added data for instrument SILVER
+    ✅ SILVER
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'instrument_code': 'COPPER-micro'} Updating log attributes
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'COPPER-micro'} Wrote 53664 lines of prices for COPPER-micro to parquetFuturesMultiplePricesData
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'COPPER-micro'} Added data for instrument COPPER-micro
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'COPPER-micro'} Wrote 53914 lines of prices for COPPER-micro to parquetFuturesAdjustedPrices
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'COPPER-micro'} Added data for instrument COPPER-micro
+    ✅ COPPER-micro
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'instrument_code': 'CRUDE_W'} Updating log attributes
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'CRUDE_W'} Wrote 46418 lines of prices for CRUDE_W to parquetFuturesMultiplePricesData
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'CRUDE_W'} Added data for instrument CRUDE_W
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'CRUDE_W'} Wrote 46666 lines of prices for CRUDE_W to parquetFuturesAdjustedPrices
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'CRUDE_W'} Added data for instrument CRUDE_W
+    ✅ CRUDE_W
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'instrument_code': 'BRENT-LAST'} Updating log attributes
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'BRENT-LAST'} Wrote 5966 lines of prices for BRENT-LAST to parquetFuturesMultiplePricesData
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'BRENT-LAST'} Added data for instrument BRENT-LAST
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'BRENT-LAST'} Wrote 6213 lines of prices for BRENT-LAST to parquetFuturesAdjustedPrices
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'BRENT-LAST'} Added data for instrument BRENT-LAST
+    ✅ BRENT-LAST
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'instrument_code': 'GASOIL'} Updating log attributes
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'GASOIL'} Wrote 67570 lines of prices for GASOIL to parquetFuturesMultiplePricesData
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'GASOIL'} Added data for instrument GASOIL
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'GASOIL'} Wrote 67827 lines of prices for GASOIL to parquetFuturesAdjustedPrices
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'GASOIL'} Added data for instrument GASOIL
+    ✅ GASOIL
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'instrument_code': 'AUD_micro'} Updating log attributes
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'AUD_micro'} Wrote 52232 lines of prices for AUD_micro to parquetFuturesMultiplePricesData
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'AUD_micro'} Added data for instrument AUD_micro
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'AUD_micro'} Wrote 52485 lines of prices for AUD_micro to parquetFuturesAdjustedPrices
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'AUD_micro'} Added data for instrument AUD_micro
+    ✅ AUD_micro
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'instrument_code': 'MXP'} Updating log attributes
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'MXP'} Wrote 50988 lines of prices for MXP to parquetFuturesMultiplePricesData
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'MXP'} Added data for instrument MXP
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'MXP'} Wrote 51198 lines of prices for MXP to parquetFuturesAdjustedPrices
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'MXP'} Added data for instrument MXP
+    ✅ MXP
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'instrument_code': 'YENEUR'} Updating log attributes
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'YENEUR'} Wrote 67533 lines of prices for YENEUR to parquetFuturesMultiplePricesData
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'YENEUR'} Added data for instrument YENEUR
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'YENEUR'} Wrote 67786 lines of prices for YENEUR to parquetFuturesAdjustedPrices
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'YENEUR'} Added data for instrument YENEUR
+    ✅ YENEUR
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'instrument_code': 'SUGAR11'} Updating log attributes
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'SUGAR11'} Wrote 41498 lines of prices for SUGAR11 to parquetFuturesMultiplePricesData
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'SUGAR11'} Added data for instrument SUGAR11
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'SUGAR11'} Wrote 41497 lines of prices for SUGAR11 to parquetFuturesAdjustedPrices
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'SUGAR11'} Added data for instrument SUGAR11
+    ✅ SUGAR11
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'instrument_code': 'COTTON'} Updating log attributes
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'COTTON'} Wrote 4414 lines of prices for COTTON to parquetFuturesMultiplePricesData
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'COTTON'} Added data for instrument COTTON
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'COTTON'} Wrote 4414 lines of prices for COTTON to parquetFuturesAdjustedPrices
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'COTTON'} Added data for instrument COTTON
+    ✅ COTTON
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'instrument_code': 'LEANHOG'} Updating log attributes
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'LEANHOG'} Wrote 31485 lines of prices for LEANHOG to parquetFuturesMultiplePricesData
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'LEANHOG'} Added data for instrument LEANHOG
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'LEANHOG'} Wrote 31736 lines of prices for LEANHOG to parquetFuturesAdjustedPrices
+2026-04-09 00:30:00 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'LEANHOG'} Added data for instrument LEANHOG
+    ✅ LEANHOG
+2026-04-09 00:30:00 DEBUG backfill_rebuild {'instrument_code': 'COCOA_LDN'} Updating log attributes
+2026-04-09 00:30:01 DEBUG backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'COCOA_LDN'} Wrote 29763 lines of prices for COCOA_LDN to parquetFuturesMultiplePricesData
+2026-04-09 00:30:01 INFO backfill_rebuild {'component': 'parquetFuturesMultiplePricesData', 'instrument_code': 'COCOA_LDN'} Added data for instrument COCOA_LDN
+2026-04-09 00:30:01 DEBUG backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'COCOA_LDN'} Wrote 30016 lines of prices for COCOA_LDN to parquetFuturesAdjustedPrices
+2026-04-09 00:30:01 INFO backfill_rebuild {'component': 'parquetFuturesAdjustedPricesData', 'instrument_code': 'COCOA_LDN'} Added data for instrument COCOA_LDN
+    ✅ COCOA_LDN
+  ✅ Rebuilt 25/25

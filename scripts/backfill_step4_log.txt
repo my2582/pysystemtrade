@@ -1,0 +1,58 @@
+Loading config from /Users/msyeom/Developer/pysystemtrade/private/private_config.yaml
+
+============================================================
+STEP 4: Export MongoDB → CSV
+============================================================
+Configuring sim logging
+    ✅ SP500_micro multiple: 35898 rows → 2024-03-28
+    ✅ SP500_micro adjusted: 36149 rows → 2026-04-02
+    ✅ NASDAQ_micro multiple: 52577 rows → 2024-03-28
+    ✅ NASDAQ_micro adjusted: 52828 rows → 2026-03-30
+    ✅ DAX multiple: 60445 rows → 2026-04-08
+    ✅ DAX adjusted: 60445 rows → 2026-04-08
+    ✅ NIKKEI multiple: 17452 rows → 2026-04-09
+    ✅ NIKKEI adjusted: 17437 rows → 2026-04-09
+    ✅ FTSE100 multiple: 54367 rows → 2026-04-08
+    ✅ FTSE100 adjusted: 54367 rows → 2026-04-08
+    ✅ IBEX_mini multiple: 10189 rows → 2024-03-28
+    ✅ IBEX_mini adjusted: 10302 rows → 2026-03-31
+    ✅ FTSECHINAA multiple: 16825 rows → 2024-03-29
+    ✅ FTSECHINAA adjusted: 17090 rows → 2026-04-01
+    ✅ US10 multiple: 50125 rows → 2026-04-08
+    ✅ US10 adjusted: 50125 rows → 2026-04-08
+    ✅ US5 multiple: 47491 rows → 2024-03-28
+    ✅ US5 adjusted: 47741 rows → 2026-03-30
+    ✅ BUND multiple: 183166 rows → 2026-04-08
+    ✅ BUND adjusted: 183166 rows → 2026-04-08
+    ✅ GILT multiple: 37234 rows → 2026-04-08
+    ✅ GILT adjusted: 37234 rows → 2026-04-08
+    ✅ JGB multiple: 19265 rows → 2026-04-09
+    ✅ JGB adjusted: 19248 rows → 2026-04-09
+    ✅ GOLD_micro multiple: 51854 rows → 2024-03-28
+    ✅ GOLD_micro adjusted: 52105 rows → 2026-04-02
+    ✅ SILVER multiple: 82261 rows → 2024-03-28
+    ✅ SILVER adjusted: 82512 rows → 2026-03-30
+    ✅ COPPER-micro multiple: 53664 rows → 2024-03-28
+    ✅ COPPER-micro adjusted: 53914 rows → 2026-03-30
+    ✅ CRUDE_W multiple: 46418 rows → 2024-03-28
+    ✅ CRUDE_W adjusted: 46666 rows → 2026-03-30
+    ✅ BRENT-LAST multiple: 5966 rows → 2024-03-28
+    ✅ BRENT-LAST adjusted: 6213 rows → 2026-03-30
+    ✅ GASOIL multiple: 67570 rows → 2024-03-28
+    ✅ GASOIL adjusted: 67827 rows → 2026-03-31
+    ✅ AUD_micro multiple: 52232 rows → 2024-03-28
+    ✅ AUD_micro adjusted: 52485 rows → 2026-03-30
+    ✅ MXP multiple: 50988 rows → 2024-03-28
+    ✅ MXP adjusted: 51198 rows → 2026-03-30
+    ✅ YENEUR multiple: 67533 rows → 2024-03-28
+    ✅ YENEUR adjusted: 67786 rows → 2026-03-30
+    ✅ SUGAR11 multiple: 41498 rows → 2024-03-28
+    ✅ SUGAR11 adjusted: 41497 rows → 2024-03-28
+    ✅ COTTON multiple: 4414 rows → 2024-03-28
+    ✅ COTTON adjusted: 4414 rows → 2024-03-28
+    ✅ LEANHOG multiple: 31485 rows → 2024-03-28
+    ✅ LEANHOG adjusted: 31736 rows → 2026-03-30
+    ✅ COCOA_LDN multiple: 29763 rows → 2024-03-28
+    ✅ COCOA_LDN adjusted: 30016 rows → 2026-03-31
+
+  ✅ Exported 25 multiple, 25 adjusted prices

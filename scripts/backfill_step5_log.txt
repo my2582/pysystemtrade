@@ -1,0 +1,30 @@
+Loading config from /Users/msyeom/Developer/pysystemtrade/private/private_config.yaml
+
+============================================================
+VERIFICATION: Gap Analysis
+============================================================
+  ⚠️  AUD_micro            last=2026-03-30  gaps: 03/28-03/31(368d)
+  ⚠️  BRENT-LAST           last=2026-03-30  gaps: 03/28-03/31(368d)
+  ⚠️  BUND                 last=2026-04-08  gaps: 03/28-04/03(371d)
+  ⚠️  COCOA_LDN            last=2026-03-31  gaps: 03/28-04/01(369d)
+  ⚠️  COPPER-micro         last=2026-03-30  gaps: 03/28-03/31(368d)
+  ✅ COTTON               last=2024-03-28  continuous ✓
+  ⚠️  CRUDE_W              last=2026-03-30  gaps: 03/28-03/31(368d)
+  ⚠️  DAX                  last=2026-04-08  gaps: 03/28-04/03(371d)
+  ⚠️  FTSE100              last=2026-04-08  gaps: 03/28-04/03(371d)
+  ⚠️  FTSECHINAA           last=2026-04-01  gaps: 03/29-04/02(369d)
+  ⚠️  GASOIL               last=2026-03-31  gaps: 03/28-04/01(369d)
+  ⚠️  GILT                 last=2026-04-08  gaps: 03/28-04/03(371d)
+  ⚠️  GOLD_micro           last=2026-04-02  gaps: 03/28-04/03(371d)
+  ⚠️  IBEX_mini            last=2026-03-31  gaps: 03/28-10/21(572d)
+  ⚠️  JGB                  last=2026-04-09  gaps: 03/29-04/07(374d)
+  ⚠️  LEANHOG              last=2026-03-30  gaps: 03/28-03/31(368d)
+  ⚠️  MXP                  last=2026-03-30  gaps: 03/28-05/28(426d)
+  ⚠️  NASDAQ_micro         last=2026-03-30  gaps: 03/28-03/31(368d)
+  ⚠️  NIKKEI               last=2026-04-09  gaps: 03/29-04/07(374d)
+  ⚠️  SILVER               last=2026-03-30  gaps: 03/28-03/31(368d)
+  ⚠️  SP500_micro          last=2026-04-02  gaps: 03/28-04/03(371d)
+  ✅ SUGAR11              last=2024-03-28  continuous ✓
+  ⚠️  US10                 last=2026-04-08  gaps: 03/28-04/03(371d)
+  ⚠️  US5                  last=2026-03-30  gaps: 03/28-03/31(368d)
+  ⚠️  YENEUR               last=2026-03-30  gaps: 03/28-03/31(368d)

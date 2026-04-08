@@ -41,6 +41,7 @@
   <div class="tab-nav__item" data-tab="methodology">Methodology</div>
   <div class="tab-nav__item" data-tab="risk">Risk Dashboard</div>
   <div class="tab-nav__item" data-tab="instrument">Instrument Deep-Dive</div>
+  <div class="tab-nav__item" data-tab="macro">Arki Macro</div>
   <div class="tab-nav__item" data-tab="sweep">Universe Sweep</div>
   <div class="tab-nav__item" data-tab="comparison">Run Comparison</div>
 </nav>
@@ -304,6 +305,103 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- ──── TAB: Arki Macro ──── -->
+  <section class="tab-content" id="tab-macro">
+
+    <!-- KPI Strip -->
+    <div class="grid grid-6" id="macro-kpi-strip" style="margin-bottom:var(--space-lg)">
+      <!-- Injected by JS -->
+    </div>
+
+    <!-- Equity Curve -->
+    <div class="card" style="margin-bottom:var(--space-lg)">
+      <div class="card__header">
+        <span class="card__title">Equity Curve — Arki Macro vs Components</span>
+        <span class="info-tip" title="Cumulative growth of $1 invested. Combined = capital-weighted P&L of Macro Mini ($100K) + Multi-Factor ($200K). Total capital $300K.">ⓘ</span>
+      </div>
+      <p class="card__hint">Arki Macro = Macro Mini ($100K, 1.6× leverage) + Multi-Factor ($200K, 25 futures)</p>
+      <div class="chart-wrap chart-wrap--tall">
+        <canvas id="macro-equity-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Period Returns + Stats -->
+    <div class="grid grid-2" style="margin-bottom:var(--space-lg)">
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Period Returns (Annualized)</span>
+          <span class="info-tip" title="Annualized returns over standard lookback periods for each strategy component.">ⓘ</span>
+        </div>
+        <div class="table-wrap" id="macro-period-table">
+          <p class="loading">Loading...</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Detailed Statistics</span>
+          <span class="info-tip" title="Full performance statistics for each strategy. All metrics computed on monthly returns.">ⓘ</span>
+        </div>
+        <div class="table-wrap" id="macro-stats-table" style="max-height:500px;overflow-y:auto">
+          <p class="loading">Loading...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Annual Returns Table -->
+    <div class="card" style="margin-bottom:var(--space-lg)">
+      <div class="card__header">
+        <span class="card__title">Annual Returns (%)</span>
+        <span class="info-tip" title="Calendar year total returns for combined strategy and each component.">ⓘ</span>
+      </div>
+      <div class="table-wrap" id="macro-annual-table" style="max-height:600px;overflow-y:auto">
+        <p class="loading">Loading...</p>
+      </div>
+    </div>
+
+    <!-- Monthly Heatmap -->
+    <div class="card" style="margin-bottom:var(--space-lg)">
+      <div class="card__header">
+        <span class="card__title">Monthly Returns Heatmap (Combined)</span>
+        <span class="info-tip" title="Year × Month matrix of combined Arki Macro returns. Green = positive, Red = negative. Darker = larger magnitude.">ⓘ</span>
+      </div>
+      <div class="table-wrap" id="macro-heatmap" style="overflow-x:auto">
+        <p class="loading">Loading...</p>
+      </div>
+    </div>
+
+    <!-- Rolling Charts -->
+    <div class="grid grid-2" style="margin-bottom:var(--space-lg)">
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Rolling 3-Year Sharpe Ratio</span>
+        </div>
+        <div class="chart-wrap chart-wrap--medium">
+          <canvas id="macro-rolling-sr-chart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Rolling 3-Year Correlation</span>
+          <span class="info-tip" title="Rolling 36-month correlation between Macro Mini and Multi-Factor. Lower is better for diversification.">ⓘ</span>
+        </div>
+        <div class="chart-wrap chart-wrap--medium">
+          <canvas id="macro-corr-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drawdown -->
+    <div class="card">
+      <div class="card__header">
+        <span class="card__title">Drawdown Comparison</span>
+      </div>
+      <div class="chart-wrap chart-wrap--medium">
+        <canvas id="macro-drawdown-chart"></canvas>
+      </div>
+    </div>
+
   </section>
 
   <!-- ──── TAB: Universe Sweep ──── -->

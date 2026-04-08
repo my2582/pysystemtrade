@@ -1702,6 +1702,312 @@ function renderSweepCountChart(runs) {
   });
 }
 
+// ══════════════════════════════════════════════════════════════════
+// ARKI MACRO TAB
+// ══════════════════════════════════════════════════════════════════
+
+let macroData = null;
+let macroLoaded = false;
+
+async function loadMacroData() {
+  if (macroLoaded) return;
+  try {
+    const text = await loadFile('data/arki_macro_summary.json');
+    macroData = JSON.parse(text);
+    macroLoaded = true;
+    renderMacroTab();
+  } catch (e) {
+    console.warn('Arki Macro data not found:', e.message);
+  }
+}
+
+function renderMacroTab() {
+  if (!macroData) return;
+  renderMacroKPIs();
+  renderMacroEquity();
+  renderMacroPeriodTable();
+  renderMacroStatsTable();
+  renderMacroAnnualTable();
+  renderMacroHeatmap();
+  renderMacroRollingSR();
+  renderMacroCorrelation();
+  renderMacroDrawdown();
+}
+
+function renderMacroKPIs() {
+  const s = macroData.combined.stats;
+  const m = macroData.meta;
+  const kpis = [
+    { label: 'CAGR', value: s.cagr + '%', cls: 'positive', sub: `${s.years} years` },
+    { label: 'Sharpe', value: s.sharpe, cls: '', sub: `Monthly basis` },
+    { label: 'Sortino', value: s.sortino, cls: '', sub: `Downside adj.` },
+    { label: 'Max Drawdown', value: s.max_drawdown + '%', cls: 'negative', sub: `Avg DD: ${s.avg_drawdown}%` },
+    { label: 'Correlation', value: m.correlation, cls: '', sub: `Mini vs MF` },
+    { label: 'Total Capital', value: '$' + (m.total_capital/1000) + 'K', cls: '', sub: '$100K + $200K' },
+  ];
+  document.getElementById('macro-kpi-strip').innerHTML = kpis.map(k => `
+    <div class="kpi">
+      <div class="kpi__label">${k.label}</div>
+      <div class="kpi__value ${k.cls}">${k.value}</div>
+      <div class="kpi__sub">${k.sub}</div>
+    </div>
+  `).join('');
+}
+
+function renderMacroEquity() {
+  const toDate = pts => pts.map(p => new Date(p[0]));
+  const toVal = pts => pts.map(p => p[1]);
+
+  destroyChart('macro-equity-chart');
+  state.charts['macro-equity-chart'] = new Chart(document.getElementById('macro-equity-chart'), {
+    type: 'line',
+    data: {
+      labels: toDate(macroData.combined.equity_monthly),
+      datasets: [
+        {
+          label: 'Arki Macro (Combined)',
+          data: toVal(macroData.combined.equity_monthly),
+          borderColor: PALETTE.forest,
+          backgroundColor: PALETTE.forest15,
+          fill: true,
+          borderWidth: 2,
+          pointRadius: 0,
+        },
+        {
+          label: 'Macro Mini ($100K)',
+          data: toVal(macroData.macro_mini.equity_monthly),
+          borderColor: PALETTE.green,
+          borderWidth: 1.5,
+          pointRadius: 0,
+          borderDash: [4, 2],
+        },
+        {
+          label: 'Multi-Factor ($200K)',
+          data: toVal(macroData.multi_factor.equity_monthly),
+          borderColor: '#C4B68A',
+          borderWidth: 1.5,
+          pointRadius: 0,
+          borderDash: [6, 3],
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', align: 'end' },
+        tooltip: {
+          callbacks: {
+            title: ctx => {
+              const d = ctx[0].label;
+              return typeof d === 'object' ? d.toLocaleDateString('en-US', {year:'numeric',month:'short'}) : d;
+            },
+            label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)}×`
+          }
+        },
+      },
+      scales: {
+        x: {
+          type: 'time',
+          time: { unit: 'year', displayFormats: { year: 'yyyy' } },
+          grid: { color: PALETTE.gridLine },
+          ticks: { maxTicksLimit: 12, font: { size: 10 } }
+        },
+        y: {
+          type: 'logarithmic',
+          grid: { color: PALETTE.gridLine },
+          ticks: {
+            callback: v => {
+              if (v >= 1000) return v.toFixed(0) + '×';
+              if (v >= 100) return v.toFixed(0) + '×';
+              if (v >= 10) return v.toFixed(0) + '×';
+              return v.toFixed(1) + '×';
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+function renderMacroPeriodTable() {
+  const periods = ['ytd', '1y', '3y', '5y', '10y', '20y', 'since_inception'];
+  const labels = {'ytd':'YTD','1y':'1 Year','3y':'3 Year','5y':'5 Year','10y':'10 Year','20y':'20 Year','since_inception':'Since Inception'};
+
+  let html = `<table>
+    <thead><tr><th>Period</th><th>Arki Macro</th><th>Macro Mini</th><th>Multi-Factor</th></tr></thead>
+    <tbody>`;
+  periods.forEach(p => {
+    const c = macroData.combined.period_returns[p];
+    const m = macroData.macro_mini.period_returns[p];
+    const f = macroData.multi_factor.period_returns[p];
+    const fmt = v => v !== null && v !== undefined ? `<span class="${v>=0?'td-positive':'td-negative'}">${v.toFixed(2)}%</span>` : '—';
+    html += `<tr><td style="font-weight:600">${labels[p]}</td><td>${fmt(c)}</td><td>${fmt(m)}</td><td>${fmt(f)}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('macro-period-table').innerHTML = html;
+}
+
+function renderMacroStatsTable() {
+  const metrics = [
+    ['Total Return', 'total_return', '%'], ['CAGR', 'cagr', '%'], ['Ann Vol', 'ann_vol', '%'],
+    ['Sharpe', 'sharpe', ''], ['Sortino', 'sortino', ''], ['Calmar', 'calmar', ''],
+    ['Max Drawdown', 'max_drawdown', '%'], ['Avg Drawdown', 'avg_drawdown', '%'],
+    ['Skew', 'skew', ''], ['Kurtosis', 'kurtosis', ''],
+    ['Hit Rate', 'hit_rate', '%'], ['Gain/Loss Ratio', 'gain_loss_ratio', ''],
+    ['Profit Factor', 'profit_factor', ''],
+    ['Best Month', 'best_month', '%'], ['Worst Month', 'worst_month', '%'],
+  ];
+
+  let html = `<table>
+    <thead><tr><th>Metric</th><th>Arki Macro</th><th>Macro Mini</th><th>Multi-Factor</th></tr></thead>
+    <tbody>`;
+  metrics.forEach(([label, key, suffix]) => {
+    const c = macroData.combined.stats[key];
+    const m = macroData.macro_mini.stats[key];
+    const f = macroData.multi_factor.stats[key];
+    const fmt = v => v !== undefined ? v + suffix : '—';
+    html += `<tr><td style="font-weight:500">${label}</td><td>${fmt(c)}</td><td>${fmt(m)}</td><td>${fmt(f)}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('macro-stats-table').innerHTML = html;
+}
+
+function renderMacroAnnualTable() {
+  const years = macroData.annual_returns;
+  let html = `<table>
+    <thead><tr><th>Year</th><th>Arki Macro</th><th>Macro Mini</th><th>Multi-Factor</th></tr></thead>
+    <tbody>`;
+  // Show in reverse order (most recent first)
+  [...years].reverse().forEach(y => {
+    const fmt = v => v !== null && v !== undefined ? `<span class="${v>=0?'td-positive':'td-negative'}">${v.toFixed(2)}%</span>` : '—';
+    html += `<tr><td style="font-weight:600">${y.year}</td><td>${fmt(y.combined)}</td><td>${fmt(y.mini)}</td><td>${fmt(y.mf)}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('macro-annual-table').innerHTML = html;
+}
+
+function renderMacroHeatmap() {
+  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const data = macroData.monthly_returns;
+  const years = Object.keys(data).sort().reverse();
+
+  function heatColor(val) {
+    if (val === undefined || val === null) return 'background:#f8f4e8';
+    const abs = Math.min(Math.abs(val), 10);
+    const intensity = Math.round(40 + abs * 18);
+    if (val >= 0) return `background:rgba(85,183,134,${intensity/100});color:${abs>4?'#fff':'#265844'}`;
+    return `background:rgba(184,92,74,${intensity/100});color:${abs>4?'#fff':'#7a3322'}`;
+  }
+
+  let html = `<table class="heatmap-table">
+    <thead><tr><th>Year</th>${monthNames.map(m => `<th>${m}</th>`).join('')}<th style="font-weight:700">Annual</th></tr></thead>
+    <tbody>`;
+  years.forEach(y => {
+    const row = data[y];
+    let yearTotal = 1;
+    let cells = monthNames.map((_, i) => {
+      const val = row[String(i+1)];
+      if (val !== undefined) yearTotal *= (1 + val/100);
+      const display = val !== undefined ? val.toFixed(1) : '';
+      return `<td style="${heatColor(val)};text-align:center;font-size:11px;font-weight:500;padding:4px 6px">${display}</td>`;
+    }).join('');
+    const annRet = (yearTotal - 1) * 100;
+    html += `<tr><td style="font-weight:700;padding:4px 8px">${y}</td>${cells}<td style="${heatColor(annRet)};text-align:center;font-weight:700;padding:4px 8px">${annRet.toFixed(1)}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('macro-heatmap').innerHTML = html;
+}
+
+function renderMacroRollingSR() {
+  const toDate = pts => pts.map(p => new Date(p[0]));
+  const toVal = pts => pts.map(p => p[1]);
+  const rs = macroData.rolling_sharpe_3y;
+
+  destroyChart('macro-rolling-sr-chart');
+  state.charts['macro-rolling-sr-chart'] = new Chart(document.getElementById('macro-rolling-sr-chart'), {
+    type: 'line',
+    data: {
+      labels: toDate(rs.combined),
+      datasets: [
+        { label: 'Combined', data: toVal(rs.combined), borderColor: PALETTE.forest, borderWidth: 2, pointRadius: 0 },
+        { label: 'Macro Mini', data: toVal(rs.mini), borderColor: PALETTE.green, borderWidth: 1.5, pointRadius: 0, borderDash: [4,2] },
+        { label: 'Multi-Factor', data: toVal(rs.mf), borderColor: '#C4B68A', borderWidth: 1.5, pointRadius: 0, borderDash: [6,3] },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', align: 'end' },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(3)}` } },
+      },
+      scales: {
+        x: { type: 'time', time: { unit: 'year' }, grid: { color: PALETTE.gridLine }, ticks: { maxTicksLimit: 10, font: { size: 10 } } },
+        y: { grid: { color: PALETTE.gridLine }, ticks: { callback: v => v.toFixed(1) } }
+      }
+    }
+  });
+}
+
+function renderMacroCorrelation() {
+  const rc = macroData.rolling_correlation;
+  if (!rc || rc.length === 0) return;
+
+  destroyChart('macro-corr-chart');
+  state.charts['macro-corr-chart'] = new Chart(document.getElementById('macro-corr-chart'), {
+    type: 'line',
+    data: {
+      labels: rc.map(p => new Date(p[0])),
+      datasets: [{
+        label: 'Rolling 3Y Correlation',
+        data: rc.map(p => p[1]),
+        borderColor: PALETTE.forest,
+        backgroundColor: PALETTE.forest15,
+        fill: true,
+        borderWidth: 1.5,
+        pointRadius: 0,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `ρ = ${ctx.raw.toFixed(3)}` } },
+      },
+      scales: {
+        x: { type: 'time', time: { unit: 'year' }, grid: { color: PALETTE.gridLine }, ticks: { maxTicksLimit: 10, font: { size: 10 } } },
+        y: { min: -0.5, max: 1, grid: { color: PALETTE.gridLine }, ticks: { callback: v => v.toFixed(1) } }
+      }
+    }
+  });
+}
+
+function renderMacroDrawdown() {
+  const dd = macroData.drawdown;
+
+  destroyChart('macro-drawdown-chart');
+  state.charts['macro-drawdown-chart'] = new Chart(document.getElementById('macro-drawdown-chart'), {
+    type: 'line',
+    data: {
+      labels: dd.combined.map(p => new Date(p[0])),
+      datasets: [
+        { label: 'Combined', data: dd.combined.map(p => p[1] * 100), borderColor: PALETTE.forest, backgroundColor: PALETTE.forest15, fill: true, borderWidth: 1.5, pointRadius: 0 },
+        { label: 'Macro Mini', data: dd.mini.map(p => p[1] * 100), borderColor: PALETTE.green, borderWidth: 1, pointRadius: 0, borderDash: [4,2] },
+        { label: 'Multi-Factor', data: dd.mf.map(p => p[1] * 100), borderColor: '#C4B68A', borderWidth: 1, pointRadius: 0, borderDash: [6,3] },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', align: 'end' } },
+      scales: {
+        x: { type: 'time', time: { unit: 'year' }, grid: { color: PALETTE.gridLine }, ticks: { maxTicksLimit: 10, font: { size: 10 } } },
+        y: { grid: { color: PALETTE.gridLine }, ticks: { callback: v => v.toFixed(0) + '%' } }
+      }
+    }
+  });
+}
+
+
 // ── Tab Navigation ──
 document.querySelectorAll('.tab-nav__item').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -1709,8 +2015,14 @@ document.querySelectorAll('.tab-nav__item').forEach(tab => {
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+
+    // Lazy-load Arki Macro data when tab is clicked
+    if (tab.dataset.tab === 'macro' && !macroLoaded) {
+      loadMacroData();
+    }
   });
 });
 
 // ── Init ──
 loadData();
+
