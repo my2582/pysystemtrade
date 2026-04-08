@@ -23,6 +23,7 @@ CLASS_MAP = {
     "sweep_Ags_Metals": {"label": "+ Ags + Metals", "classes": ["Equity", "Bond", "Ags", "Metals"]},
     "sweep_FX_Metals": {"label": "+ FX + Metals", "classes": ["Equity", "Bond", "FX", "Metals"]},
     "sweep_Ags_FX_Metals": {"label": "+ Ags + FX + Metals", "classes": ["Equity", "Bond", "Ags", "FX", "Metals"]},
+    "arki_v4_optimized": {"label": "Full 25 (+ Energy)", "classes": ["Equity", "Bond", "Ags", "FX", "Metals", "Energy"]},
 }
 
 
@@ -44,6 +45,12 @@ def find_latest_sweep_runs():
             meta_file = d / "dashboard_meta.json"
             if meta_file.exists():
                 runs[label] = d  # latest wins (sorted order)
+
+        # Include arki_v4_optimized
+        if label == "arki_v4_optimized":
+            meta_file = d / "dashboard_meta.json"
+            if meta_file.exists():
+                runs["arki_v4_optimized"] = d
 
     # Also include v6 handcraft as baseline
     for d in sorted(RUNS_DIR.iterdir()):
@@ -115,7 +122,7 @@ def main():
     order = [
         "sweep_base", "sweep_Ags", "sweep_FX", "sweep_Metals",
         "sweep_Ags_FX", "sweep_Ags_Metals", "sweep_FX_Metals",
-        "sweep_Ags_FX_Metals", "v6_handcraft",
+        "sweep_Ags_FX_Metals", "arki_v4_optimized", "v6_handcraft",
     ]
 
     for label in order:
@@ -171,6 +178,8 @@ def main():
 
     # Compute marginal contributions
     base_sr = next((r["sharpe"] for r in summary["runs"] if r["id"] == "sweep_base"), 0)
+    no_energy_sr = next((r["sharpe"] for r in summary["runs"] if r["id"] == "sweep_Ags_FX_Metals"), 0)
+    full_sr = next((r["sharpe"] for r in summary["runs"] if r["id"] == "arki_v4_optimized"), 0)
     marginal = []
     for cls_name, single_label in [("Ags", "sweep_Ags"), ("FX", "sweep_FX"), ("Metals", "sweep_Metals")]:
         single_sr = next((r["sharpe"] for r in summary["runs"] if r["id"] == single_label), 0)
@@ -178,6 +187,11 @@ def main():
             "class": cls_name,
             "contribution": round(single_sr - base_sr, 4),
         })
+    # Energy marginal = Full25 SR - (Ags+FX+Metals without Energy)
+    marginal.append({
+        "class": "Energy",
+        "contribution": round(full_sr - no_energy_sr, 4),
+    })
     summary["marginal_contributions"] = sorted(marginal, key=lambda x: x["contribution"], reverse=True)
 
     # Sort runs by Sharpe (descending)
