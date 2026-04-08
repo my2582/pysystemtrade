@@ -1712,7 +1712,7 @@ let macroLoaded = false;
 async function loadMacroData() {
   if (macroLoaded) return;
   try {
-    const text = await loadFile('data/arki_macro_summary.json');
+    const text = await loadFile('arki_macro_summary.json');
     macroData = JSON.parse(text);
     macroLoaded = true;
     renderMacroTab();

@@ -13,7 +13,7 @@ from pathlib import Path
 from datetime import datetime
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DASHBOARD_DATA = PROJECT_ROOT / "scripts" / "dashboard" / "data"
+DASHBOARD_DIR = PROJECT_ROOT / "scripts" / "dashboard"
 
 # --- Configuration ---
 MINI_CAPITAL = 100_000
@@ -280,8 +280,8 @@ def main():
     }
 
     # Write output
-    DASHBOARD_DATA.mkdir(parents=True, exist_ok=True)
-    output_path = DASHBOARD_DATA / "arki_macro_summary.json"
+    DASHBOARD_DIR.mkdir(parents=True, exist_ok=True)
+    output_path = DASHBOARD_DIR / "arki_macro_summary.json"
     with open(output_path, "w") as f:
         json.dump(summary, f, separators=(",", ":"))
 
