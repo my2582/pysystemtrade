@@ -42,6 +42,9 @@
   <div class="tab-nav__item" data-tab="risk">Risk Dashboard</div>
   <div class="tab-nav__item" data-tab="instrument">Instrument Deep-Dive</div>
   <div class="tab-nav__item" data-tab="macro">Arki Macro</div>
+  <div class="tab-nav__item" data-tab="smaller-macro">Smaller Macro</div>
+  <div class="tab-nav__item" data-tab="macro-compare">Macro Compare</div>
+  <div class="tab-nav__item" data-tab="universe">Universe</div>
   <div class="tab-nav__item" data-tab="sweep">Universe Sweep</div>
   <div class="tab-nav__item" data-tab="comparison">Run Comparison</div>
 </nav>
@@ -402,6 +405,116 @@
       </div>
     </div>
 
+  </section>
+
+  <!-- ──── TAB: Smaller Arki Macro ──── -->
+  <section class="tab-content" id="tab-smaller-macro">
+
+    <!-- KPI Strip -->
+    <div class="grid grid-6" id="smaller-macro-kpi-strip" style="margin-bottom:var(--space-lg)">
+    </div>
+
+    <!-- Equity Curve -->
+    <div class="card" style="margin-bottom:var(--space-lg)">
+      <div class="card__header">
+        <span class="card__title">Equity Curve — Smaller Arki Macro vs Components</span>
+        <span class="info-tip" title="$250K portfolio: Mini ($150K, 1.6× leverage) + Multi-Factor ($100K optimized). Mini returns already include 1.6x leverage.">ⓘ</span>
+      </div>
+      <p class="card__hint">Smaller Arki Macro = Macro Mini ($150K, 1.6× leverage) + Multi-Factor ($100K, optimized subset)</p>
+      <div class="chart-wrap chart-wrap--tall">
+        <canvas id="smaller-macro-equity-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Period Returns + Stats -->
+    <div class="grid grid-2" style="margin-bottom:var(--space-lg)">
+      <div class="card">
+        <div class="card__header"><span class="card__title">Period Returns (Annualized)</span></div>
+        <div class="table-wrap" id="smaller-macro-period-table"><p class="loading">Loading...</p></div>
+      </div>
+      <div class="card">
+        <div class="card__header"><span class="card__title">Detailed Statistics</span></div>
+        <div class="table-wrap" id="smaller-macro-stats-table" style="max-height:500px;overflow-y:auto"><p class="loading">Loading...</p></div>
+      </div>
+    </div>
+
+    <!-- Annual Returns -->
+    <div class="card" style="margin-bottom:var(--space-lg)">
+      <div class="card__header"><span class="card__title">Annual Returns (%)</span></div>
+      <div class="table-wrap" id="smaller-macro-annual-table" style="max-height:600px;overflow-y:auto"><p class="loading">Loading...</p></div>
+    </div>
+
+    <!-- Monthly Heatmap -->
+    <div class="card" style="margin-bottom:var(--space-lg)">
+      <div class="card__header"><span class="card__title">Monthly Returns Heatmap (Combined)</span></div>
+      <div class="table-wrap" id="smaller-macro-heatmap" style="overflow-x:auto"><p class="loading">Loading...</p></div>
+    </div>
+
+    <!-- Rolling Charts -->
+    <div class="grid grid-2" style="margin-bottom:var(--space-lg)">
+      <div class="card">
+        <div class="card__header"><span class="card__title">Rolling 3-Year Sharpe Ratio</span></div>
+        <div class="chart-wrap chart-wrap--medium"><canvas id="smaller-macro-rolling-sr-chart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Rolling 3-Year Correlation</span>
+          <span class="info-tip" title="Lower correlation = stronger diversification benefit.">ⓘ</span>
+        </div>
+        <div class="chart-wrap chart-wrap--medium"><canvas id="smaller-macro-corr-chart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Drawdown -->
+    <div class="card">
+      <div class="card__header"><span class="card__title">Drawdown Comparison</span></div>
+      <div class="chart-wrap chart-wrap--medium"><canvas id="smaller-macro-drawdown-chart"></canvas></div>
+    </div>
+
+  </section>
+
+  <!-- ──── TAB: Macro Comparison ──── -->
+  <section class="tab-content" id="tab-macro-compare">
+
+    <!-- Side-by-side KPIs -->
+    <div class="card" style="margin-bottom:var(--space-lg)">
+      <div class="card__header">
+        <span class="card__title">Strategy Comparison — Arki Macro vs Smaller Arki Macro</span>
+        <span class="info-tip" title="Side-by-side comparison of the $300K and $250K portfolio configurations.">ⓘ</span>
+      </div>
+      <div class="table-wrap" id="macro-compare-table"><p class="loading">Loading...</p></div>
+    </div>
+
+    <!-- Equity overlay -->
+    <div class="card" style="margin-bottom:var(--space-lg)">
+      <div class="card__header"><span class="card__title">Equity Curve Overlay</span></div>
+      <div class="chart-wrap chart-wrap--tall"><canvas id="macro-compare-equity-chart"></canvas></div>
+    </div>
+
+    <!-- Period Returns comparison -->
+    <div class="card" style="margin-bottom:var(--space-lg)">
+      <div class="card__header"><span class="card__title">Period Returns Comparison</span></div>
+      <div class="table-wrap" id="macro-compare-period-table"><p class="loading">Loading...</p></div>
+    </div>
+
+    <!-- Drawdown overlay -->
+    <div class="card">
+      <div class="card__header"><span class="card__title">Drawdown Comparison</span></div>
+      <div class="chart-wrap chart-wrap--medium"><canvas id="macro-compare-drawdown-chart"></canvas></div>
+    </div>
+
+  </section>
+
+  <!-- ──── TAB: Universe Info ──── -->
+  <section class="tab-content" id="tab-universe">
+    <div class="card">
+      <div class="card__header">
+        <span class="card__title">Futures Universe — Contract Specifications</span>
+        <span class="info-tip" title="All instruments in the backtest universe with their contract specs, latest prices, and nominal values per contract.">ⓘ</span>
+      </div>
+      <p class="card__hint">Showing all instruments across both Arki Macro configurations. Nominal Value = Latest Price × Point Size.</p>
+      <div class="table-wrap" id="universe-table" style="overflow-x:auto"><p class="loading">Loading...</p></div>
+    </div>
   </section>
 
   <!-- ──── TAB: Universe Sweep ──── -->

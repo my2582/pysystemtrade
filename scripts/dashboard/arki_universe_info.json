@@ -1,0 +1,227 @@
+[
+  {
+    "instrument": "AUD_micro",
+    "description": "AUDUSD micro",
+    "asset_class": "FX",
+    "currency": "USD",
+    "pointsize": 10000.0,
+    "latest_price": 0.65,
+    "nominal_value": 6533.0
+  },
+  {
+    "instrument": "BRENT-LAST",
+    "description": "Brent Crude Oil - Last Day",
+    "asset_class": "OilGas",
+    "currency": "USD",
+    "pointsize": 1000.0,
+    "latest_price": 86.05,
+    "nominal_value": 86050.0
+  },
+  {
+    "instrument": "BUND",
+    "description": "German 10 year bond Bund",
+    "asset_class": "Bond",
+    "currency": "EUR",
+    "pointsize": 1000.0,
+    "latest_price": 125.55,
+    "nominal_value": 125550.0
+  },
+  {
+    "instrument": "COCOA_LDN",
+    "description": "Cocoa London",
+    "asset_class": "Ags",
+    "currency": "GBP",
+    "pointsize": 10.0,
+    "latest_price": 7725.0,
+    "nominal_value": 77250.0
+  },
+  {
+    "instrument": "COPPER-micro",
+    "description": "Copper micro",
+    "asset_class": "Metals",
+    "currency": "USD",
+    "pointsize": 2500.0,
+    "latest_price": 4.01,
+    "nominal_value": 10028.0
+  },
+  {
+    "instrument": "COTTON",
+    "description": "NYMEX Cotton index",
+    "asset_class": "Ags",
+    "currency": "USD",
+    "pointsize": 50000.0,
+    "latest_price": 0.91,
+    "nominal_value": 45690.0
+  },
+  {
+    "instrument": "CRUDE_W",
+    "description": "Light sweet crude Winter",
+    "asset_class": "OilGas",
+    "currency": "USD",
+    "pointsize": 1000.0,
+    "latest_price": 77.68,
+    "nominal_value": 77680.0
+  },
+  {
+    "instrument": "DAX",
+    "description": "DAX 30 Index (Deutsche Aktien Xchange 30)",
+    "asset_class": "Equity",
+    "currency": "EUR",
+    "pointsize": 1.0,
+    "latest_price": 23313.0,
+    "nominal_value": 23313.0
+  },
+  {
+    "instrument": "FTSE100",
+    "description": "FTSE100 Index",
+    "asset_class": "Equity",
+    "currency": "GBP",
+    "pointsize": 10.0,
+    "latest_price": 10438.0,
+    "nominal_value": 104380.0
+  },
+  {
+    "instrument": "FTSECHINAA",
+    "description": "FTSE/Xinhua China A50",
+    "asset_class": "Equity",
+    "currency": "USD",
+    "pointsize": 1.0,
+    "latest_price": 12138.0,
+    "nominal_value": 12138.0
+  },
+  {
+    "instrument": "GASOIL",
+    "description": "ICE-EU Low Sulphur Gasoil",
+    "asset_class": "OilGas",
+    "currency": "USD",
+    "pointsize": 100.0,
+    "latest_price": 797.75,
+    "nominal_value": 79775.0
+  },
+  {
+    "instrument": "GILT",
+    "description": "UK 10 year bonds Long Gilt",
+    "asset_class": "Bond",
+    "currency": "GBP",
+    "pointsize": 1000.0,
+    "latest_price": 88.58,
+    "nominal_value": 88580.0
+  },
+  {
+    "instrument": "GOLD_micro",
+    "description": "Gold micro",
+    "asset_class": "Metals",
+    "currency": "USD",
+    "pointsize": 10.0,
+    "latest_price": 2255.0,
+    "nominal_value": 22550.0
+  },
+  {
+    "instrument": "IBEX_mini",
+    "description": "IBEX 35 mini",
+    "asset_class": "Equity",
+    "currency": "EUR",
+    "pointsize": 1.0,
+    "latest_price": 11068.0,
+    "nominal_value": 11068.0
+  },
+  {
+    "instrument": "JGB",
+    "description": "Standardized 6% 10-Year Japanese Government Bond",
+    "asset_class": "Bond",
+    "currency": "JPY",
+    "pointsize": 1000000.0,
+    "latest_price": 130.13,
+    "nominal_value": 130130000.0
+  },
+  {
+    "instrument": "LEANHOG",
+    "description": "Lean hogs",
+    "asset_class": "Ags",
+    "currency": "USD",
+    "pointsize": 400.0,
+    "latest_price": 104.0,
+    "nominal_value": 41600.0
+  },
+  {
+    "instrument": "MXP",
+    "description": "MEXUSD currency",
+    "asset_class": "FX",
+    "currency": "USD",
+    "pointsize": 500000.0,
+    "latest_price": 0.06,
+    "nominal_value": 29725.0
+  },
+  {
+    "instrument": "NASDAQ_micro",
+    "description": "NASDAQ micro",
+    "asset_class": "Equity",
+    "currency": "USD",
+    "pointsize": 2.0,
+    "latest_price": 18465.25,
+    "nominal_value": 36930.0
+  },
+  {
+    "instrument": "NIKKEI",
+    "description": "Nikkei 225 Mini",
+    "asset_class": "Equity",
+    "currency": "JPY",
+    "pointsize": 100.0,
+    "latest_price": 53240.0,
+    "nominal_value": 5324000.0
+  },
+  {
+    "instrument": "SILVER",
+    "description": "NYMEX Silver Index",
+    "asset_class": "Metals",
+    "currency": "USD",
+    "pointsize": 1000.0,
+    "latest_price": 25.1,
+    "nominal_value": 25100.0
+  },
+  {
+    "instrument": "SP500_micro",
+    "description": "S&P 500 micro",
+    "asset_class": "Equity",
+    "currency": "USD",
+    "pointsize": 5.0,
+    "latest_price": 5303.75,
+    "nominal_value": 26519.0
+  },
+  {
+    "instrument": "SUGAR11",
+    "description": "Sugar #11",
+    "asset_class": "Ags",
+    "currency": "USD",
+    "pointsize": 1120.0,
+    "latest_price": 22.14,
+    "nominal_value": 24797.0
+  },
+  {
+    "instrument": "US10",
+    "description": "US 10 year bond note",
+    "asset_class": "Bond",
+    "currency": "USD",
+    "pointsize": 1000.0,
+    "latest_price": 111.02,
+    "nominal_value": 111016.0
+  },
+  {
+    "instrument": "US5",
+    "description": "US 5 year bond note",
+    "asset_class": "Bond",
+    "currency": "USD",
+    "pointsize": 1000.0,
+    "latest_price": 106.95,
+    "nominal_value": 106945.0
+  },
+  {
+    "instrument": "YENEUR",
+    "description": "YENEUR currency",
+    "asset_class": "FX",
+    "currency": "JPY",
+    "pointsize": 125000.0,
+    "latest_price": 161.87,
+    "nominal_value": 20233750.0
+  }
+]

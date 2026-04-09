@@ -2008,6 +2008,347 @@ function renderMacroDrawdown() {
 }
 
 
+// ══════════════════════════════════════════════════════════════════
+// SMALLER ARKI MACRO TAB (reuses macro helpers with different data/IDs)
+// ══════════════════════════════════════════════════════════════════
+
+let smallerMacroData = null;
+let smallerMacroLoaded = false;
+
+async function loadSmallerMacroData() {
+  if (smallerMacroLoaded) return;
+  try {
+    const text = await loadFile('arki_macro_smaller.json');
+    smallerMacroData = JSON.parse(text);
+    smallerMacroLoaded = true;
+    renderSmallerMacroTab();
+  } catch (e) {
+    console.warn('Smaller Macro data not found:', e.message);
+  }
+}
+
+function renderSmallerMacroTab() {
+  if (!smallerMacroData) return;
+  const d = smallerMacroData;
+  const prefix = 'smaller-macro';
+
+  // KPIs
+  const s = d.combined.stats, m = d.meta;
+  const kpis = [
+    { label: 'CAGR', value: s.cagr+'%', cls: 'positive', sub: `${s.years} years` },
+    { label: 'Sharpe', value: s.sharpe, cls: '', sub: 'Monthly basis' },
+    { label: 'Sortino', value: s.sortino, cls: '', sub: 'Downside adj.' },
+    { label: 'Max Drawdown', value: s.max_drawdown+'%', cls: 'negative', sub: `Avg DD: ${s.avg_drawdown}%` },
+    { label: 'Correlation', value: m.correlation, cls: '', sub: 'Mini vs MF' },
+    { label: 'Total Capital', value: '$'+(m.total_capital/1000)+'K', cls: '', sub: `$${m.mini_capital/1000}K + $${m.mf_capital/1000}K` },
+  ];
+  document.getElementById(`${prefix}-kpi-strip`).innerHTML = kpis.map(k => `
+    <div class="kpi"><div class="kpi__label">${k.label}</div><div class="kpi__value ${k.cls}">${k.value}</div><div class="kpi__sub">${k.sub}</div></div>
+  `).join('');
+
+  // Equity
+  const toDate = pts => pts.map(p => new Date(p[0]));
+  const toVal = pts => pts.map(p => p[1]);
+  destroyChart(`${prefix}-equity-chart`);
+  state.charts[`${prefix}-equity-chart`] = new Chart(document.getElementById(`${prefix}-equity-chart`), {
+    type: 'line',
+    data: {
+      labels: toDate(d.combined.equity_monthly),
+      datasets: [
+        { label: d.meta.label, data: toVal(d.combined.equity_monthly), borderColor: PALETTE.forest, backgroundColor: PALETTE.forest15, fill: true, borderWidth: 2, pointRadius: 0 },
+        { label: `Mini ($${m.mini_capital/1000}K)`, data: toVal(d.macro_mini.equity_monthly), borderColor: PALETTE.green, borderWidth: 1.5, pointRadius: 0, borderDash: [4,2] },
+        { label: `MF ($${m.mf_capital/1000}K)`, data: toVal(d.multi_factor.equity_monthly), borderColor: '#C4B68A', borderWidth: 1.5, pointRadius: 0, borderDash: [6,3] },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', align: 'end' }, tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)}×` } } },
+      scales: {
+        x: { type: 'time', time: { unit: 'year' }, grid: { color: PALETTE.gridLine }, ticks: { maxTicksLimit: 12, font: { size: 10 } } },
+        y: { type: 'logarithmic', grid: { color: PALETTE.gridLine }, ticks: { callback: v => v >= 10 ? v.toFixed(0)+'×' : v.toFixed(1)+'×' } }
+      }
+    }
+  });
+
+  // Tables (reuse macro helpers with different element IDs)
+  renderGenericPeriodTable(d, `${prefix}-period-table`);
+  renderGenericStatsTable(d, `${prefix}-stats-table`);
+  renderGenericAnnualTable(d, `${prefix}-annual-table`);
+  renderGenericHeatmap(d, `${prefix}-heatmap`);
+
+  // Rolling SR
+  destroyChart(`${prefix}-rolling-sr-chart`);
+  state.charts[`${prefix}-rolling-sr-chart`] = new Chart(document.getElementById(`${prefix}-rolling-sr-chart`), {
+    type: 'line',
+    data: {
+      labels: toDate(d.rolling_sharpe_3y.combined),
+      datasets: [
+        { label: 'Combined', data: toVal(d.rolling_sharpe_3y.combined), borderColor: PALETTE.forest, borderWidth: 2, pointRadius: 0 },
+        { label: 'Mini', data: toVal(d.rolling_sharpe_3y.mini), borderColor: PALETTE.green, borderWidth: 1.5, pointRadius: 0, borderDash: [4,2] },
+        { label: 'MF', data: toVal(d.rolling_sharpe_3y.mf), borderColor: '#C4B68A', borderWidth: 1.5, pointRadius: 0, borderDash: [6,3] },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', align: 'end' } },
+      scales: { x: { type: 'time', time: { unit: 'year' }, grid: { color: PALETTE.gridLine } }, y: { grid: { color: PALETTE.gridLine }, ticks: { callback: v => v.toFixed(1) } } } }
+  });
+
+  // Correlation
+  const rc = d.rolling_correlation;
+  if (rc && rc.length > 0) {
+    destroyChart(`${prefix}-corr-chart`);
+    state.charts[`${prefix}-corr-chart`] = new Chart(document.getElementById(`${prefix}-corr-chart`), {
+      type: 'line',
+      data: { labels: rc.map(p => new Date(p[0])), datasets: [{ label: 'ρ', data: rc.map(p => p[1]), borderColor: PALETTE.forest, backgroundColor: PALETTE.forest15, fill: true, borderWidth: 1.5, pointRadius: 0 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+        scales: { x: { type: 'time', time: { unit: 'year' }, grid: { color: PALETTE.gridLine } }, y: { min: -0.5, max: 1, grid: { color: PALETTE.gridLine } } } }
+    });
+  }
+
+  // Drawdown
+  destroyChart(`${prefix}-drawdown-chart`);
+  state.charts[`${prefix}-drawdown-chart`] = new Chart(document.getElementById(`${prefix}-drawdown-chart`), {
+    type: 'line',
+    data: {
+      labels: d.drawdown.combined.map(p => new Date(p[0])),
+      datasets: [
+        { label: 'Combined', data: d.drawdown.combined.map(p => p[1]*100), borderColor: PALETTE.forest, backgroundColor: PALETTE.forest15, fill: true, borderWidth: 1.5, pointRadius: 0 },
+        { label: 'Mini', data: d.drawdown.mini.map(p => p[1]*100), borderColor: PALETTE.green, borderWidth: 1, pointRadius: 0, borderDash: [4,2] },
+        { label: 'MF', data: d.drawdown.mf.map(p => p[1]*100), borderColor: '#C4B68A', borderWidth: 1, pointRadius: 0, borderDash: [6,3] },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', align: 'end' } },
+      scales: { x: { type: 'time', time: { unit: 'year' }, grid: { color: PALETTE.gridLine } }, y: { grid: { color: PALETTE.gridLine }, ticks: { callback: v => v.toFixed(0)+'%' } } } }
+  });
+}
+
+// ── Generic renderers (shared by both macro tabs) ──
+
+function renderGenericPeriodTable(d, elId) {
+  const periods = ['ytd','1y','3y','5y','10y','20y','since_inception'];
+  const labels = {ytd:'YTD','1y':'1 Year','3y':'3 Year','5y':'5 Year','10y':'10 Year','20y':'20 Year',since_inception:'Since Inception'};
+  let html = `<table><thead><tr><th>Period</th><th>Combined</th><th>Macro Mini</th><th>Multi-Factor</th></tr></thead><tbody>`;
+  periods.forEach(p => {
+    const fmt = v => v !== null && v !== undefined ? `<span class="${v>=0?'td-positive':'td-negative'}">${v.toFixed(2)}%</span>` : '—';
+    html += `<tr><td style="font-weight:600">${labels[p]}</td><td>${fmt(d.combined.period_returns[p])}</td><td>${fmt(d.macro_mini.period_returns[p])}</td><td>${fmt(d.multi_factor.period_returns[p])}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById(elId).innerHTML = html;
+}
+
+function renderGenericStatsTable(d, elId) {
+  const metrics = [['Total Return','total_return','%'],['CAGR','cagr','%'],['Ann Vol','ann_vol','%'],['Sharpe','sharpe',''],['Sortino','sortino',''],['Calmar','calmar',''],['Max Drawdown','max_drawdown','%'],['Avg Drawdown','avg_drawdown','%'],['Skew','skew',''],['Kurtosis','kurtosis',''],['Hit Rate','hit_rate','%'],['Gain/Loss','gain_loss_ratio',''],['Profit Factor','profit_factor',''],['Best Month','best_month','%'],['Worst Month','worst_month','%']];
+  let html = `<table><thead><tr><th>Metric</th><th>Combined</th><th>Macro Mini</th><th>Multi-Factor</th></tr></thead><tbody>`;
+  metrics.forEach(([label,key,suf]) => {
+    const fmt = v => v !== undefined ? v+suf : '—';
+    html += `<tr><td style="font-weight:500">${label}</td><td>${fmt(d.combined.stats[key])}</td><td>${fmt(d.macro_mini.stats[key])}</td><td>${fmt(d.multi_factor.stats[key])}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById(elId).innerHTML = html;
+}
+
+function renderGenericAnnualTable(d, elId) {
+  let html = `<table><thead><tr><th>Year</th><th>Combined</th><th>Mini</th><th>MF</th></tr></thead><tbody>`;
+  [...d.annual_returns].reverse().forEach(y => {
+    const fmt = v => v !== null && v !== undefined ? `<span class="${v>=0?'td-positive':'td-negative'}">${v.toFixed(2)}%</span>` : '—';
+    html += `<tr><td style="font-weight:600">${y.year}</td><td>${fmt(y.combined)}</td><td>${fmt(y.mini)}</td><td>${fmt(y.mf)}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById(elId).innerHTML = html;
+}
+
+function renderGenericHeatmap(d, elId) {
+  const mns = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const data = d.monthly_returns;
+  const years = Object.keys(data).sort().reverse();
+  function hc(v) {
+    if (v === undefined || v === null) return 'background:#f8f4e8';
+    const a = Math.min(Math.abs(v),10), i = Math.round(40+a*18);
+    return v >= 0 ? `background:rgba(85,183,134,${i/100});color:${a>4?'#fff':'#265844'}` : `background:rgba(184,92,74,${i/100});color:${a>4?'#fff':'#7a3322'}`;
+  }
+  let html = `<table class="heatmap-table"><thead><tr><th>Year</th>${mns.map(m=>`<th>${m}</th>`).join('')}<th style="font-weight:700">Annual</th></tr></thead><tbody>`;
+  years.forEach(y => {
+    const row = data[y]; let yt = 1;
+    let cells = mns.map((_,i) => { const v = row[String(i+1)]; if (v !== undefined) yt *= (1+v/100); return `<td style="${hc(v)};text-align:center;font-size:11px;font-weight:500;padding:4px 6px">${v !== undefined ? v.toFixed(1) : ''}</td>`; }).join('');
+    const ar = (yt-1)*100;
+    html += `<tr><td style="font-weight:700;padding:4px 8px">${y}</td>${cells}<td style="${hc(ar)};text-align:center;font-weight:700;padding:4px 8px">${ar.toFixed(1)}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById(elId).innerHTML = html;
+}
+
+
+// ══════════════════════════════════════════════════════════════════
+// MACRO COMPARISON TAB
+// ══════════════════════════════════════════════════════════════════
+
+let compareData = null;
+let compareLoaded = false;
+
+async function loadCompareData() {
+  if (compareLoaded) return;
+  try {
+    const text = await loadFile('arki_macro_comparison.json');
+    compareData = JSON.parse(text);
+    compareLoaded = true;
+    renderCompareTab();
+  } catch (e) {
+    console.warn('Comparison data not found:', e.message);
+  }
+}
+
+function renderCompareTab() {
+  if (!compareData) return;
+  const orig = compareData.scenarios.original;
+  const small = compareData.scenarios.smaller;
+  const toDate = pts => pts.map(p => new Date(p[0]));
+  const toVal = pts => pts.map(p => p[1]);
+
+  // Comparison table
+  const metrics = [
+    ['Total Capital', v => '$'+(v.total_capital/1000)+'K'],
+    ['Mini Capital', v => '$'+(v.mini_capital/1000)+'K'],
+    ['MF Capital', v => '$'+(v.mf_capital/1000)+'K'],
+    ['CAGR', v => v.stats.cagr+'%'],
+    ['Sharpe', v => v.stats.sharpe],
+    ['Sortino', v => v.stats.sortino],
+    ['Max Drawdown', v => v.stats.max_drawdown+'%'],
+    ['Avg Drawdown', v => v.stats.avg_drawdown+'%'],
+    ['Calmar', v => v.stats.calmar],
+    ['Ann Vol', v => v.stats.ann_vol+'%'],
+    ['Hit Rate', v => v.stats.hit_rate+'%'],
+    ['Correlation', v => v.correlation],
+    ['Best Month', v => v.stats.best_month+'%'],
+    ['Worst Month', v => v.stats.worst_month+'%'],
+    ['Profit Factor', v => v.stats.profit_factor],
+  ];
+
+  let html = `<table><thead><tr><th>Metric</th><th>Arki Macro ($300K)</th><th>Smaller Macro ($250K)</th><th>Delta</th></tr></thead><tbody>`;
+  metrics.forEach(([label, fn]) => {
+    const ov = fn(orig), sv = fn(small);
+    const oParsed = parseFloat(ov), sParsed = parseFloat(sv);
+    let delta = '';
+    if (!isNaN(oParsed) && !isNaN(sParsed)) {
+      const d = sParsed - oParsed;
+      const sign = d >= 0 ? '+' : '';
+      const cls = (label.includes('Drawdown') || label === 'Ann Vol') ? (d <= 0 ? 'td-positive' : 'td-negative') : (d >= 0 ? 'td-positive' : 'td-negative');
+      delta = `<span class="${cls}">${sign}${d.toFixed(2)}</span>`;
+    }
+    html += `<tr><td style="font-weight:600">${label}</td><td>${ov}</td><td>${sv}</td><td>${delta}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('macro-compare-table').innerHTML = html;
+
+  // Equity overlay
+  destroyChart('macro-compare-equity-chart');
+  state.charts['macro-compare-equity-chart'] = new Chart(document.getElementById('macro-compare-equity-chart'), {
+    type: 'line',
+    data: {
+      labels: toDate(orig.equity_monthly),
+      datasets: [
+        { label: 'Arki Macro ($300K)', data: toVal(orig.equity_monthly), borderColor: PALETTE.forest, borderWidth: 2, pointRadius: 0 },
+        { label: 'Smaller Macro ($250K)', data: toVal(small.equity_monthly), borderColor: PALETTE.green, borderWidth: 2, borderDash: [6,3], pointRadius: 0 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', align: 'end' }, tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)}×` } } },
+      scales: {
+        x: { type: 'time', time: { unit: 'year' }, grid: { color: PALETTE.gridLine }, ticks: { maxTicksLimit: 12, font: { size: 10 } } },
+        y: { type: 'logarithmic', grid: { color: PALETTE.gridLine }, ticks: { callback: v => v >= 10 ? v.toFixed(0)+'×' : v.toFixed(1)+'×' } }
+      }
+    }
+  });
+
+  // Period returns comparison
+  const periods = ['ytd','1y','3y','5y','10y','20y','since_inception'];
+  const plabels = {ytd:'YTD','1y':'1Y','3y':'3Y','5y':'5Y','10y':'10Y','20y':'20Y',since_inception:'SI'};
+  let phtml = `<table><thead><tr><th>Period</th><th>Arki Macro</th><th>Smaller Macro</th><th>Delta</th></tr></thead><tbody>`;
+  periods.forEach(p => {
+    const ov = orig.period_returns[p], sv = small.period_returns[p];
+    const fmt = v => v !== null && v !== undefined ? `<span class="${v>=0?'td-positive':'td-negative'}">${v.toFixed(2)}%</span>` : '—';
+    let delta = '';
+    if (ov != null && sv != null) {
+      const d = sv - ov;
+      delta = `<span class="${d>=0?'td-positive':'td-negative'}">${d>=0?'+':''}${d.toFixed(2)}%</span>`;
+    }
+    phtml += `<tr><td style="font-weight:600">${plabels[p]}</td><td>${fmt(ov)}</td><td>${fmt(sv)}</td><td>${delta}</td></tr>`;
+  });
+  phtml += '</tbody></table>';
+  document.getElementById('macro-compare-period-table').innerHTML = phtml;
+
+  // Drawdown overlay
+  destroyChart('macro-compare-drawdown-chart');
+  state.charts['macro-compare-drawdown-chart'] = new Chart(document.getElementById('macro-compare-drawdown-chart'), {
+    type: 'line',
+    data: {
+      labels: orig.drawdown.map(p => new Date(p[0])),
+      datasets: [
+        { label: 'Arki Macro', data: orig.drawdown.map(p => p[1]*100), borderColor: PALETTE.forest, backgroundColor: PALETTE.forest15, fill: true, borderWidth: 1.5, pointRadius: 0 },
+        { label: 'Smaller Macro', data: small.drawdown.map(p => p[1]*100), borderColor: PALETTE.green, borderWidth: 1.5, pointRadius: 0, borderDash: [6,3] },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', align: 'end' } },
+      scales: { x: { type: 'time', time: { unit: 'year' }, grid: { color: PALETTE.gridLine } }, y: { grid: { color: PALETTE.gridLine }, ticks: { callback: v => v.toFixed(0)+'%' } } } }
+  });
+}
+
+
+// ══════════════════════════════════════════════════════════════════
+// UNIVERSE INFO TAB
+// ══════════════════════════════════════════════════════════════════
+
+let universeData = null;
+let universeLoaded = false;
+
+async function loadUniverseData() {
+  if (universeLoaded) return;
+  try {
+    const text = await loadFile('arki_universe_info.json');
+    universeData = JSON.parse(text);
+    universeLoaded = true;
+    renderUniverseTab();
+  } catch (e) {
+    console.warn('Universe data not found:', e.message);
+  }
+}
+
+function renderUniverseTab() {
+  if (!universeData || universeData.length === 0) return;
+  const fmt = v => v !== null && v !== undefined ? v.toLocaleString() : '—';
+  const fmtUSD = v => v !== null && v !== undefined ? '$'+Math.round(v).toLocaleString() : '—';
+
+  // Sort by asset class then instrument
+  const sorted = [...universeData].sort((a,b) => (a.asset_class+a.instrument).localeCompare(b.asset_class+b.instrument));
+
+  let html = `<table>
+    <thead><tr>
+      <th>Instrument</th><th>Description</th><th>Asset Class</th><th>CCY</th>
+      <th style="text-align:right">Point Size</th><th style="text-align:right">Latest Price</th>
+      <th style="text-align:right">Nominal Value (1 contract)</th>
+    </tr></thead><tbody>`;
+
+  let prevClass = '';
+  sorted.forEach(r => {
+    if (r.asset_class !== prevClass) {
+      html += `<tr><td colspan="7" style="background:var(--forest,#265844);color:#fff;font-weight:700;padding:6px 12px;font-size:12px">${r.asset_class || 'Unknown'}</td></tr>`;
+      prevClass = r.asset_class;
+    }
+    const nomColor = r.nominal_value && r.nominal_value > 100000 ? 'color:#B85C4A;font-weight:600' : '';
+    html += `<tr>
+      <td style="font-weight:600;font-family:var(--font-mono,monospace);font-size:12px">${r.instrument}</td>
+      <td style="font-size:12px">${r.description}</td>
+      <td style="font-size:12px">${r.asset_class}</td>
+      <td style="font-size:12px;text-align:center">${r.currency}</td>
+      <td style="text-align:right;font-family:var(--font-mono);font-size:12px">${fmt(r.pointsize)}</td>
+      <td style="text-align:right;font-family:var(--font-mono);font-size:12px">${fmt(r.latest_price)}</td>
+      <td style="text-align:right;font-family:var(--font-mono);font-size:12px;${nomColor}">${fmtUSD(r.nominal_value)}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('universe-table').innerHTML = html;
+}
+
+
 // ── Tab Navigation ──
 document.querySelectorAll('.tab-nav__item').forEach(tab => {
   tab.addEventListener('click', () => {
@@ -2016,13 +2357,13 @@ document.querySelectorAll('.tab-nav__item').forEach(tab => {
     tab.classList.add('active');
     document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
 
-    // Lazy-load Arki Macro data when tab is clicked
-    if (tab.dataset.tab === 'macro' && !macroLoaded) {
-      loadMacroData();
-    }
+    // Lazy-load data per tab
+    if (tab.dataset.tab === 'macro' && !macroLoaded) loadMacroData();
+    if (tab.dataset.tab === 'smaller-macro' && !smallerMacroLoaded) loadSmallerMacroData();
+    if (tab.dataset.tab === 'macro-compare' && !compareLoaded) loadCompareData();
+    if (tab.dataset.tab === 'universe' && !universeLoaded) loadUniverseData();
   });
 });
 
 // ── Init ──
 loadData();
-
