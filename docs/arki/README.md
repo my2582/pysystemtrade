@@ -86,3 +86,5 @@ Every `arki_*.yaml` is **self-contained** — instruments, rules, weights all in
 | 4 | [config_knowledge_map.md](config_knowledge_map.md) | Complete config file map, run management, quick reference |
 | 5 | [estimation_reference.md](estimation_reference.md) | All 7 estimation flags explained with code traces |
 | 6 | [handcraft_deep_dive.md](handcraft_deep_dive.md) | Handcraft algorithm: clustering, DM, SR adjustment with numerical examples |
+| 7 | [pysystemtrade_core_architecture.md](pysystemtrade_core_architecture.md) | Core engineering guide, philosophy, and Arki AI development patterns |
+| 8 | [dashboard_research_upgrade_spec.md](dashboard_research_upgrade_spec.md) | Architecture and specifications for transforming the dashboard into a strategy research tool |
