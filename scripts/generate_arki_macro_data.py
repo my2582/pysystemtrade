@@ -256,15 +256,29 @@ def build_scenario(mini_ret, mf_file, mini_capital, mf_capital, label):
 
 
 def build_universe_info(instruments_list):
-    """Build universe info table with contract specs."""
+    """Build universe info table with contract specs, IB symbols, and universe membership."""
     cfg = pd.read_csv(INST_CONFIG)
+    IB_CONFIG = PROJECT_ROOT / "sysbrokers" / "IB" / "config" / "ib_config_futures.csv"
+    ibcfg = pd.read_csv(IB_CONFIG) if IB_CONFIG.exists() else pd.DataFrame()
+
+    INSTS_25 = ['SP500_micro','NASDAQ_micro','DAX','NIKKEI','FTSE100','IBEX_mini','FTSECHINAA',
+                'US10','US5','BUND','GILT','JGB','GOLD_micro','SILVER','COPPER-micro',
+                'CRUDE_W','BRENT-LAST','GASOIL','AUD_micro','MXP','YENEUR',
+                'SUGAR11','COTTON','LEANHOG','COCOA_LDN']
+    INSTS_13 = ['GOLD_micro','DAX','EU-DJ-OIL','SILVER','CRUDE_W','BRENT-LAST',
+                'COPPER-micro','GILT','SP500_micro','EU-BANKS','TOPIX','EU-DJ-TELECOM','US10']
+
     universe = []
     for inst in sorted(instruments_list):
         row = cfg[cfg["Instrument"] == inst]
         if len(row) == 0:
             continue
         r = row.iloc[0]
-        # Get latest price for nominal value calculation
+        # IB config
+        ib = ibcfg[ibcfg["Instrument"] == inst] if len(ibcfg) > 0 else pd.DataFrame()
+        ib_symbol = ib["IBSymbol"].values[0] if len(ib) > 0 else ""
+        ib_exchange = ib["IBExchange"].values[0] if len(ib) > 0 else ""
+        # Latest price
         price_file = PROJECT_ROOT / "data" / "futures" / "multiple_prices_csv" / f"{inst}.csv"
         latest_price = None
         if price_file.exists():
@@ -278,12 +292,16 @@ def build_universe_info(instruments_list):
         nominal = round(latest_price * pointsize, 0) if latest_price else None
         universe.append({
             "instrument": inst,
+            "ib_symbol": ib_symbol,
+            "ib_exchange": ib_exchange,
             "description": r.get("Description", ""),
             "asset_class": r.get("AssetClass", ""),
             "currency": r.get("Currency", ""),
             "pointsize": pointsize,
             "latest_price": round(latest_price, 2) if latest_price else None,
             "nominal_value": nominal,
+            "in_25": inst in INSTS_25,
+            "in_13": inst in INSTS_13,
         })
     return universe
 

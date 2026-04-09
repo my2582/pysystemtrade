@@ -1,263 +1,379 @@
 [
   {
     "instrument": "AUD_micro",
+    "ib_symbol": "M6A",
+    "ib_exchange": "CME",
     "description": "AUDUSD micro",
     "asset_class": "FX",
     "currency": "USD",
     "pointsize": 10000.0,
     "latest_price": 0.65,
-    "nominal_value": 6533.0
+    "nominal_value": 6533.0,
+    "in_25": true,
+    "in_13": false
   },
   {
     "instrument": "BRENT-LAST",
+    "ib_symbol": "BZ",
+    "ib_exchange": "NYMEX",
     "description": "Brent Crude Oil - Last Day",
     "asset_class": "OilGas",
     "currency": "USD",
     "pointsize": 1000.0,
     "latest_price": 86.05,
-    "nominal_value": 86050.0
+    "nominal_value": 86050.0,
+    "in_25": true,
+    "in_13": true
   },
   {
     "instrument": "BUND",
+    "ib_symbol": "GBL",
+    "ib_exchange": "EUREX",
     "description": "German 10 year bond Bund",
     "asset_class": "Bond",
     "currency": "EUR",
     "pointsize": 1000.0,
     "latest_price": 125.55,
-    "nominal_value": 125550.0
+    "nominal_value": 125550.0,
+    "in_25": true,
+    "in_13": false
   },
   {
     "instrument": "COCOA_LDN",
+    "ib_symbol": "C",
+    "ib_exchange": "ICEEUSOFT",
     "description": "Cocoa London",
     "asset_class": "Ags",
     "currency": "GBP",
     "pointsize": 10.0,
     "latest_price": 7725.0,
-    "nominal_value": 77250.0
+    "nominal_value": 77250.0,
+    "in_25": true,
+    "in_13": false
   },
   {
     "instrument": "COPPER-micro",
+    "ib_symbol": "MHG",
+    "ib_exchange": "COMEX",
     "description": "Copper micro",
     "asset_class": "Metals",
     "currency": "USD",
     "pointsize": 2500.0,
     "latest_price": 4.01,
-    "nominal_value": 10028.0
+    "nominal_value": 10028.0,
+    "in_25": true,
+    "in_13": true
   },
   {
     "instrument": "COTTON",
+    "ib_symbol": "TT",
+    "ib_exchange": "NYMEX",
     "description": "NYMEX Cotton index",
     "asset_class": "Ags",
     "currency": "USD",
     "pointsize": 50000.0,
     "latest_price": 0.91,
-    "nominal_value": 45690.0
+    "nominal_value": 45690.0,
+    "in_25": true,
+    "in_13": false
   },
   {
     "instrument": "CRUDE_W",
+    "ib_symbol": "CL",
+    "ib_exchange": "NYMEX",
     "description": "Light sweet crude Winter",
     "asset_class": "OilGas",
     "currency": "USD",
     "pointsize": 1000.0,
     "latest_price": 77.68,
-    "nominal_value": 77680.0
+    "nominal_value": 77680.0,
+    "in_25": true,
+    "in_13": true
   },
   {
     "instrument": "DAX",
+    "ib_symbol": "DAX",
+    "ib_exchange": "EUREX",
     "description": "DAX 30 Index (Deutsche Aktien Xchange 30)",
     "asset_class": "Equity",
     "currency": "EUR",
     "pointsize": 1.0,
     "latest_price": 23313.0,
-    "nominal_value": 23313.0
+    "nominal_value": 23313.0,
+    "in_25": true,
+    "in_13": true
   },
   {
     "instrument": "EU-BANKS",
+    "ib_symbol": "SX7E",
+    "ib_exchange": "EUREX",
     "description": "Dow Jones Euro STOXX Banks Index",
     "asset_class": "Sector",
     "currency": "EUR",
     "pointsize": 50.0,
     "latest_price": 135.4,
-    "nominal_value": 6770.0
+    "nominal_value": 6770.0,
+    "in_25": false,
+    "in_13": true
   },
   {
     "instrument": "EU-DJ-OIL",
+    "ib_symbol": "ESE",
+    "ib_exchange": "EUREX",
     "description": "Dow Jones Euro STOXX Oil & Gas",
     "asset_class": "Sector",
     "currency": "EUR",
     "pointsize": 50.0,
     "latest_price": 361.4,
-    "nominal_value": 18070.0
+    "nominal_value": 18070.0,
+    "in_25": false,
+    "in_13": true
   },
   {
     "instrument": "EU-DJ-TELECOM",
+    "ib_symbol": "SXKE",
+    "ib_exchange": "EUREX",
     "description": "Dow Jones Euro STOXX Telecommunications",
     "asset_class": "Sector",
     "currency": "EUR",
     "pointsize": 50.0,
     "latest_price": 283.6,
-    "nominal_value": 14180.0
+    "nominal_value": 14180.0,
+    "in_25": false,
+    "in_13": true
   },
   {
     "instrument": "FTSE100",
+    "ib_symbol": "Z",
+    "ib_exchange": "ICEEU",
     "description": "FTSE100 Index",
     "asset_class": "Equity",
     "currency": "GBP",
     "pointsize": 10.0,
     "latest_price": 10438.0,
-    "nominal_value": 104380.0
+    "nominal_value": 104380.0,
+    "in_25": true,
+    "in_13": false
   },
   {
     "instrument": "FTSECHINAA",
+    "ib_symbol": "XINA50",
+    "ib_exchange": "SGX",
     "description": "FTSE/Xinhua China A50",
     "asset_class": "Equity",
     "currency": "USD",
     "pointsize": 1.0,
     "latest_price": 12138.0,
-    "nominal_value": 12138.0
+    "nominal_value": 12138.0,
+    "in_25": true,
+    "in_13": false
   },
   {
     "instrument": "GASOIL",
+    "ib_symbol": "GOIL",
+    "ib_exchange": "IPE",
     "description": "ICE-EU Low Sulphur Gasoil",
     "asset_class": "OilGas",
     "currency": "USD",
     "pointsize": 100.0,
     "latest_price": 797.75,
-    "nominal_value": 79775.0
+    "nominal_value": 79775.0,
+    "in_25": true,
+    "in_13": false
   },
   {
     "instrument": "GILT",
+    "ib_symbol": "R",
+    "ib_exchange": "ICEEU",
     "description": "UK 10 year bonds Long Gilt",
     "asset_class": "Bond",
     "currency": "GBP",
     "pointsize": 1000.0,
     "latest_price": 88.58,
-    "nominal_value": 88580.0
+    "nominal_value": 88580.0,
+    "in_25": true,
+    "in_13": true
   },
   {
     "instrument": "GOLD_micro",
+    "ib_symbol": "MGC",
+    "ib_exchange": "COMEX",
     "description": "Gold micro",
     "asset_class": "Metals",
     "currency": "USD",
     "pointsize": 10.0,
     "latest_price": 2255.0,
-    "nominal_value": 22550.0
+    "nominal_value": 22550.0,
+    "in_25": true,
+    "in_13": true
   },
   {
     "instrument": "IBEX_mini",
+    "ib_symbol": "IBEX",
+    "ib_exchange": "MEFFRV",
     "description": "IBEX 35 mini",
     "asset_class": "Equity",
     "currency": "EUR",
     "pointsize": 1.0,
     "latest_price": 11068.0,
-    "nominal_value": 11068.0
+    "nominal_value": 11068.0,
+    "in_25": true,
+    "in_13": false
   },
   {
     "instrument": "JGB",
+    "ib_symbol": "JGB",
+    "ib_exchange": "OSE.JPN",
     "description": "Standardized 6% 10-Year Japanese Government Bond",
     "asset_class": "Bond",
     "currency": "JPY",
     "pointsize": 1000000.0,
     "latest_price": 130.13,
-    "nominal_value": 130130000.0
+    "nominal_value": 130130000.0,
+    "in_25": true,
+    "in_13": false
   },
   {
     "instrument": "LEANHOG",
+    "ib_symbol": "HE",
+    "ib_exchange": "CME",
     "description": "Lean hogs",
     "asset_class": "Ags",
     "currency": "USD",
     "pointsize": 400.0,
     "latest_price": 104.0,
-    "nominal_value": 41600.0
+    "nominal_value": 41600.0,
+    "in_25": true,
+    "in_13": false
   },
   {
     "instrument": "MXP",
+    "ib_symbol": "6M",
+    "ib_exchange": "CME",
     "description": "MEXUSD currency",
     "asset_class": "FX",
     "currency": "USD",
     "pointsize": 500000.0,
     "latest_price": 0.06,
-    "nominal_value": 29725.0
+    "nominal_value": 29725.0,
+    "in_25": true,
+    "in_13": false
   },
   {
     "instrument": "NASDAQ_micro",
+    "ib_symbol": "MNQ",
+    "ib_exchange": "CME",
     "description": "NASDAQ micro",
     "asset_class": "Equity",
     "currency": "USD",
     "pointsize": 2.0,
     "latest_price": 18465.25,
-    "nominal_value": 36930.0
+    "nominal_value": 36930.0,
+    "in_25": true,
+    "in_13": false
   },
   {
     "instrument": "NIKKEI",
+    "ib_symbol": "N225M",
+    "ib_exchange": "OSE.JPN",
     "description": "Nikkei 225 Mini",
     "asset_class": "Equity",
     "currency": "JPY",
     "pointsize": 100.0,
     "latest_price": 53240.0,
-    "nominal_value": 5324000.0
+    "nominal_value": 5324000.0,
+    "in_25": true,
+    "in_13": false
   },
   {
     "instrument": "SILVER",
+    "ib_symbol": "SI",
+    "ib_exchange": "COMEX",
     "description": "NYMEX Silver Index",
     "asset_class": "Metals",
     "currency": "USD",
     "pointsize": 1000.0,
     "latest_price": 25.1,
-    "nominal_value": 25100.0
+    "nominal_value": 25100.0,
+    "in_25": true,
+    "in_13": true
   },
   {
     "instrument": "SP500_micro",
+    "ib_symbol": "MES",
+    "ib_exchange": "CME",
     "description": "S&P 500 micro",
     "asset_class": "Equity",
     "currency": "USD",
     "pointsize": 5.0,
     "latest_price": 5303.75,
-    "nominal_value": 26519.0
+    "nominal_value": 26519.0,
+    "in_25": true,
+    "in_13": true
   },
   {
     "instrument": "SUGAR11",
+    "ib_symbol": "SB",
+    "ib_exchange": "NYBOT",
     "description": "Sugar #11",
     "asset_class": "Ags",
     "currency": "USD",
     "pointsize": 1120.0,
     "latest_price": 22.14,
-    "nominal_value": 24797.0
+    "nominal_value": 24797.0,
+    "in_25": true,
+    "in_13": false
   },
   {
     "instrument": "TOPIX",
+    "ib_symbol": "MNTPX",
+    "ib_exchange": "OSE.JPN",
     "description": "Japan Mini Topix",
     "asset_class": "Equity",
     "currency": "JPY",
     "pointsize": 1000.0,
     "latest_price": 2767.75,
-    "nominal_value": 2767750.0
+    "nominal_value": 2767750.0,
+    "in_25": false,
+    "in_13": true
   },
   {
     "instrument": "US10",
+    "ib_symbol": "ZN",
+    "ib_exchange": "CBOT",
     "description": "US 10 year bond note",
     "asset_class": "Bond",
     "currency": "USD",
     "pointsize": 1000.0,
     "latest_price": 111.02,
-    "nominal_value": 111016.0
+    "nominal_value": 111016.0,
+    "in_25": true,
+    "in_13": true
   },
   {
     "instrument": "US5",
+    "ib_symbol": "ZF",
+    "ib_exchange": "CBOT",
     "description": "US 5 year bond note",
     "asset_class": "Bond",
     "currency": "USD",
     "pointsize": 1000.0,
     "latest_price": 106.95,
-    "nominal_value": 106945.0
+    "nominal_value": 106945.0,
+    "in_25": true,
+    "in_13": false
   },
   {
     "instrument": "YENEUR",
+    "ib_symbol": "RY",
+    "ib_exchange": "CME",
     "description": "YENEUR currency",
     "asset_class": "FX",
     "currency": "JPY",
     "pointsize": 125000.0,
     "latest_price": 161.87,
-    "nominal_value": 20233750.0
+    "nominal_value": 20233750.0,
+    "in_25": true,
+    "in_13": false
   }
 ]

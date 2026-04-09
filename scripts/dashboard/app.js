@@ -2315,7 +2315,12 @@ async function loadUniverseData() {
 function renderUniverseTab() {
   if (!universeData || universeData.length === 0) return;
   const fmt = v => v !== null && v !== undefined ? v.toLocaleString() : '—';
-  const fmtUSD = v => v !== null && v !== undefined ? '$'+Math.round(v).toLocaleString() : '—';
+  const ccySymbol = { USD: '$', EUR: '€', GBP: '£', JPY: '¥', AUD: 'A$', CAD: 'C$', CHF: 'CHF ', CNY: '¥', HKD: 'HK$', SGD: 'S$', MXP: 'MX$', BRL: 'R$', KRW: '₩' };
+  const fmtNominal = (v, ccy) => {
+    if (v === null || v === undefined) return '—';
+    const sym = ccySymbol[ccy] || (ccy ? ccy + ' ' : '$');
+    return sym + Math.round(v).toLocaleString();
+  };
 
   // Sort by asset class then instrument
   const sorted = [...universeData].sort((a,b) => (a.asset_class+a.instrument).localeCompare(b.asset_class+b.instrument));
@@ -2341,7 +2346,7 @@ function renderUniverseTab() {
       <td style="font-size:12px;text-align:center">${r.currency}</td>
       <td style="text-align:right;font-family:var(--font-mono);font-size:12px">${fmt(r.pointsize)}</td>
       <td style="text-align:right;font-family:var(--font-mono);font-size:12px">${fmt(r.latest_price)}</td>
-      <td style="text-align:right;font-family:var(--font-mono);font-size:12px;${nomColor}">${fmtUSD(r.nominal_value)}</td>
+      <td style="text-align:right;font-family:var(--font-mono);font-size:12px;${nomColor}">${fmtNominal(r.nominal_value, r.currency)}</td>
     </tr>`;
   });
   html += '</tbody></table>';
