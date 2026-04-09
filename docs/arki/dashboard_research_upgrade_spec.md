@@ -33,6 +33,22 @@ In `stats.yaml` or a new `stability.json`, export not just the single chosen par
 - E.g., The system estimates a forecast weight of 30% for rule A. Python should export pre-calculated PnL vectors if that weight was rigidly set to 10% or 50%.
 *Usage: Allows the dashboard to plot a 3D surface or line chart showing if the optimized parameter resides on a stable plateau or a brittle peak.*
 
+### D. Buffer Drag (Execution Cost Isolation)
+`pysystemtrade` maintains a strict buffering module to suppress excessive trading. We need to export:
+- `Optimal Position` (what the pure math wants)
+- `Actual Buffered Position` (what is actually sent inside `account_buffering_*`)
+*Usage: A Quant can calculate the "Buffer Drag" (the PnL left on the table by delaying trades) versus the "Saved Spread Costs". This answers the age-old question: "Are my buffers too wide?"*
+
+### E. Correlation Diversification Identifiers (FCM & IDM)
+The core of Rob Carver's scaling is accounting for correlations. We must export:
+- **Forecast Correlation Multiplier (FCM):** (`system.combForecast.get_forecast_diversification_multiplier`)
+- **Instrument Diversification Multiplier (IDM):** (`system.portfolio.get_instrument_diversification_multiplier`)
+*Usage: An IDM time-series directly works as a "Market Crisis Indicator". When the IDM violently compresses, it proves that all portfolio assets have suddenly become positively correlated. The dashboard must overlay IDM on top of Portfolio Drawdowns to diagnose if a loss was purely due to an IDM shock.*
+
+### F. Return Volatility & Risk Parity Diagnostics
+Instead of merely exporting `factor_returns.csv`, export **Rolling Volatility by Rule and Instrument**.
+*Usage: The premise of the entire system is Risk Parity (Vol Targeting). By plotting the rolling standard deviation of "Momentum PnL" vs "Carry PnL", a Quant can instantly verify if the Volatility Target is holding true, or if extreme fat tails are breaking the parity model.*
+
 ## 3. UI Dashboard Additions (`dashboard/`)
 
 ### UI Tab 1: "Signal & Forecast Analyzer"
