@@ -72,6 +72,33 @@
     "nominal_value": 23313.0
   },
   {
+    "instrument": "EU-BANKS",
+    "description": "Dow Jones Euro STOXX Banks Index",
+    "asset_class": "Sector",
+    "currency": "EUR",
+    "pointsize": 50.0,
+    "latest_price": 135.4,
+    "nominal_value": 6770.0
+  },
+  {
+    "instrument": "EU-DJ-OIL",
+    "description": "Dow Jones Euro STOXX Oil & Gas",
+    "asset_class": "Sector",
+    "currency": "EUR",
+    "pointsize": 50.0,
+    "latest_price": 361.4,
+    "nominal_value": 18070.0
+  },
+  {
+    "instrument": "EU-DJ-TELECOM",
+    "description": "Dow Jones Euro STOXX Telecommunications",
+    "asset_class": "Sector",
+    "currency": "EUR",
+    "pointsize": 50.0,
+    "latest_price": 283.6,
+    "nominal_value": 14180.0
+  },
+  {
     "instrument": "FTSE100",
     "description": "FTSE100 Index",
     "asset_class": "Equity",
@@ -196,6 +223,15 @@
     "pointsize": 1120.0,
     "latest_price": 22.14,
     "nominal_value": 24797.0
+  },
+  {
+    "instrument": "TOPIX",
+    "description": "Japan Mini Topix",
+    "asset_class": "Equity",
+    "currency": "JPY",
+    "pointsize": 1000.0,
+    "latest_price": 2767.75,
+    "nominal_value": 2767750.0
   },
   {
     "instrument": "US10",

@@ -19,7 +19,7 @@ DASHBOARD_DIR = PROJECT_ROOT / "scripts" / "dashboard"
 # --- Configuration ---
 MINI_FILE = PROJECT_ROOT / "data" / "arki_macro" / "arki_macro_mini_returns.xlsx"
 MF200_FILE = PROJECT_ROOT / "results" / "runs" / "20260405_0147_arki_v4_optimized" / "daily_returns.csv"
-MF100_FILE = PROJECT_ROOT / "results" / "runs" / "20260409_0735_arki_100k_optimal" / "daily_returns.csv"
+MF100_FILE = PROJECT_ROOT / "results" / "runs" / "20260409_1028_arki_100k_13inst" / "daily_returns.csv"
 INST_CONFIG = PROJECT_ROOT / "data" / "futures" / "csvconfig" / "instrumentconfig.csv"
 
 # Scenario definitions
