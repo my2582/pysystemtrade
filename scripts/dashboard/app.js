@@ -257,13 +257,20 @@ function renderKPIs() {
   const exec = state.meta.executability;
   const isTheoretical = exec && exec.grade === 'THEORETICAL';
   const strikeStyle = isTheoretical ? 'text-decoration:line-through;opacity:0.5' : '';
+  // Compute true Max Drawdown from rolling stats (peak-to-trough)
+  let trueMDD = s.min; // fallback to worst day
+  if (state.rollingStats) {
+    const ddValues = state.rollingStats.map(r => r.drawdown_pct).filter(v => !isNaN(v));
+    if (ddValues.length > 0) trueMDD = Math.min(...ddValues).toFixed(2);
+  }
+  const trueCalmar = (parseFloat(s.ann_mean) / Math.abs(parseFloat(trueMDD))).toFixed(4);
   const kpis = [
     { label: 'Net Sharpe', value: s.sharpe, fmt: v => v, cls: '', sub: `t-stat: ${s.t_stat} (stat. significance)` },
     { label: 'Ann Return', value: s.ann_mean, fmt: v => v + '%', cls: 'positive', sub: `Gross SR: ${(parseFloat(s.sharpe) + 0.089).toFixed(3)}` },
     { label: 'Ann Vol', value: s.ann_std, fmt: v => v + '%', cls: '', sub: `Target: 25%` },
-    { label: 'Max Drawdown', value: s.min, fmt: v => v + '%', cls: 'negative', sub: `Avg DD: ${s.avg_drawdown}%` },
+    { label: 'Max Drawdown', value: trueMDD, fmt: v => v + '%', cls: 'negative', sub: `Avg DD: ${s.avg_drawdown}% · Worst Day: ${s.min}%` },
     { label: 'Sortino', value: s.sortino, fmt: v => v, cls: '', sub: `Downside risk adj. return` },
-    { label: 'Calmar', value: s.calmar, fmt: v => v, cls: '', sub: `Return / Max DD` },
+    { label: 'Calmar', value: trueCalmar, fmt: v => v, cls: '', sub: `Return / Max DD` },
   ];
 
   const warningBadge = isTheoretical ? '<div style="color:#B85C4A;font-size:10px;font-weight:700;margin-top:4px">⚠ THEORETICAL</div>' : '';
