@@ -328,6 +328,31 @@ def export_enhanced_data(system, instruments, run_dir):
             "stats": stats.get("stats", {}),
             "instruments": instruments,
         }
+
+        # Executability scoring from position snapshot
+        pos_path = run_dir / "position_snapshot.csv"
+        if pos_path.exists():
+            try:
+                pos_df = pd.read_csv(pos_path)
+                if "Avg |Position|" in pos_df.columns:
+                    total = len(pos_df)
+                    tradeable = len(pos_df[pos_df["Avg |Position|"] >= 0.5])
+                    untradeable_list = pos_df[pos_df["Avg |Position|"] < 0.5]["Instrument"].tolist()
+                    score = round(tradeable / total * 100, 1) if total > 0 else 0
+                    grade = "PRODUCTION" if score >= 80 else ("RESEARCH" if score >= 60 else "THEORETICAL")
+                    dashboard_data["executability"] = {
+                        "score": score,
+                        "grade": grade,
+                        "tradeable_count": tradeable,
+                        "total_count": total,
+                        "untradeable_instruments": untradeable_list,
+                        "threshold": 0.5,
+                    }
+                    if untradeable_list:
+                        print(f"    ⚠️  Executability: {grade} ({score}%) — {len(untradeable_list)} untradeable: {untradeable_list}")
+            except Exception:
+                pass
+
         with open(run_dir / "dashboard_meta.json", "w") as f:
             json.dump(dashboard_data, f, indent=2)
         print("✅")

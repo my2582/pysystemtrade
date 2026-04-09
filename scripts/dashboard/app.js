@@ -228,12 +228,35 @@ function renderHeader() {
   document.getElementById('hm-period').textContent = m.period;
   document.getElementById('hm-instruments').textContent = m.instrument_count;
   document.getElementById('hm-mode').textContent = m.mode.toUpperCase();
+
+  // Executability-aware banner
+  const banner = document.getElementById('sim-banner');
+  const exec = state.meta.executability;
+  if (exec) {
+    const { grade, score, tradeable_count, total_count, untradeable_instruments } = exec;
+    if (grade === 'THEORETICAL') {
+      banner.style.background = '#B85C4A';
+      banner.style.color = '#fff';
+      banner.innerHTML = `🚫 THEORETICAL BACKTEST — ${total_count - tradeable_count}/${total_count} instruments untradeable (Executability: ${score}%). Results NOT achievable in practice.`;
+    } else if (grade === 'RESEARCH') {
+      banner.style.background = '#C4A24A';
+      banner.style.color = '#232220';
+      banner.innerHTML = `⚠ RESEARCH ONLY — Executability ${score}% (${tradeable_count}/${total_count} tradeable). Some results may not be replicable.`;
+    } else {
+      banner.style.background = '#265844';
+      banner.style.color = '#F5E8C1';
+      banner.innerHTML = `✅ PRODUCTION GRADE — Executability ${score}% (${tradeable_count}/${total_count} tradeable). Simulated backtest, not live results.`;
+    }
+  }
 }
 
 // ── KPIs ──
 function renderKPIs() {
   if (!state.meta) return;
   const s = state.meta.stats;
+  const exec = state.meta.executability;
+  const isTheoretical = exec && exec.grade === 'THEORETICAL';
+  const strikeStyle = isTheoretical ? 'text-decoration:line-through;opacity:0.5' : '';
   const kpis = [
     { label: 'Net Sharpe', value: s.sharpe, fmt: v => v, cls: '', sub: `t-stat: ${s.t_stat} (stat. significance)` },
     { label: 'Ann Return', value: s.ann_mean, fmt: v => v + '%', cls: 'positive', sub: `Gross SR: ${(parseFloat(s.sharpe) + 0.089).toFixed(3)}` },
@@ -243,11 +266,13 @@ function renderKPIs() {
     { label: 'Calmar', value: s.calmar, fmt: v => v, cls: '', sub: `Return / Max DD` },
   ];
 
+  const warningBadge = isTheoretical ? '<div style="color:#B85C4A;font-size:10px;font-weight:700;margin-top:4px">⚠ THEORETICAL</div>' : '';
   document.getElementById('kpi-strip').innerHTML = kpis.map(k => `
     <div class="kpi">
       <div class="kpi__label">${k.label}</div>
-      <div class="kpi__value ${k.cls}">${k.fmt(k.value)}</div>
+      <div class="kpi__value ${k.cls}" style="${strikeStyle}">${k.fmt(k.value)}</div>
       <div class="kpi__sub">${k.sub}</div>
+      ${warningBadge}
     </div>
   `).join('');
 }
@@ -410,6 +435,7 @@ function renderConfig() {
   if (!state.meta) return;
   const m = state.meta.meta;
   const s = state.meta.stats;
+  const exec = state.meta.executability;
   const items = [
     ['Capital', `$${(m.capital).toLocaleString()}`],
     ['Mode', m.mode],
@@ -424,6 +450,15 @@ function renderConfig() {
     ['p-value', s.p_value],
     ['Hit Rate', (parseFloat(s.hitrate)*100).toFixed(1) + '%'],
   ];
+
+  // Add executability row
+  if (exec) {
+    const gradeColors = { PRODUCTION: '#265844', RESEARCH: '#C4A24A', THEORETICAL: '#B85C4A' };
+    const gradeIcon = { PRODUCTION: '🟢', RESEARCH: '🟡', THEORETICAL: '🔴' };
+    items.push(['Executability', `<span style="color:${gradeColors[exec.grade]};font-weight:700">${gradeIcon[exec.grade]} ${exec.grade} (${exec.score}%)</span>`]);
+    items.push(['Tradeable', `${exec.tradeable_count} / ${exec.total_count} instruments`]);
+  }
+
   document.getElementById('config-panel').innerHTML = items.map(([k,v]) =>
     `<div class="config-panel__row"><span class="config-panel__key">${k}</span><span class="config-panel__value">${v}</span></div>`
   ).join('');
