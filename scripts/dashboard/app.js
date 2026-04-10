@@ -1579,15 +1579,13 @@ function renderSweepMetricsTable(runs) {
     <div style="background:var(--sand-light);border:1px solid var(--border-subtle);border-left:4px solid #C4B68A;
                 border-radius:8px;padding:12px 16px;margin-bottom:12px;font-size:12px;line-height:1.6">
       <div style="font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#8B7355;margin-bottom:6px">
-        ⚠ Why Smaller Accounts Cannot Use Larger Universes
+        ⚠ Capital ≠ Minimum Required Capital
       </div>
       <p style="color:var(--text-secondary);margin:0">
-        Each futures contract has a fixed <strong>nominal value</strong> (e.g. Nikkei ¥1,000,000 ≈ $6,500, US 10Y Bond $111,000).
-        pysystemtrade sizes positions as: <code style="background:#fff;padding:1px 5px;border-radius:3px">
-        Contracts = (Capital × vol_target × IDM × weight) ÷ (Nominal × annual_vol)</code>.
-        For a $100K account split across 19+ instruments, most high-value contracts round to <strong>0 contracts</strong> — effectively untradeable.
-        The 13-instrument $100K Macro Mini universe was hand-selected to include only <strong>micro-contracts and low-nominal instruments</strong>
-        where at least 1 contract is consistently achievable.
+        <strong>BT Capital</strong> shows the account size used as input for each backtest run.
+        This is <em>not</em> the minimum capital required to execute each universe.
+        Computing minimum required capital involves per-instrument nominal value, volatility, IDM, and weight calculations via the pysystemtrade <code style="background:#fff;padding:1px 5px;border-radius:3px">System</code> object.
+        The $100K Macro Mini (13 inst) universe was specifically designed with micro-contracts to remain tradeable at $100K.
       </p>
     </div>`;
 
@@ -1607,7 +1605,7 @@ function renderSweepMetricsTable(runs) {
   let html = `<table class="data-table">
     <thead><tr>
       <th>Rank</th><th>Universe</th><th>#Inst</th>
-      ${hasCapital ? '<th title="Account size used in backtest">Capital</th>' : ''}
+      ${hasCapital ? '<th title="Account size used as backtest input — NOT minimum required capital">BT Capital</th>' : ''}
       <th>Sharpe</th>
       <th>Return</th><th>Vol</th><th>Avg DD</th>${hasMDD ? '<th>Max DD</th>' : ''}<th>Sortino</th><th>Skew</th>
       <th>Asset Classes</th>
