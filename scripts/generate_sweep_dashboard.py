@@ -24,6 +24,7 @@ CLASS_MAP = {
     "sweep_FX_Metals": {"label": "+ FX + Metals", "classes": ["Equity", "Bond", "FX", "Metals"]},
     "sweep_Ags_FX_Metals": {"label": "+ Ags + FX + Metals", "classes": ["Equity", "Bond", "Ags", "FX", "Metals"]},
     "arki_v4_optimized": {"label": "Full 25 (+ Energy)", "classes": ["Equity", "Bond", "Ags", "FX", "Metals", "Energy"]},
+    "arki_100k_13inst": {"label": "$100K Macro Mini (13 inst)", "classes": ["Equity", "Bond", "Metals", "OilGas", "Ags"]},
 }
 
 
@@ -59,6 +60,13 @@ def find_latest_sweep_runs():
             if meta_file.exists():
                 runs["v6_handcraft"] = d
 
+    # Include $100K 13-instrument Macro Mini run
+    for d in sorted(RUNS_DIR.iterdir()):
+        if "100k_13inst" in d.name:
+            meta_file = d / "dashboard_meta.json"
+            if meta_file.exists():
+                runs["arki_100k_13inst"] = d
+
     return runs
 
 
@@ -87,16 +95,27 @@ def load_equity_curve_weekly(run_dir):
 
 
 def load_rolling_sharpe(run_dir, window_years=3):
-    """Compute rolling Sharpe ratio from daily returns."""
+    """Compute rolling Sharpe ratio from daily returns.
+    Handles both single-column (portfolio P&L) and multi-column (per-instrument) CSVs.
+    """
     ret_file = run_dir / "daily_returns.csv"
     if not ret_file.exists():
         return []
 
     df = pd.read_csv(ret_file, index_col=0, parse_dates=True)
-    col = df.columns[0]
-    returns = df[col].dropna()
 
+    # If multi-column (per-instrument), sum to get portfolio daily P&L
+    if len(df.columns) > 1:
+        returns = df.sum(axis=1)
+    else:
+        returns = df.iloc[:, 0]
+    returns = returns.dropna()
+
+    # Need enough data for the rolling window
     window = int(window_years * 252)
+    if len(returns) < window + 60:
+        return []
+
     rolling_mean = returns.rolling(window).mean() * 252
     rolling_std = returns.rolling(window).std() * (252 ** 0.5)
     rolling_sr = (rolling_mean / rolling_std).dropna()
@@ -120,6 +139,7 @@ def main():
 
     # Process sweep runs in a logical order
     order = [
+        "arki_100k_13inst",
         "sweep_base", "sweep_Ags", "sweep_FX", "sweep_Metals",
         "sweep_Ags_FX", "sweep_Ags_Metals", "sweep_FX_Metals",
         "sweep_Ags_FX_Metals", "arki_v4_optimized", "v6_handcraft",
@@ -143,6 +163,10 @@ def main():
             display_label = "Production (25, Handcraft)"
             classes = ["Equity", "Bond", "Ags", "FX", "Metals", "OilGas"]
             is_baseline = True
+        elif label == "arki_100k_13inst":
+            display_label = CLASS_MAP[label]["label"]
+            classes = CLASS_MAP[label]["classes"]
+            is_baseline = False
         else:
             display_label = CLASS_MAP[label]["label"]
             classes = CLASS_MAP[label]["classes"]
