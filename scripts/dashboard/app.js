@@ -2351,32 +2351,6 @@ function renderSweepScatterChart(runs) {
             }
           }
         },
-        annotation: {
-          annotations: {
-            prodLine: {
-              type: 'line',
-              xMin: 80, xMax: 80,
-              borderColor: PALETTE.forest + '44',
-              borderWidth: 2,
-              borderDash: [6, 4],
-              label: {
-                content: 'PRODUCTION 80%',
-                display: true,
-                position: 'start',
-                font: { size: 9, weight: '600' },
-                color: PALETTE.forest,
-                backgroundColor: 'transparent',
-              }
-            },
-            srTarget: {
-              type: 'line',
-              yMin: 0.8, yMax: 0.8,
-              borderColor: '#C4B68A44',
-              borderWidth: 1,
-              borderDash: [4, 4],
-            }
-          }
-        }
       },
       scales: {
         x: {
@@ -2393,11 +2367,46 @@ function renderSweepScatterChart(runs) {
       }
     },
     plugins: [{
-      // Draw labels next to each point
-      afterDatasetsDraw(chart) {
-        const { ctx: c } = chart;
-        const meta = chart.getDatasetMeta(0);
+      // Draw reference lines + labels
+      afterDraw(chart) {
+        const { ctx: c, chartArea, scales } = chart;
+        const xScale = scales.x;
+        const yScale = scales.y;
         c.save();
+
+        // Vertical line at Exec = 80% (PRODUCTION threshold)
+        const x80 = xScale.getPixelForValue(80);
+        if (x80 >= chartArea.left && x80 <= chartArea.right) {
+          c.strokeStyle = PALETTE.forest + '44';
+          c.lineWidth = 2;
+          c.setLineDash([6, 4]);
+          c.beginPath();
+          c.moveTo(x80, chartArea.top);
+          c.lineTo(x80, chartArea.bottom);
+          c.stroke();
+
+          c.fillStyle = PALETTE.forest;
+          c.font = '600 9px Inter, sans-serif';
+          c.textAlign = 'center';
+          c.fillText('PRODUCTION 80%', x80, chartArea.top - 4);
+        }
+
+        // Horizontal line at SR = 0.8
+        const y08 = yScale.getPixelForValue(0.8);
+        if (y08 >= chartArea.top && y08 <= chartArea.bottom) {
+          c.strokeStyle = '#C4B68A44';
+          c.lineWidth = 1;
+          c.setLineDash([4, 4]);
+          c.beginPath();
+          c.moveTo(chartArea.left, y08);
+          c.lineTo(chartArea.right, y08);
+          c.stroke();
+        }
+
+        c.setLineDash([]);
+
+        // Draw point labels
+        const meta = chart.getDatasetMeta(0);
         c.font = '10px Inter, sans-serif';
         meta.data.forEach((pt, i) => {
           const d = data[i];
@@ -2406,6 +2415,7 @@ function renderSweepScatterChart(runs) {
           c.textAlign = 'left';
           c.fillText(short, pt.x + 8, pt.y - 4);
         });
+
         c.restore();
       }
     }]
@@ -2498,14 +2508,16 @@ function renderSweepCapitalChart(data) {
           position: 'left',
           title: { display: true, text: 'Net Sharpe Ratio', font: { size: 10 } },
           grid: { color: PALETTE.gridLine },
-          suggestedMin: 0.9,
+          min: 1.0,
+          max: 1.15,
+          ticks: { callback: v => v.toFixed(2) },
         },
         y1: {
           type: 'linear',
           position: 'right',
           title: { display: true, text: 'Exec% / Max DD%', font: { size: 10 } },
           grid: { display: false },
-          suggestedMin: 0, suggestedMax: 100,
+          min: 0, max: 80,
           ticks: { callback: v => v + '%' },
         },
         x: { grid: { display: false } }
