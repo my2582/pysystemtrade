@@ -193,6 +193,7 @@ def main():
             "ann_vol": float(stats.get("ann_std", 0)),
             "sortino": float(stats.get("sortino", 0)),
             "avg_drawdown": float(stats.get("avg_drawdown", 0)),
+            "max_drawdown": float(stats["min"]) if "min" in stats else None,
             "skew": float(stats.get("skew", 0)),
             "calmar": float(stats.get("calmar", 0)),
             "equity_weekly": equity,

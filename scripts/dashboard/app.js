@@ -1571,11 +1571,13 @@ function renderSweepMetricsTable(runs) {
 
   const bestSR = Math.max(...runs.map(r => r.sharpe));
   const worstDD = Math.min(...runs.map(r => r.avg_drawdown));
+  const worstMDD = Math.min(...runs.map(r => r.max_drawdown ?? -999));
+  const hasMDD = runs.some(r => r.max_drawdown != null);
 
   let html = `<table class="data-table">
     <thead><tr>
       <th>Rank</th><th>Universe</th><th>#Inst</th><th>Sharpe</th>
-      <th>Return</th><th>Vol</th><th>Avg DD</th><th>Sortino</th><th>Skew</th>
+      <th>Return</th><th>Vol</th><th>Avg DD</th>${hasMDD ? '<th>Max DD</th>' : ''}<th>Sortino</th><th>Skew</th>
       <th>Asset Classes</th>
     </tr></thead><tbody>`;
 
@@ -1586,6 +1588,9 @@ function renderSweepMetricsTable(runs) {
     const skewCls = r.skew > 0 ? ' style="color:var(--forest)"' : r.skew < -0.5 ? ' style="color:#8B4513"' : '';
     const star = isBest ? ' ★' : '';
     const tag = r.is_baseline ? ' <span style="background:var(--forest);color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;margin-left:4px">BASELINE</span>' : '';
+    const mdd = r.max_drawdown != null ? r.max_drawdown : null;
+    const mddCls = mdd != null && mdd === worstMDD ? ' style="color:#B85C4A;font-weight:700"' : '';
+    const mddCell = hasMDD ? `<td${mddCls}>${mdd != null ? mdd.toFixed(1) + '%' : '—'}</td>` : '';
 
     html += `<tr${rowCls}>
       <td>${i + 1}</td>
@@ -1595,6 +1600,7 @@ function renderSweepMetricsTable(runs) {
       <td>${r.ann_return.toFixed(1)}%</td>
       <td>${r.ann_vol.toFixed(1)}%</td>
       <td>${r.avg_drawdown.toFixed(1)}%</td>
+      ${mddCell}
       <td>${r.sortino.toFixed(3)}</td>
       <td${skewCls}>${r.skew > 0 ? '+' : ''}${r.skew.toFixed(2)}</td>
       <td style="font-size:10px">${r.classes.join(', ')}</td>
@@ -1765,6 +1771,13 @@ function renderSweepCountChart(runs) {
   const counts = sorted.map(r => r.n_instruments);
   const srs = sorted.map(r => r.sharpe);
 
+  // Dynamic y1 axis: give SR values breathing room by padding 20% beyond data range
+  const srMin = Math.min(...srs);
+  const srMax = Math.max(...srs);
+  const srRange = srMax - srMin || 0.5;
+  const srAxisMin = Math.max(0, parseFloat((srMin - srRange * 0.3).toFixed(2)));
+  const srAxisMax = parseFloat((srMax + srRange * 0.3).toFixed(2));
+
   state.charts.sweepCount = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -1784,8 +1797,10 @@ function renderSweepCountChart(runs) {
           type: 'line',
           borderColor: PALETTE.forest,
           borderWidth: 2,
-          pointRadius: 4,
-          pointBackgroundColor: PALETTE.forest,
+          pointRadius: 5,
+          pointBackgroundColor: sorted.map(r => r.is_baseline ? '#fff' : PALETTE.forest),
+          pointBorderColor: PALETTE.forest,
+          pointBorderWidth: 2,
           yAxisID: 'y1',
         }
       ]
@@ -1796,15 +1811,24 @@ function renderSweepCountChart(runs) {
       maintainAspectRatio: false,
       plugins: {
         legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.label === 'Sharpe Ratio'
+              ? `SR: ${ctx.raw.toFixed(3)}`
+              : `# Instruments: ${ctx.raw}`
+          }
+        }
       },
       scales: {
         x: { display: false },
         y: { grid: { display: false }, ticks: { font: { size: 9 } } },
         y1: {
           position: 'right',
-          grid: { display: false },
-          title: { display: true, text: 'SR' },
-          min: 0,
+          grid: { color: 'rgba(38,88,68,0.08)', drawOnChartArea: true },
+          title: { display: true, text: 'Sharpe Ratio', font: { size: 10 } },
+          min: srAxisMin,
+          max: srAxisMax,
+          ticks: { callback: v => v.toFixed(2), font: { size: 9 }, maxTicksLimit: 6 }
         }
       }
     }
