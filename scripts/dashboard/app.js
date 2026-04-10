@@ -3067,7 +3067,162 @@ function renderGenericHeatmap(d, elId) {
 
 
 // ══════════════════════════════════════════════════════════════════
-// MACRO COMPARISON TAB
+// MACRO COMPARISON TAB — Universe-Level Comparison
+// ══════════════════════════════════════════════════════════════════
+
+let universeCompareData = null;
+let universeCompareLoaded = false;
+
+async function loadUniverseCompareData() {
+  if (universeCompareLoaded) return;
+  try {
+    const text = await loadFile('data/arki_macro_universe_compare.json');
+    universeCompareData = JSON.parse(text);
+    universeCompareLoaded = true;
+    renderUniverseCompare();
+  } catch (e) {
+    console.warn('Universe compare data not found:', e.message);
+  }
+}
+
+function renderUniverseCompare() {
+  if (!universeCompareData) return;
+  const scenarios = universeCompareData.scenarios;
+
+  // ─── 1. Metrics Table ───
+  const bestSR = Math.max(...scenarios.map(s => s.combined_stats.sharpe));
+  const bestDD = Math.max(...scenarios.map(s => s.combined_stats.max_drawdown)); // least negative
+  const bestCAGR = Math.max(...scenarios.map(s => s.combined_stats.cagr));
+
+  let html = `<table><thead><tr>
+    <th>#</th><th>Universe</th><th>N</th><th>Total $</th>
+    <th>Combined SR</th><th>MF-Only SR</th><th>SR Lift</th>
+    <th>CAGR</th><th>Max DD</th><th>Ann Vol</th><th>ρ (Mini↔MF)</th><th>Months</th>
+  </tr></thead><tbody>`;
+
+  scenarios.forEach((s, i) => {
+    const cs = s.combined_stats;
+    const ms = s.mf_stats;
+    const srLift = cs.sharpe - ms.sharpe;
+    const isBest = cs.sharpe === bestSR;
+    const rowCls = i === 0 ? 'style="background:#f0f7f2;font-weight:600"' : '';
+    html += `<tr ${rowCls}>
+      <td>${i + 1}</td>
+      <td>${isBest ? '🏆 ' : ''}${s.label}</td>
+      <td>${s.n_instruments}</td>
+      <td>$${(s.total_capital/1000).toFixed(0)}K</td>
+      <td class="${cs.sharpe === bestSR ? 'td-positive' : ''}" style="font-weight:700">${cs.sharpe.toFixed(3)}</td>
+      <td>${ms.sharpe.toFixed(3)}</td>
+      <td class="td-positive">+${srLift.toFixed(3)}</td>
+      <td>${cs.cagr}%</td>
+      <td class="${cs.max_drawdown === bestDD ? 'td-positive' : 'td-negative'}">${cs.max_drawdown}%</td>
+      <td>${cs.ann_vol}%</td>
+      <td>${s.correlation.toFixed(3)}</td>
+      <td>${cs.months}</td>
+    </tr>`;
+  });
+  html += '</tbody></table>';
+  document.getElementById('macro-universe-table').innerHTML = html;
+
+  // ─── 2. Top-5 Equity Overlay ───
+  const top5 = scenarios.slice(0, 5);
+  const equityColors = [PALETTE.forest, PALETTE.green, '#8B7355', '#C4B68A', '#999'];
+  const equityDash = [[], [6,3], [4,4], [2,3], [8,4]];
+
+  destroyChart('macro-universe-equity-chart');
+  state.charts['macro-universe-equity-chart'] = new Chart(
+    document.getElementById('macro-universe-equity-chart'), {
+      type: 'line',
+      data: {
+        labels: top5[0].equity_monthly.map(p => new Date(p[0])),
+        datasets: top5.map((s, i) => ({
+          label: s.label + ` (SR ${s.combined_stats.sharpe.toFixed(3)})`,
+          data: s.equity_monthly.map(p => p[1]),
+          borderColor: equityColors[i],
+          borderWidth: i === 0 ? 2.5 : 1.8,
+          borderDash: equityDash[i],
+          pointRadius: 0,
+          tension: 0.1,
+        }))
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top', align: 'end', labels: { boxWidth: 14, font: { size: 10 } } },
+          tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(2)}×` } }
+        },
+        scales: {
+          x: { type: 'time', time: { unit: 'year' }, grid: { color: PALETTE.gridLine }, ticks: { maxTicksLimit: 12, font: { size: 10 } } },
+          y: { type: 'logarithmic', grid: { color: PALETTE.gridLine }, ticks: { callback: v => v >= 10 ? v.toFixed(0)+'×' : v.toFixed(1)+'×' } }
+        }
+      }
+    }
+  );
+
+  // ─── 3. MF-Only vs Combined SR Bar Chart ───
+  const labels = scenarios.map(s => s.label.replace('+ ', '+'));
+  const mfSRs = scenarios.map(s => s.mf_stats.sharpe);
+  const combSRs = scenarios.map(s => s.combined_stats.sharpe);
+
+  destroyChart('macro-universe-sr-compare-chart');
+  state.charts['macro-universe-sr-compare-chart'] = new Chart(
+    document.getElementById('macro-universe-sr-compare-chart'), {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'MF-Only SR', data: mfSRs, backgroundColor: '#C4B68A88', borderColor: '#C4B68A', borderWidth: 1, borderRadius: 3 },
+          { label: 'Combined SR (Mini+MF)', data: combSRs, backgroundColor: PALETTE.forest + '88', borderColor: PALETTE.forest, borderWidth: 1, borderRadius: 3 },
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+          tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(3)}` } }
+        },
+        scales: {
+          x: { min: 0, max: 1.1, grid: { color: PALETTE.gridLine }, title: { display: true, text: 'Sharpe Ratio', font: { size: 10 } } },
+          y: { grid: { display: false }, ticks: { font: { size: 9 } } }
+        }
+      }
+    }
+  );
+
+  // ─── 4. Top-5 Drawdown ───
+  destroyChart('macro-universe-drawdown-chart');
+  state.charts['macro-universe-drawdown-chart'] = new Chart(
+    document.getElementById('macro-universe-drawdown-chart'), {
+      type: 'line',
+      data: {
+        labels: top5[0].drawdown.map(p => new Date(p[0])),
+        datasets: top5.map((s, i) => ({
+          label: s.label,
+          data: s.drawdown.map(p => p[1] * 100),
+          borderColor: equityColors[i],
+          borderWidth: i === 0 ? 2 : 1.2,
+          borderDash: equityDash[i],
+          pointRadius: 0,
+          fill: i === 0,
+          backgroundColor: i === 0 ? PALETTE.forest + '15' : undefined,
+        }))
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'top', align: 'end', labels: { boxWidth: 14, font: { size: 9 } } } },
+        scales: {
+          x: { type: 'time', time: { unit: 'year' }, grid: { color: PALETTE.gridLine } },
+          y: { grid: { color: PALETTE.gridLine }, ticks: { callback: v => v.toFixed(0)+'%' } }
+        }
+      }
+    }
+  );
+}
+
+
+// ══════════════════════════════════════════════════════════════════
+// MACRO COMPARISON TAB — Original vs Smaller (Legacy)
 // ══════════════════════════════════════════════════════════════════
 
 let compareData = null;
@@ -3075,13 +3230,16 @@ let compareLoaded = false;
 
 async function loadCompareData() {
   if (compareLoaded) return;
-  try {
-    const text = await loadFile('arki_macro_comparison.json');
-    compareData = JSON.parse(text);
+  // Load both datasets in parallel
+  const [compText] = await Promise.all([
+    loadFile('arki_macro_comparison.json').catch(() => null),
+  ]);
+  loadUniverseCompareData(); // fire and forget
+
+  if (compText) {
+    compareData = JSON.parse(compText);
     compareLoaded = true;
     renderCompareTab();
-  } catch (e) {
-    console.warn('Comparison data not found:', e.message);
   }
 }
 

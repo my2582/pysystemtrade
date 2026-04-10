@@ -502,31 +502,67 @@
   <!-- ──── TAB: Macro Comparison ──── -->
   <section class="tab-content" id="tab-macro-compare">
 
-    <!-- Side-by-side KPIs -->
+    <!-- Universe-Level Arki Macro Comparison -->
+    <div class="card" style="border-left:4px solid var(--forest);background:linear-gradient(135deg, var(--sand-light) 0%, #f5f0e8 100%);margin-bottom:var(--space-lg)">
+      <div class="card__header">
+        <span class="card__title">🌍 Universe-Level Arki Macro Comparison</span>
+        <span class="info-tip" title="Each row is an Arki Macro portfolio: fixed Mini ($100K, 1.6× levered) combined with a different Multi-Factor universe at $200K. This isolates the universe effect at the combined portfolio level.">ⓘ</span>
+      </div>
+      <p class="card__hint">Fixed: Macro Mini ($100K, 1.6×). Variable: Multi-Factor universe. Combined = capital-weighted blend.</p>
+      <div class="table-wrap" id="macro-universe-table"><p class="loading">Loading...</p></div>
+    </div>
+
+    <!-- Universe Equity Overlay -->
     <div class="card" style="margin-bottom:var(--space-lg)">
       <div class="card__header">
-        <span class="card__title">Strategy Comparison — Arki Macro vs Smaller Arki Macro</span>
-        <span class="info-tip" title="Side-by-side comparison of the $300K and $250K portfolio configurations.">ⓘ</span>
+        <span class="card__title">Combined Equity — Top Universes</span>
+        <span class="info-tip" title="Cumulative monthly equity for the top 5 universe combinations. All include the same Macro Mini component.">ⓘ</span>
+      </div>
+      <div class="chart-wrap chart-wrap--tall"><canvas id="macro-universe-equity-chart"></canvas></div>
+    </div>
+
+    <!-- SR: MF Only vs Combined -->
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">SR: MF-Only vs Combined</span>
+          <span class="info-tip" title="How each universe's Sharpe Ratio changes when combined with Macro Mini. The gap shows diversification benefit — larger gap = better diversifier.">ⓘ</span>
+        </div>
+        <div class="chart-wrap chart-wrap--medium"><canvas id="macro-universe-sr-compare-chart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Drawdown — Top Universes</span>
+        </div>
+        <div class="chart-wrap chart-wrap--medium"><canvas id="macro-universe-drawdown-chart"></canvas></div>
+      </div>
+    </div>
+
+    <hr style="border:none;border-top:2px dashed var(--border-subtle);margin:var(--space-xl) 0">
+
+    <!-- Legacy: Side-by-side comparison (Original vs Smaller) -->
+    <div class="card" style="margin-bottom:var(--space-lg)">
+      <div class="card__header">
+        <span class="card__title">Original vs Smaller — Detailed Comparison</span>
+        <span class="info-tip" title="Side-by-side comparison of the $300K (Mini $100K + MF $200K) and $250K (Mini $150K + MF $100K) portfolio configurations.">ⓘ</span>
       </div>
       <div class="table-wrap" id="macro-compare-table"><p class="loading">Loading...</p></div>
     </div>
 
-    <!-- Equity overlay -->
     <div class="card" style="margin-bottom:var(--space-lg)">
-      <div class="card__header"><span class="card__title">Equity Curve Overlay</span></div>
+      <div class="card__header"><span class="card__title">Equity Curve — Original vs Smaller</span></div>
       <div class="chart-wrap chart-wrap--tall"><canvas id="macro-compare-equity-chart"></canvas></div>
     </div>
 
-    <!-- Period Returns comparison -->
-    <div class="card" style="margin-bottom:var(--space-lg)">
-      <div class="card__header"><span class="card__title">Period Returns Comparison</span></div>
-      <div class="table-wrap" id="macro-compare-period-table"><p class="loading">Loading...</p></div>
-    </div>
-
-    <!-- Drawdown overlay -->
-    <div class="card">
-      <div class="card__header"><span class="card__title">Drawdown Comparison</span></div>
-      <div class="chart-wrap chart-wrap--medium"><canvas id="macro-compare-drawdown-chart"></canvas></div>
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card__header"><span class="card__title">Period Returns Comparison</span></div>
+        <div class="table-wrap" id="macro-compare-period-table"><p class="loading">Loading...</p></div>
+      </div>
+      <div class="card">
+        <div class="card__header"><span class="card__title">Drawdown Comparison</span></div>
+        <div class="chart-wrap chart-wrap--medium"><canvas id="macro-compare-drawdown-chart"></canvas></div>
+      </div>
     </div>
 
   </section>
@@ -692,6 +728,6 @@
 
 </main>
 
-<script src="app.js?v=20260411c"></script>
+<script src="app.js?v=20260411d"></script>
 </body>
 </html>
