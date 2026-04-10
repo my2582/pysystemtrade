@@ -7,10 +7,14 @@ For each sweep universe, computes:
 
 This isolates the universe effect at the combined portfolio level while keeping
 the Mini component and capital allocation fixed.
+
+Also embeds full provenance metadata (source config, trading rules, instrument
+weights method, run_id) so the dashboard can display traceability.
 """
 import json
 import numpy as np
 import pandas as pd
+import yaml
 from pathlib import Path
 from datetime import datetime
 
@@ -37,7 +41,7 @@ def find_latest_run(label):
     return matches[-1] if matches else None
 
 
-# Universe configs: label -> (run_label, mf_capital, display_name, n_instruments)
+# Universe configs: (run_label, mf_capital, display_name, n_instruments)
 UNIVERSE_CONFIGS = [
     # Full 25 variants (capital scaling)
     ("arki_v4_optimized",   200_000, "Full 25 ($200K)",     25),
@@ -72,6 +76,13 @@ def load_multi_factor_monthly(filepath):
     daily_ret = port_daily_pct / 100
     monthly = (1 + daily_ret).resample("M").prod() - 1
     return monthly
+
+
+def compute_daily_sr(filepath):
+    """Compute annualized SR from daily returns (pysystemtrade method, √256)."""
+    df = pd.read_csv(filepath, index_col=0, parse_dates=True)
+    port = df.sum(axis=1) / 100
+    return round(float(port.mean() / port.std() * np.sqrt(256)), 3)
 
 
 def compute_stats(returns):
@@ -110,6 +121,93 @@ def compute_stats(returns):
     }
 
 
+def extract_provenance(run_dir):
+    """Extract full provenance from a run directory for traceability."""
+    provenance = {
+        "run_id": run_dir.name,
+        "run_dir": str(run_dir.relative_to(PROJECT_ROOT)),
+    }
+
+    # config.yaml — run-level metadata
+    cfg_file = run_dir / "config.yaml"
+    if cfg_file.exists():
+        with open(cfg_file) as f:
+            cfg = yaml.safe_load(f) or {}
+        provenance["config_file"] = cfg.get("config_file", "unknown")
+        provenance["instruments_file"] = cfg.get("instruments_file", "unknown")
+        provenance["instruments"] = cfg.get("instruments", [])
+        provenance["capital"] = cfg.get("capital", cfg.get("notional_trading_capital"))
+        provenance["vol_target"] = cfg.get("vol_target")
+        provenance["mode"] = cfg.get("mode")
+        provenance["timestamp"] = cfg.get("timestamp")
+
+    # methodology.json — trading rules with exact parameters
+    meth_file = run_dir / "methodology.json"
+    if meth_file.exists():
+        with open(meth_file) as f:
+            meth = json.load(f)
+        rules = meth.get("trading_rules", {})
+        provenance["trading_rules"] = {}
+        for name, info in sorted(rules.items()):
+            family = "unknown"
+            func = info.get("function", "")
+            if "ewmac" in func:
+                family = "Trend"
+            elif "carry" in func:
+                family = "Carry"
+            elif "rel_mom" in func or "relative_momentum" in func:
+                family = "CS Momentum"
+            provenance["trading_rules"][name] = {
+                "family": family,
+                "function": func.split(".")[-1],
+                "params": info.get("params", info.get("other_args", {})),
+            }
+        provenance["forecast_cap"] = meth.get("forecast_cap")
+        provenance["shadow_cost"] = meth.get("shadow_cost")
+        provenance["tracking_error_buffer"] = meth.get("tracking_error_buffer")
+        provenance["cost_multiplier"] = meth.get("cost_multiplier")
+        provenance["vol_calc"] = meth.get("volatility_calculation", {})
+
+    # Source config file — forecast/instrument weight methods
+    src_cfg_path = provenance.get("config_file")
+    if src_cfg_path:
+        full_src = PROJECT_ROOT / src_cfg_path
+        # Fallback chain: original path → arki_production.yaml → archive
+        if not full_src.exists():
+            full_src = PROJECT_ROOT / "scripts" / "backtest_config" / "arki_production.yaml"
+        if not full_src.exists():
+            archive_name = Path(src_cfg_path).name
+            full_src = PROJECT_ROOT / "scripts" / "backtest_config" / "archive" / archive_name
+        if full_src.exists():
+            with open(full_src) as f:
+                src = yaml.safe_load(f) or {}
+            provenance["forecast_weight_method"] = (
+                "handcraft" if src.get("forecast_weight_estimate", {}).get("method") == "handcraft"
+                else ("estimated" if src.get("use_forecast_weight_estimates") else "fixed")
+            )
+            provenance["instrument_weight_method"] = (
+                "estimated" if src.get("use_instrument_weight_estimates")
+                else "fixed"
+            )
+            # Extract forecast scalars if available
+            provenance["forecast_scalars"] = src.get("forecast_scalars", {})
+        else:
+            provenance["forecast_weight_method"] = "unknown"
+            provenance["instrument_weight_method"] = "unknown"
+
+    # stats.yaml — native daily SR from pysystemtrade
+    stats_file = run_dir / "stats.yaml"
+    if stats_file.exists():
+        with open(stats_file) as f:
+            st = yaml.safe_load(f) or {}
+        native_stats = st.get("stats", {})
+        provenance["daily_sr"] = float(native_stats.get("sharpe", 0))
+        provenance["period"] = st.get("period")
+        provenance["years"] = st.get("years")
+
+    return provenance
+
+
 def series_to_points(series):
     return [[int(dt.timestamp() * 1000), round(float(val), 4)] for dt, val in series.items()]
 
@@ -133,9 +231,15 @@ def main():
 
         print(f"\n  📊 {display_name} ({run_dir.name})...")
 
+        # Extract provenance
+        provenance = extract_provenance(run_dir)
+
         # Load MF returns
         mf_ret = load_multi_factor_monthly(dr_file)
         total_capital = MINI_CAPITAL + mf_capital
+
+        # Also compute native daily SR for MF
+        mf_daily_sr = compute_daily_sr(dr_file)
 
         # Align dates
         common_start = max(mini_ret.index[0], mf_ret.index[0])
@@ -159,9 +263,10 @@ def main():
         mf_stats = compute_stats(mf_a)
 
         print(f"    Common: {common_idx[0].date()} → {common_idx[-1].date()} ({len(common_idx)} months)")
-        print(f"    Combined SR: {stats['sharpe']:.3f}, MF SR: {mf_stats['sharpe']:.3f}, ρ={corr:.3f}")
+        print(f"    Combined SR: {stats['sharpe']:.3f}, MF Monthly SR: {mf_stats['sharpe']:.3f}, MF Daily SR: {mf_daily_sr:.3f}, ρ={corr:.3f}")
 
-        scenarios.append({
+        # Build scenario with provenance
+        scenario = {
             "id": run_label,
             "label": display_name,
             "n_instruments": n_inst,
@@ -171,17 +276,30 @@ def main():
             "correlation": round(corr, 4),
             "combined_stats": stats,
             "mf_stats": mf_stats,
+            "mf_daily_sr": mf_daily_sr,
             "equity_monthly": series_to_points(combined_equity),
             "drawdown": series_to_points(drawdown),
-        })
+            "provenance": provenance,
+        }
+        scenarios.append(scenario)
 
     # Sort by combined SR descending
     scenarios.sort(key=lambda s: s["combined_stats"]["sharpe"], reverse=True)
+
+    # SR methodology note
+    sr_note = {
+        "mf_daily_sr": "Annualized from daily returns (√256). Same as pysystemtrade stats and Universe Sweep.",
+        "mf_monthly_sr": "CAGR ÷ monthly vol (√12). Lower due to compounding, volatility drag, and monthly resampling.",
+        "combined_sr": "Same methodology as Monthly SR, applied to the capital-weighted Mini+MF blend.",
+        "why_different": "Daily SR ≈ monthly_mean × √256/std ≈ 1.08. Monthly SR uses CAGR/(std×√12) ≈ 0.75. "
+                        "The gap (~0.3) is expected: CAGR < arithmetic mean (due to vol drag) and monthly vol > daily vol × √21 (due to autocorrelation of trend strategies).",
+    }
 
     output = {
         "generated": datetime.now().isoformat(),
         "mini_capital": MINI_CAPITAL,
         "mini_description": "Macro Mini ($100K, 1.6× leveraged trend)",
+        "sr_methodology": sr_note,
         "scenarios": scenarios,
     }
 
@@ -195,12 +313,12 @@ def main():
     print(f"   {len(scenarios)} universe scenarios compared\n")
 
     # Summary table
-    print(f"  {'#':>2}  {'Universe':<25} {'Total$':>7}  {'Comb SR':>8}  {'MF SR':>7}  {'MaxDD':>8}  {'CAGR':>7}  {'ρ':>6}")
-    print(f"  {'—'*2}  {'—'*25} {'—'*7}  {'—'*8}  {'—'*7}  {'—'*8}  {'—'*7}  {'—'*6}")
+    print(f"  {'#':>2}  {'Universe':<25} {'Total$':>7}  {'Comb SR':>8}  {'MF DailySR':>10}  {'MF MonSR':>8}  {'MaxDD':>8}  {'CAGR':>7}  {'ρ':>6}")
+    print(f"  {'—'*2}  {'—'*25} {'—'*7}  {'—'*8}  {'—'*10}  {'—'*8}  {'—'*8}  {'—'*7}  {'—'*6}")
     for i, s in enumerate(scenarios, 1):
         cs = s["combined_stats"]
         ms = s["mf_stats"]
-        print(f"  {i:2d}  {s['label']:<25} ${s['total_capital']/1000:>5.0f}K  {cs['sharpe']:>8.3f}  {ms['sharpe']:>7.3f}  {cs['max_drawdown']:>7.1f}%  {cs['cagr']:>6.1f}%  {s['correlation']:>6.3f}")
+        print(f"  {i:2d}  {s['label']:<25} ${s['total_capital']/1000:>5.0f}K  {cs['sharpe']:>8.3f}  {s['mf_daily_sr']:>10.3f}  {ms['sharpe']:>8.3f}  {cs['max_drawdown']:>7.1f}%  {cs['cagr']:>6.1f}%  {s['correlation']:>6.3f}")
 
 
 if __name__ == "__main__":

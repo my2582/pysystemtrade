@@ -3092,17 +3092,21 @@ function renderUniverseCompare() {
   // ─── 1. Metrics Table ───
   const bestSR = Math.max(...scenarios.map(s => s.combined_stats.sharpe));
   const bestDD = Math.max(...scenarios.map(s => s.combined_stats.max_drawdown)); // least negative
-  const bestCAGR = Math.max(...scenarios.map(s => s.combined_stats.cagr));
+  const bestDailySR = Math.max(...scenarios.map(s => s.mf_daily_sr || 0));
 
   let html = `<table><thead><tr>
     <th>#</th><th>Universe</th><th>N</th><th>Total $</th>
-    <th>Combined SR</th><th>MF-Only SR</th><th>SR Lift</th>
-    <th>CAGR</th><th>Max DD</th><th>Ann Vol</th><th>ρ (Mini↔MF)</th><th>Months</th>
+    <th title="Combined Monthly SR: CAGR ÷ (monthly σ × √12)">Combined SR</th>
+    <th title="MF Daily SR: annualized from daily returns (√256). Matches Universe Sweep tab.">MF Daily SR</th>
+    <th title="MF Monthly SR: CAGR ÷ (monthly σ × √12). Lower than Daily SR due to compounding & vol drag.">MF Monthly SR</th>
+    <th>SR Lift</th>
+    <th>CAGR</th><th>Max DD</th><th>Ann Vol</th><th>ρ (Mini↔MF)</th>
   </tr></thead><tbody>`;
 
   scenarios.forEach((s, i) => {
     const cs = s.combined_stats;
     const ms = s.mf_stats;
+    const dailySR = s.mf_daily_sr || 0;
     const srLift = cs.sharpe - ms.sharpe;
     const isBest = cs.sharpe === bestSR;
     const rowCls = i === 0 ? 'style="background:#f0f7f2;font-weight:600"' : '';
@@ -3112,17 +3116,100 @@ function renderUniverseCompare() {
       <td>${s.n_instruments}</td>
       <td>$${(s.total_capital/1000).toFixed(0)}K</td>
       <td class="${cs.sharpe === bestSR ? 'td-positive' : ''}" style="font-weight:700">${cs.sharpe.toFixed(3)}</td>
-      <td>${ms.sharpe.toFixed(3)}</td>
+      <td class="${dailySR === bestDailySR ? 'td-positive' : ''}" style="font-weight:600">${dailySR.toFixed(3)}</td>
+      <td style="color:var(--text-muted)">${ms.sharpe.toFixed(3)}</td>
       <td class="td-positive">+${srLift.toFixed(3)}</td>
       <td>${cs.cagr}%</td>
       <td class="${cs.max_drawdown === bestDD ? 'td-positive' : 'td-negative'}">${cs.max_drawdown}%</td>
       <td>${cs.ann_vol}%</td>
       <td>${s.correlation.toFixed(3)}</td>
-      <td>${cs.months}</td>
     </tr>`;
   });
   html += '</tbody></table>';
+
+  // SR methodology note
+  const srNote = universeCompareData.sr_methodology;
+  if (srNote) {
+    html += `<div style="margin-top:var(--space-sm);padding:var(--space-sm) var(--space-md);background:#fdf9ee;border-left:3px solid #C4B68A;font-size:11px;color:var(--text-muted);line-height:1.6">
+      <strong>📐 SR Methodology Note:</strong><br>
+      <strong>MF Daily SR</strong> = ${srNote.mf_daily_sr}<br>
+      <strong>MF Monthly SR</strong> = ${srNote.mf_monthly_sr}<br>
+      <strong>Why different?</strong> ${srNote.why_different}
+    </div>`;
+  }
+
   document.getElementById('macro-universe-table').innerHTML = html;
+
+  // ─── 1b. Strategy Provenance Panel ───
+  const firstProv = scenarios[0]?.provenance;
+  if (firstProv) {
+    const rules = firstProv.trading_rules || {};
+    const rulesByFamily = {};
+    Object.entries(rules).forEach(([name, r]) => {
+      const fam = r.family || 'Other';
+      if (!rulesByFamily[fam]) rulesByFamily[fam] = [];
+      rulesByFamily[fam].push({ name, ...r });
+    });
+
+    let provHtml = `<div class="card" style="margin-top:var(--space-lg)">
+      <div class="card__header" style="cursor:pointer" onclick="this.parentElement.querySelector('.ref-body').classList.toggle('collapsed')">
+        <span class="card__title">🔍 Strategy Provenance — Traceability Record</span>
+        <span class="info-tip" title="Full configuration record for the #1 ranked universe. Includes trading rules with exact parameters, weighting methods, and source config file. All universes share the same strategy configuration — only the instrument list differs.">ⓘ</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">▼ Click to expand/collapse</span>
+      </div>
+      <div class="ref-body" id="macro-provenance-body">`;
+
+    // Config summary
+    provHtml += `<div class="ref-section">
+      <div class="ref-section__title">Configuration</div>
+      <table class="ref-table"><thead><tr><th>Field</th><th>Value</th><th>Source</th></tr></thead><tbody>
+        <tr><td>Config File</td><td><code>${firstProv.config_file || '—'}</code></td><td>run config.yaml</td></tr>
+        <tr><td>Run ID</td><td><code>${firstProv.run_id || '—'}</code></td><td>results/runs/</td></tr>
+        <tr><td>Capital</td><td>$${(firstProv.capital||0).toLocaleString()}</td><td>config.yaml</td></tr>
+        <tr><td>Vol Target</td><td>${firstProv.vol_target || '—'}%</td><td>config.yaml</td></tr>
+        <tr><td>Forecast Weight Method</td><td>${firstProv.forecast_weight_method || '—'}</td><td>source YAML</td></tr>
+        <tr><td>Instrument Weight Method</td><td>${firstProv.instrument_weight_method || '—'}</td><td>source YAML</td></tr>
+        <tr><td>Forecast Cap</td><td>${firstProv.forecast_cap || '—'}</td><td>methodology.json</td></tr>
+        <tr><td>Shadow Cost</td><td>${firstProv.shadow_cost || '—'}</td><td>methodology.json</td></tr>
+        <tr><td>Tracking Error Buffer</td><td>${firstProv.tracking_error_buffer || '—'}</td><td>methodology.json</td></tr>
+        <tr><td>Daily SR (pysystemtrade)</td><td style="font-weight:700">${firstProv.daily_sr || '—'}</td><td>stats.yaml</td></tr>
+        <tr><td>Period</td><td>${firstProv.period || '—'}</td><td>stats.yaml</td></tr>
+      </tbody></table>
+    </div>`;
+
+    // Trading rules by family
+    provHtml += `<div class="ref-section">
+      <div class="ref-section__title">Trading Rules (${Object.keys(rules).length} rules, ${Object.keys(rulesByFamily).length} families)</div>
+      <table class="ref-table"><thead><tr><th>Family</th><th>Rule</th><th>Function</th><th>Parameters</th></tr></thead><tbody>`;
+    for (const [family, familyRules] of Object.entries(rulesByFamily).sort()) {
+      familyRules.forEach((r, idx) => {
+        const paramStr = Object.entries(r.params || {}).map(([k,v]) => `${k}=${v}`).join(', ');
+        provHtml += `<tr>
+          ${idx === 0 ? `<td rowspan="${familyRules.length}" style="font-weight:600;vertical-align:top">${family}</td>` : ''}
+          <td>${r.name}</td><td><code>${r.function}</code></td><td>${paramStr}</td>
+        </tr>`;
+      });
+    }
+    provHtml += '</tbody></table></div>';
+
+    // Instruments list for #1
+    if (firstProv.instruments?.length) {
+      provHtml += `<div class="ref-section">
+        <div class="ref-section__title">Instrument Universe (${firstProv.instruments.length})</div>
+        <div style="font-size:11px;font-family:monospace;columns:3;column-gap:var(--space-md);line-height:1.8">
+          ${firstProv.instruments.map(i => `<span style="display:inline-block;width:100%">${i}</span>`).join('')}
+        </div>
+      </div>`;
+    }
+
+    provHtml += '</div></div>';
+
+    // Append provenance to the table container
+    document.getElementById('macro-universe-table').insertAdjacentHTML('afterend', provHtml);
+    // Start collapsed
+    const provBody = document.getElementById('macro-provenance-body');
+    if (provBody) provBody.classList.add('collapsed');
+  }
 
   // ─── 2. Top-5 Equity Overlay ───
   const top5 = scenarios.slice(0, 5);
