@@ -29,118 +29,144 @@ CLASS_MAP = {
 }
 
 VOL_TARGET_DEFAULT = 25.0  # annual % vol target
-SIGMA_CLIP = 0.10  # clip daily returns beyond 10% (roll artifacts)
-SIGMA_LOOKBACK = 256  # trading days for volatility estimation
+POSITION_LOOKBACK = 256  # trading days for position analysis
 
 
-def compute_min_capital(run_dir):
+def compute_capital_efficiency(run_dir):
     """
-    Compute per-instrument minimum capital required to hold >= 0.5 contracts
-    at average forecast, using pysystemtrade's position sizing formula.
+    Compute capital efficiency metrics from actual backtest positions.
 
-    From positionsizing.py:
-      subsys_pos = (Capital × vol_target%) / (sqrt(256) × contract_value × σ_daily)
+    Instead of a theoretical formula, we measure how efficiently the
+    capital is being used by analyzing the actual rounded (integer)
+    positions from the backtest. This gives a ground-truth answer to
+    "can this universe be traded with this capital?"
 
-    For notional_pos >= 0.5 at avg forecast:
-      0.5 = IDM × weight × subsys_pos
-      => Capital_min = (0.5 × sqrt(256) × contract_value × σ_daily) / (IDM × weight × vol_target%)
+    Metrics:
+    - active_count: instruments actively traded (>50% of days non-zero)
+    - active_pct: active_count / total instruments
+    - avg_position: average absolute position across all instruments
+    - min_capital_est: estimated min capital via subsystem position scaling
 
-    Returns: {"per_instrument": {inst: min_cap}, "sum": float, "max": float,
-             "idm": float, "n_tradeable": int}
+    Returns: dict with efficiency metrics, or None if data missing.
     """
     run_dir = Path(run_dir)
 
-    cv_file = run_dir / "contract_values.csv"
-    iw_file = run_dir / "instrument_weights.csv"
+    rp_file = run_dir / "rounded_positions.csv"
     sp_file = run_dir / "subsystem_positions.csv"
     np_file = run_dir / "notional_positions.csv"
+    iw_file = run_dir / "instrument_weights.csv"
 
-    if not all(f.exists() for f in [cv_file, iw_file, sp_file, np_file]):
+    if not rp_file.exists():
         return None
 
-    cv = pd.read_csv(cv_file, index_col=0, parse_dates=True)
-    iw = pd.read_csv(iw_file, index_col=0, parse_dates=True)
-    sp = pd.read_csv(sp_file, index_col=0, parse_dates=True)
-    np_df = pd.read_csv(np_file, index_col=0, parse_dates=True)
+    rp = pd.read_csv(rp_file, index_col=0, parse_dates=True)
+    recent = rp.tail(POSITION_LOOKBACK)
+    n_inst = len(rp.columns)
 
-    # Read vol_target from config.yaml
-    vol_target_pct = VOL_TARGET_DEFAULT
+    if n_inst == 0:
+        return None
+
+    # Read config for capital
     config_file = run_dir / "config.yaml"
+    capital = 200000
     if config_file.exists():
         try:
             with open(config_file) as f:
                 cfg = yaml.safe_load(f)
-            vol_target_pct = float(cfg.get("vol_target", VOL_TARGET_DEFAULT))
+            capital = float(cfg.get("capital", 200000))
         except Exception:
             pass
 
-    # Last instrument weights
-    last_w = iw.dropna(how="all").iloc[-1]
-
-    # Derive IDM × risk_overlay from position data
-    # notional_pos = subsystem_pos × IDM × weight × risk_overlay
-    # => IDM_RO = notional / (subsystem × weight)
-    thresh_sp = max(1, int(len(sp.columns) * 0.5))
-    thresh_np = max(1, int(len(np_df.columns) * 0.5))
-    sp_recent = sp.dropna(thresh=thresh_sp)
-    np_recent = np_df.dropna(thresh=thresh_np)
-
-    if len(sp_recent) == 0 or len(np_recent) == 0:
-        return None
-
-    sp_row = sp_recent.iloc[-1]
-    np_row = np_recent.iloc[-1]
-
-    idm = None
-    for inst in sp.columns:
-        s_val = sp_row.get(inst, np.nan)
-        n_val = np_row.get(inst, np.nan)
-        w_val = last_w.get(inst, np.nan)
-        if (
-            pd.notna(s_val) and pd.notna(n_val) and pd.notna(w_val)
-            and s_val != 0 and w_val != 0
-        ):
-            idm = n_val / (s_val * w_val)
-            break
-
-    if idm is None or idm <= 0:
-        return None
-
-    # Last mostly-complete row of contract values
-    cv_thresh = max(1, int(len(cv.columns) * 0.5))
-    last_cv = cv.dropna(thresh=cv_thresh).iloc[-1]
-
-    # Compute per-instrument minimum capital
+    # Per-instrument activity analysis from actual positions
     per_inst = {}
-    sqrt_256 = np.sqrt(SIGMA_LOOKBACK)
+    active_count = 0
+    total_avg_pos = 0.0
 
-    for inst in cv.columns:
-        series = cv[inst].dropna()
-        if len(series) < 100:
+    for inst in rp.columns:
+        col = recent[inst].dropna()
+        if len(col) == 0:
+            per_inst[inst] = {"active_pct": 0, "avg_pos": 0}
             continue
 
-        pct_ret = series.pct_change(fill_method=None).dropna()
-        pct_clipped = pct_ret.clip(-SIGMA_CLIP, SIGMA_CLIP)
-        sigma_daily = pct_clipped.tail(SIGMA_LOOKBACK).std()
+        pct_active = (col != 0).mean()
+        avg_pos = col.abs().mean()
 
-        bv = last_cv.get(inst, np.nan)
-        w = last_w.get(inst, np.nan)
+        per_inst[inst] = {
+            "active_pct": round(pct_active * 100, 1),
+            "avg_pos": round(avg_pos, 2),
+        }
 
-        if pd.isna(bv) or pd.isna(w) or w == 0 or sigma_daily == 0 or pd.isna(sigma_daily):
-            continue
+        if pct_active > 0.50:
+            active_count += 1
+        total_avg_pos += avg_pos
 
-        min_cap = (0.5 * sqrt_256 * bv * sigma_daily) / (idm * w * vol_target_pct)
-        per_inst[inst] = round(min_cap)
+    active_pct = round(active_count / n_inst * 100, 1) if n_inst > 0 else 0
+    avg_pos = round(total_avg_pos / n_inst, 2) if n_inst > 0 else 0
 
-    if not per_inst:
-        return None
+    # Estimate minimum capital using subsystem position scaling
+    # vol_scalar ∝ capital, so min_capital = capital × (0.5 / avg_notional_pos)
+    # where avg_notional_pos is from the actual backtest
+    min_capital_est = None
+    if all(f.exists() for f in [sp_file, np_file, iw_file]):
+        try:
+            sp = pd.read_csv(sp_file, index_col=0, parse_dates=True)
+            np_df = pd.read_csv(np_file, index_col=0, parse_dates=True)
+            iw = pd.read_csv(iw_file, index_col=0, parse_dates=True)
+
+            last_w = iw.dropna(how="all").iloc[-1]
+
+            # Derive IDM × risk_overlay
+            thresh_sp = max(1, int(len(sp.columns) * 0.5))
+            thresh_np = max(1, int(len(np_df.columns) * 0.5))
+            sp_recent_df = sp.dropna(thresh=thresh_sp)
+            np_recent_df = np_df.dropna(thresh=thresh_np)
+
+            if len(sp_recent_df) > 0 and len(np_recent_df) > 0:
+                sp_row = sp_recent_df.iloc[-1]
+                np_row = np_recent_df.iloc[-1]
+
+                idm_ro = None
+                for inst_name in sp.columns:
+                    s_val = sp_row.get(inst_name, np.nan)
+                    n_val = np_row.get(inst_name, np.nan)
+                    w_val = last_w.get(inst_name, np.nan)
+                    if (
+                        pd.notna(s_val) and pd.notna(n_val) and pd.notna(w_val)
+                        and s_val != 0 and w_val != 0
+                    ):
+                        idm_ro = n_val / (s_val * w_val)
+                        break
+
+                if idm_ro and idm_ro > 0:
+                    # avg |subsys_pos| over lookback ≈ vol_scalar (at avg forecast)
+                    avg_subsys = sp.abs().tail(POSITION_LOOKBACK).mean()
+
+                    # For each instrument, min_capital = capital × (0.5/(IDM×w)) / avg|subsys|
+                    inst_min_caps = {}
+                    for inst_name in sp.columns:
+                        w_val = last_w.get(inst_name, np.nan)
+                        avg_s = avg_subsys.get(inst_name, 0)
+                        if pd.isna(w_val) or w_val == 0 or avg_s == 0:
+                            continue
+                        vs_needed = 0.5 / (idm_ro * w_val)
+                        inst_min_caps[inst_name] = round(capital * vs_needed / avg_s)
+
+                    if inst_min_caps:
+                        # Use the P75 percentile as "practical min capital"
+                        # (not all instruments need to be active simultaneously)
+                        vals = sorted(inst_min_caps.values())
+                        p75_idx = int(len(vals) * 0.75)
+                        min_capital_est = vals[p75_idx] if p75_idx < len(vals) else vals[-1]
+        except Exception:
+            pass
 
     return {
+        "n_instruments": n_inst,
+        "active_count": active_count,
+        "active_pct": active_pct,
+        "avg_position": avg_pos,
+        "min_capital_est": min_capital_est,
         "per_instrument": per_inst,
-        "sum": sum(per_inst.values()),
-        "max": max(per_inst.values()),
-        "idm": round(idm, 4),
-        "n_tradeable": len(per_inst),
     }
 
 
@@ -317,19 +343,16 @@ def main():
             "rolling_sharpe_3y": rolling_sr,
         }
 
-        # Compute minimum required capital
-        min_cap = compute_min_capital(run_dir)
-        if min_cap:
-            run_data["min_capital_sum"] = min_cap["sum"]
-            run_data["min_capital_max"] = min_cap["max"]
-            run_data["min_capital_idm"] = min_cap["idm"]
-            run_data["min_capital_per_inst"] = min_cap["per_instrument"]
-            capital_val = run_data["capital"]
-            if capital_val > 0 and min_cap["sum"] > 0:
-                run_data["headroom"] = round(capital_val / min_cap["sum"], 2)
-            print(f"    Min Capital: ${min_cap['sum']:,} (sum), ${min_cap['max']:,} (max), IDM={min_cap['idm']:.3f}")
+        # Compute capital efficiency from actual positions
+        eff = compute_capital_efficiency(run_dir)
+        if eff:
+            run_data["active_count"] = eff["active_count"]
+            run_data["active_pct"] = eff["active_pct"]
+            run_data["avg_position"] = eff["avg_position"]
+            run_data["min_capital_est"] = eff["min_capital_est"]
+            print(f"    Executability: {eff['active_count']}/{eff['n_instruments']} active ({eff['active_pct']}%), avg|pos|={eff['avg_position']}")
         else:
-            print(f"    Min Capital: N/A (missing data)")
+            print(f"    Executability: N/A (missing data)")
 
         summary["runs"].append(run_data)
 

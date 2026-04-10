@@ -1573,38 +1573,34 @@ function renderSweepMetricsTable(runs) {
   const worstMDD = Math.min(...runs.map(r => r.max_drawdown ?? -999));
   const hasMDD = runs.some(r => r.max_drawdown != null);
   const hasCapital = runs.some(r => r.capital && r.capital > 0);
-  const hasMinCap = runs.some(r => r.min_capital_sum != null);
+  const hasExec = runs.some(r => r.active_pct != null);
 
-  // ── Data-driven Explainer Card ──
+  // ── Data-driven Executability Explainer ──
   let explainerHtml = '';
-  if (hasMinCap) {
-    // Find key data points for the explainer
+  if (hasExec) {
     const mini = runs.find(r => r.id === 'arki_100k_13inst');
-    const afm = runs.find(r => r.id === 'sweep_Ags_FX_Metals');
     const baseline = runs.find(r => r.is_baseline);
+    const best_exec = runs.filter(r => r.active_pct != null).sort((a, b) => b.active_pct - a.active_pct)[0];
 
     let contextLines = [];
-    if (mini && mini.min_capital_sum) {
-      const h = mini.capital > 0 ? (mini.capital / mini.min_capital_sum).toFixed(1) : '?';
-      contextLines.push(`<strong>$100K Macro Mini (13 inst)</strong>: Min Capital $${(mini.min_capital_sum/1000).toFixed(0)}K → <strong>${h}× headroom</strong> ✅ Executable`);
+    if (mini && mini.active_pct != null) {
+      const icon = mini.active_pct >= 70 ? '✅' : mini.active_pct >= 50 ? '⚠️' : '❌';
+      contextLines.push(`<strong>$100K Macro Mini</strong>: ${mini.active_count}/${mini.n_instruments} instruments active (${mini.active_pct}%) ${icon}, avg |pos| = ${mini.avg_position}`);
     }
-    if (afm && afm.min_capital_sum) {
-      const h = afm.capital > 0 ? (afm.capital / afm.min_capital_sum).toFixed(1) : '?';
-      const icon = h >= 1.5 ? '✅' : h >= 1.0 ? '⚠️' : '❌';
-      contextLines.push(`<strong>Ags+FX+Metals (${afm.n_instruments} inst)</strong>: Min Capital $${(afm.min_capital_sum/1000).toFixed(0)}K → <strong>${h}× headroom</strong> ${icon}`);
+    if (best_exec && best_exec.id !== 'arki_100k_13inst') {
+      contextLines.push(`<strong>Best executability</strong>: ${best_exec.label} at ${best_exec.active_pct}% active rate`);
     }
-    if (baseline && baseline.min_capital_sum) {
-      const h = baseline.capital > 0 ? (baseline.capital / baseline.min_capital_sum).toFixed(1) : '?';
-      const icon = h >= 1.5 ? '✅' : h >= 1.0 ? '⚠️' : '❌';
-      contextLines.push(`<strong>Production (${baseline.n_instruments} inst)</strong>: Min Capital $${(baseline.min_capital_sum/1000).toFixed(0)}K → <strong>${h}× headroom</strong> ${icon}`);
+    if (baseline && baseline.active_pct != null) {
+      const icon = baseline.active_pct >= 70 ? '✅' : baseline.active_pct >= 50 ? '⚠️' : '❌';
+      contextLines.push(`<strong>Production (${baseline.n_instruments} inst)</strong>: ${baseline.active_count}/${baseline.n_instruments} active (${baseline.active_pct}%) ${icon}`);
     }
 
-    // Tight universes where headroom < 1.5×
-    const tight = runs.filter(r => r.min_capital_sum && r.capital > 0 && (r.capital / r.min_capital_sum) < 1.5 && !r.is_baseline);
+    // Warn about poorly executable universes
+    const poor = runs.filter(r => r.active_pct != null && r.active_pct < 50);
     let warningLine = '';
-    if (tight.length > 0) {
+    if (poor.length > 0) {
       warningLine = `<div style="margin-top:8px;padding:6px 10px;background:#FFF4E5;border-radius:4px;border:1px solid #F5E8C1;font-size:11px">
-        ⚠️ <strong>${tight.length} universe${tight.length > 1 ? 's' : ''}</strong> ${tight.length > 1 ? 'have' : 'has'} headroom &lt; 1.5× — some instruments may not reach 0.5 contracts at this capital level.
+        ⚠️ <strong>${poor.length} universe${poor.length > 1 ? 's' : ''}</strong> ${poor.length > 1 ? 'have' : 'has'} <strong>&lt; 50% active rate</strong> — most instruments are too expensive for the given capital. Consider smaller universes or higher capital.
       </div>`;
     }
 
@@ -1612,12 +1608,12 @@ function renderSweepMetricsTable(runs) {
     <div style="background:var(--sand-light);border:1px solid var(--border-subtle);border-left:4px solid var(--forest);
                 border-radius:8px;padding:14px 18px;margin-bottom:14px;font-size:12px;line-height:1.7">
       <div style="font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--forest);margin-bottom:8px">
-        📐 Minimum Required Capital Analysis
+        📊 Capital Executability Analysis
       </div>
       <p style="color:var(--text-secondary);margin:0 0 8px 0">
-        <strong>Min Capital</strong> = sum of per-instrument minimums for ≥ 0.5 contracts at average forecast.
-        Formula: <code style="background:#fff;padding:1px 5px;border-radius:3px;font-size:10px">Cap_min = 0.5 × √256 × BlockValue × σ_daily / (IDM × weight × vol_target%)</code>.
-        <strong>Headroom</strong> = BT Capital ÷ Min Capital — values below 1.5× indicate tight sizing.
+        <strong>Exec Rate</strong> = % of instruments with non-zero rounded positions on &gt; 50% of trading days (last 256 days).
+        Measured from actual backtest <code style="background:#fff;padding:1px 5px;border-radius:3px;font-size:10px">rounded_positions.csv</code>, not theoretical formulas.
+        <strong>Avg |Pos|</strong> = mean absolute position across all instruments — higher means more contracts traded.
       </p>
       <div style="display:flex;flex-direction:column;gap:3px;font-size:11px">
         ${contextLines.map(l => `<div>• ${l}</div>`).join('')}
@@ -1639,28 +1635,26 @@ function renderSweepMetricsTable(runs) {
     return `<span style="background:${bg};color:${color};padding:2px 7px;border-radius:4px;font-weight:600;font-size:10px;font-family:var(--font-mono)">${fmtCapital(cap)}</span>`;
   }
 
-  function headroomBadge(r) {
-    if (!r.min_capital_sum || !r.capital || r.capital === 0) return '<span style="color:var(--text-muted)">—</span>';
-    const headroom = r.capital / r.min_capital_sum;
+  function execBadge(r) {
+    if (r.active_pct == null) return '<span style="color:var(--text-muted)">—</span>';
     let color, bg, icon;
-    if (headroom >= 2.0) {
+    if (r.active_pct >= 70) {
       color = '#265844'; bg = '#26584418'; icon = '✅';
-    } else if (headroom >= 1.5) {
-      color = '#55B786'; bg = '#55B78618'; icon = '✅';
-    } else if (headroom >= 1.0) {
+    } else if (r.active_pct >= 50) {
       color = '#8B7355'; bg = '#F5E8C133'; icon = '⚠️';
     } else {
       color = '#B85C4A'; bg = '#B85C4A18'; icon = '❌';
     }
-    return `<span style="background:${bg};color:${color};padding:2px 7px;border-radius:4px;font-weight:600;font-size:10px;font-family:var(--font-mono)">${fmtCapital(r.min_capital_sum)}</span>
-      <span style="color:${color};font-size:10px;font-weight:600;margin-left:3px" title="Headroom: BT Capital ÷ Min Capital">${icon} ${headroom.toFixed(1)}×</span>`;
+    return `<span style="background:${bg};color:${color};padding:2px 7px;border-radius:4px;font-weight:600;font-size:10px;font-family:var(--font-mono)">${r.active_count}/${r.n_instruments}</span>
+      <span style="color:${color};font-size:10px;font-weight:600;margin-left:3px" title="Active instruments / Total (last 256d)">${icon} ${r.active_pct}%</span>`;
   }
 
   let html = `<table class="data-table">
     <thead><tr>
       <th>Rank</th><th>Universe</th><th>#Inst</th>
       ${hasCapital ? '<th title="Account size used as backtest input">BT Capital</th>' : ''}
-      ${hasMinCap ? '<th title="Minimum capital required for all instruments to trade ≥ 0.5 contracts at average forecast">Min Capital</th>' : ''}
+      ${hasExec ? '<th title="% of instruments actively traded (non-zero position > 50% of days)">Exec Rate</th>' : ''}
+      ${hasExec ? '<th title="Average absolute position size across all instruments">Avg |Pos|</th>' : ''}
       <th>Sharpe</th>
       <th>Return</th><th>Vol</th><th>Avg DD</th>${hasMDD ? '<th>Max DD</th>' : ''}<th>Sortino</th><th>Skew</th>
       <th>Asset Classes</th>
@@ -1677,14 +1671,16 @@ function renderSweepMetricsTable(runs) {
     const mddCls = mdd != null && mdd === worstMDD ? ' style="color:#B85C4A;font-weight:700"' : '';
     const mddCell = hasMDD ? `<td${mddCls}>${mdd != null ? mdd.toFixed(1) + '%' : '—'}</td>` : '';
     const capitalCell = hasCapital ? `<td>${capitalBadge(r.capital)}</td>` : '';
-    const minCapCell = hasMinCap ? `<td style="white-space:nowrap">${headroomBadge(r)}</td>` : '';
+    const execCell = hasExec ? `<td style="white-space:nowrap">${execBadge(r)}</td>` : '';
+    const avgPosCell = hasExec ? `<td style="font-family:var(--font-mono);font-size:10px;font-weight:600">${r.avg_position != null ? r.avg_position.toFixed(2) : '—'}</td>` : '';
 
     html += `<tr${rowCls}>
       <td>${i + 1}</td>
       <td>${r.label}${tag}</td>
       <td>${r.n_instruments}</td>
       ${capitalCell}
-      ${minCapCell}
+      ${execCell}
+      ${avgPosCell}
       <td${srCls}>${r.sharpe.toFixed(3)}${star}</td>
       <td>${r.ann_return.toFixed(1)}%</td>
       <td>${r.ann_vol.toFixed(1)}%</td>
