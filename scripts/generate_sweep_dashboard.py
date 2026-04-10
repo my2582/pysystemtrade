@@ -24,7 +24,8 @@ CLASS_MAP = {
     "sweep_Ags_Metals": {"label": "+ Ags + Metals", "classes": ["Equity", "Bond", "Ags", "Metals"]},
     "sweep_FX_Metals": {"label": "+ FX + Metals", "classes": ["Equity", "Bond", "FX", "Metals"]},
     "sweep_Ags_FX_Metals": {"label": "+ Ags + FX + Metals", "classes": ["Equity", "Bond", "Ags", "FX", "Metals"]},
-    "arki_v4_optimized": {"label": "Full 25 (+ Energy)", "classes": ["Equity", "Bond", "Ags", "FX", "Metals", "Energy"]},
+    "arki_v4_optimized": {"label": "Full 25 ($200K)", "classes": ["Equity", "Bond", "Ags", "FX", "Metals", "Energy"]},
+    "full25_250k": {"label": "Full 25 ($250K)", "classes": ["Equity", "Bond", "Ags", "FX", "Metals", "Energy"]},
     "arki_100k_13inst": {"label": "$100K Macro Mini (13 inst)", "classes": ["Equity", "Bond", "Metals", "OilGas", "Ags"]},
 }
 
@@ -124,12 +125,11 @@ def find_latest_sweep_runs():
             if meta_file.exists():
                 runs["arki_v4_optimized"] = d
 
-    # Also include v6 handcraft as baseline
-    for d in sorted(RUNS_DIR.iterdir()):
-        if "v6_handcraft" in d.name:
+        # Include full25_250k
+        if label == "full25_250k":
             meta_file = d / "dashboard_meta.json"
             if meta_file.exists():
-                runs["v6_handcraft"] = d
+                runs["full25_250k"] = d
 
     # Include $100K 13-instrument Macro Mini run
     for d in sorted(RUNS_DIR.iterdir()):
@@ -213,7 +213,7 @@ def main():
         "arki_100k_13inst",
         "sweep_base", "sweep_Ags", "sweep_FX", "sweep_Metals",
         "sweep_Ags_FX", "sweep_Ags_Metals", "sweep_FX_Metals",
-        "sweep_Ags_FX_Metals", "arki_v4_optimized", "v6_handcraft",
+        "sweep_Ags_FX_Metals", "arki_v4_optimized", "full25_250k",
     ]
 
     for label in order:
@@ -230,11 +230,7 @@ def main():
         instruments = meta.get("instruments", [])
 
         # Get display info
-        if label == "v6_handcraft":
-            display_label = "Production (25, Handcraft)"
-            classes = ["Equity", "Bond", "Ags", "FX", "Metals", "OilGas"]
-            is_baseline = True
-        elif label == "arki_100k_13inst":
+        if label == "arki_100k_13inst":
             display_label = CLASS_MAP[label]["label"]
             classes = CLASS_MAP[label]["classes"]
             is_baseline = False
