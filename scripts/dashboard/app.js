@@ -149,7 +149,7 @@ async function loadData() {
       loadFile('data/contract_values.csv').catch(() => null),
       loadFile('data/spread_costs.csv').catch(() => null),
       loadFile('data/methodology.json').catch(() => null),
-      loadFile('sweep_summary.json').catch(() => null),
+      loadFile('data/sweep_summary.json').catch(() => null),
     ]);
 
     if (metaText) state.meta = JSON.parse(metaText);
@@ -1839,7 +1839,7 @@ async function renderSweep() {
   // Load sweep data if not in state
   if (!state.sweepData) {
     try {
-      const text = await loadFile('sweep_summary.json');
+      const text = await loadFile('data/sweep_summary.json');
       state.sweepData = JSON.parse(text);
     } catch {
       const el = document.getElementById('sweep-loading');
