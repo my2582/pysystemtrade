@@ -1573,34 +1573,37 @@ function renderSweepMetricsTable(runs) {
   const worstMDD = Math.min(...runs.map(r => r.max_drawdown ?? -999));
   const hasMDD = runs.some(r => r.max_drawdown != null);
   const hasCapital = runs.some(r => r.capital && r.capital > 0);
-  const hasExec = runs.some(r => r.active_pct != null);
+  const hasExec = runs.some(r => r.exec_pct != null);
 
-  // ── Data-driven Executability Explainer ──
+  // ── Executability Explainer (aligned with dashboard header methodology) ──
   let explainerHtml = '';
   if (hasExec) {
     const mini = runs.find(r => r.id === 'arki_100k_13inst');
     const baseline = runs.find(r => r.is_baseline);
-    const best_exec = runs.filter(r => r.active_pct != null).sort((a, b) => b.active_pct - a.active_pct)[0];
+    const best_exec = runs.filter(r => r.exec_pct != null).sort((a, b) => b.exec_pct - a.exec_pct)[0];
 
     let contextLines = [];
-    if (mini && mini.active_pct != null) {
-      const icon = mini.active_pct >= 70 ? '✅' : mini.active_pct >= 50 ? '⚠️' : '❌';
-      contextLines.push(`<strong>$100K Macro Mini</strong>: ${mini.active_count}/${mini.n_instruments} instruments active (${mini.active_pct}%) ${icon}, avg |pos| = ${mini.avg_position}`);
+    if (mini && mini.exec_pct != null) {
+      const grade = mini.exec_pct >= 80 ? 'PRODUCTION' : mini.exec_pct >= 60 ? 'RESEARCH' : 'THEORETICAL';
+      const icon = mini.exec_pct >= 80 ? '✅' : mini.exec_pct >= 60 ? '⚠️' : '❌';
+      contextLines.push(`<strong>$100K Macro Mini</strong>: ${mini.tradeable_count}/${mini.n_instruments} tradeable (${mini.exec_pct}%) ${icon} ${grade}`);
     }
     if (best_exec && best_exec.id !== 'arki_100k_13inst') {
-      contextLines.push(`<strong>Best executability</strong>: ${best_exec.label} at ${best_exec.active_pct}% active rate`);
+      contextLines.push(`<strong>Best executability</strong>: ${best_exec.label} at ${best_exec.exec_pct}% (${best_exec.tradeable_count}/${best_exec.n_instruments})`);
     }
-    if (baseline && baseline.active_pct != null) {
-      const icon = baseline.active_pct >= 70 ? '✅' : baseline.active_pct >= 50 ? '⚠️' : '❌';
-      contextLines.push(`<strong>Production (${baseline.n_instruments} inst)</strong>: ${baseline.active_count}/${baseline.n_instruments} active (${baseline.active_pct}%) ${icon}`);
+    if (baseline && baseline.exec_pct != null) {
+      const grade = baseline.exec_pct >= 80 ? 'PRODUCTION' : baseline.exec_pct >= 60 ? 'RESEARCH' : 'THEORETICAL';
+      const icon = baseline.exec_pct >= 80 ? '✅' : baseline.exec_pct >= 60 ? '⚠️' : '❌';
+      contextLines.push(`<strong>Production (${baseline.n_instruments} inst)</strong>: ${baseline.tradeable_count}/${baseline.n_instruments} tradeable (${baseline.exec_pct}%) ${icon} ${grade}`);
     }
 
     // Warn about poorly executable universes
-    const poor = runs.filter(r => r.active_pct != null && r.active_pct < 50);
+    const poor = runs.filter(r => r.exec_pct != null && r.exec_pct < 60);
     let warningLine = '';
     if (poor.length > 0) {
+      const names = poor.map(r => r.label).join(', ');
       warningLine = `<div style="margin-top:8px;padding:6px 10px;background:#FFF4E5;border-radius:4px;border:1px solid #F5E8C1;font-size:11px">
-        ⚠️ <strong>${poor.length} universe${poor.length > 1 ? 's' : ''}</strong> ${poor.length > 1 ? 'have' : 'has'} <strong>&lt; 50% active rate</strong> — most instruments are too expensive for the given capital. Consider smaller universes or higher capital.
+        ⚠️ <strong>${poor.length} universe${poor.length > 1 ? 's' : ''}</strong> below RESEARCH grade (&lt;60%): ${names}
       </div>`;
     }
 
@@ -1611,9 +1614,9 @@ function renderSweepMetricsTable(runs) {
         📊 Capital Executability Analysis
       </div>
       <p style="color:var(--text-secondary);margin:0 0 8px 0">
-        <strong>Exec Rate</strong> = % of instruments with non-zero rounded positions on &gt; 50% of trading days (last 256 days).
-        Measured from actual backtest <code style="background:#fff;padding:1px 5px;border-radius:3px;font-size:10px">rounded_positions.csv</code>, not theoretical formulas.
-        <strong>Avg |Pos|</strong> = mean absolute position across all instruments — higher means more contracts traded.
+        <strong>Exec Rate</strong> = % of instruments with avg |notional position| ≥ 0.5 over the last 5 years.
+        Same method as the dashboard header's executability score, but time-bounded to avoid historical inflation bias.
+        Grades: <strong>PRODUCTION</strong> ≥ 80% · <strong>RESEARCH</strong> ≥ 60% · <strong>THEORETICAL</strong> &lt; 60%.
       </p>
       <div style="display:flex;flex-direction:column;gap:3px;font-size:11px">
         ${contextLines.map(l => `<div>• ${l}</div>`).join('')}
@@ -1636,25 +1639,25 @@ function renderSweepMetricsTable(runs) {
   }
 
   function execBadge(r) {
-    if (r.active_pct == null) return '<span style="color:var(--text-muted)">—</span>';
-    let color, bg, icon;
-    if (r.active_pct >= 70) {
-      color = '#265844'; bg = '#26584418'; icon = '✅';
-    } else if (r.active_pct >= 50) {
-      color = '#8B7355'; bg = '#F5E8C133'; icon = '⚠️';
+    if (r.exec_pct == null) return '<span style="color:var(--text-muted)">—</span>';
+    let color, bg, grade;
+    if (r.exec_pct >= 80) {
+      color = '#265844'; bg = '#26584418'; grade = '✅ PRODUCTION';
+    } else if (r.exec_pct >= 60) {
+      color = '#8B7355'; bg = '#F5E8C133'; grade = '⚠️ RESEARCH';
     } else {
-      color = '#B85C4A'; bg = '#B85C4A18'; icon = '❌';
+      color = '#B85C4A'; bg = '#B85C4A18'; grade = '❌ THEORETICAL';
     }
-    return `<span style="background:${bg};color:${color};padding:2px 7px;border-radius:4px;font-weight:600;font-size:10px;font-family:var(--font-mono)">${r.active_count}/${r.n_instruments}</span>
-      <span style="color:${color};font-size:10px;font-weight:600;margin-left:3px" title="Active instruments / Total (last 256d)">${icon} ${r.active_pct}%</span>`;
+    return `<span style="background:${bg};color:${color};padding:2px 7px;border-radius:4px;font-weight:600;font-size:10px;font-family:var(--font-mono)">${r.tradeable_count}/${r.n_instruments}</span>
+      <span style="color:${color};font-size:10px;font-weight:600;margin-left:3px" title="Tradeable instruments (5Y avg|pos|≥0.5)">${grade} ${r.exec_pct}%</span>`;
   }
 
   let html = `<table class="data-table">
     <thead><tr>
       <th>Rank</th><th>Universe</th><th>#Inst</th>
       ${hasCapital ? '<th title="Account size used as backtest input">BT Capital</th>' : ''}
-      ${hasExec ? '<th title="% of instruments actively traded (non-zero position > 50% of days)">Exec Rate</th>' : ''}
-      ${hasExec ? '<th title="Average absolute position size across all instruments">Avg |Pos|</th>' : ''}
+      ${hasExec ? '<th title="% of instruments with avg |notional position| ≥ 0.5 over last 5 years">Executability</th>' : ''}
+      ${hasExec ? '<th title="Average absolute notional position across all instruments (5Y)">Avg |Pos|</th>' : ''}
       <th>Sharpe</th>
       <th>Return</th><th>Vol</th><th>Avg DD</th>${hasMDD ? '<th>Max DD</th>' : ''}<th>Sortino</th><th>Skew</th>
       <th>Asset Classes</th>

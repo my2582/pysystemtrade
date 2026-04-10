@@ -29,143 +29,72 @@ CLASS_MAP = {
 }
 
 VOL_TARGET_DEFAULT = 25.0  # annual % vol target
-POSITION_LOOKBACK = 256  # trading days for position analysis
+EXEC_LOOKBACK = 1280  # 5 years of trading days for executability scoring
+EXEC_THRESHOLD = 0.5  # same as backtest_runner.py position_snapshot threshold
 
 
 def compute_capital_efficiency(run_dir):
     """
-    Compute capital efficiency metrics from actual backtest positions.
+    Compute capital efficiency metrics from actual backtest notional positions.
 
-    Instead of a theoretical formula, we measure how efficiently the
-    capital is being used by analyzing the actual rounded (integer)
-    positions from the backtest. This gives a ground-truth answer to
-    "can this universe be traded with this capital?"
+    Uses the SAME method as backtest_runner.py's executability scoring
+    (avg |notional_position| >= 0.5 = tradeable) but bounded to the last
+    5 years (1280 trading days) to avoid historical inflation bias from
+    decades of cheaper contract prices.
 
-    Metrics:
-    - active_count: instruments actively traded (>50% of days non-zero)
-    - active_pct: active_count / total instruments
-    - avg_position: average absolute position across all instruments
-    - min_capital_est: estimated min capital via subsystem position scaling
+    The dashboard header's 84% score uses the full 50-year history where
+    instruments like GOLD_micro averaged 12+ contracts (due to $200/oz in
+    1975) even though they average <1 contract at today's $3,000/oz.
+    Using a 5-year window eliminates this survivorship bias while still
+    being stable across runs.
 
     Returns: dict with efficiency metrics, or None if data missing.
     """
     run_dir = Path(run_dir)
 
-    rp_file = run_dir / "rounded_positions.csv"
-    sp_file = run_dir / "subsystem_positions.csv"
     np_file = run_dir / "notional_positions.csv"
-    iw_file = run_dir / "instrument_weights.csv"
-
-    if not rp_file.exists():
+    if not np_file.exists():
         return None
 
-    rp = pd.read_csv(rp_file, index_col=0, parse_dates=True)
-    recent = rp.tail(POSITION_LOOKBACK)
-    n_inst = len(rp.columns)
-
+    np_df = pd.read_csv(np_file, index_col=0, parse_dates=True)
+    n_inst = len(np_df.columns)
     if n_inst == 0:
         return None
 
-    # Read config for capital
-    config_file = run_dir / "config.yaml"
-    capital = 200000
-    if config_file.exists():
-        try:
-            with open(config_file) as f:
-                cfg = yaml.safe_load(f)
-            capital = float(cfg.get("capital", 200000))
-        except Exception:
-            pass
+    # Use last 5 years of notional positions
+    recent = np_df.tail(EXEC_LOOKBACK)
+    avg_abs = recent.abs().mean()
 
-    # Per-instrument activity analysis from actual positions
+    # Per-instrument executability (same metric as backtest_runner.py:339)
     per_inst = {}
-    active_count = 0
-    total_avg_pos = 0.0
+    tradeable_count = 0
 
-    for inst in rp.columns:
-        col = recent[inst].dropna()
-        if len(col) == 0:
-            per_inst[inst] = {"active_pct": 0, "avg_pos": 0}
-            continue
-
-        pct_active = (col != 0).mean()
-        avg_pos = col.abs().mean()
-
+    for inst in np_df.columns:
+        avg_pos = float(avg_abs.get(inst, 0))
+        is_tradeable = avg_pos >= EXEC_THRESHOLD
+        if is_tradeable:
+            tradeable_count += 1
         per_inst[inst] = {
-            "active_pct": round(pct_active * 100, 1),
-            "avg_pos": round(avg_pos, 2),
+            "avg_pos": round(avg_pos, 4),
+            "tradeable": is_tradeable,
         }
 
-        if pct_active > 0.50:
-            active_count += 1
-        total_avg_pos += avg_pos
+    exec_pct = round(tradeable_count / n_inst * 100, 1) if n_inst > 0 else 0
+    avg_pos_all = round(float(avg_abs.mean()), 2)
 
-    active_pct = round(active_count / n_inst * 100, 1) if n_inst > 0 else 0
-    avg_pos = round(total_avg_pos / n_inst, 2) if n_inst > 0 else 0
-
-    # Estimate minimum capital using subsystem position scaling
-    # vol_scalar ∝ capital, so min_capital = capital × (0.5 / avg_notional_pos)
-    # where avg_notional_pos is from the actual backtest
-    min_capital_est = None
-    if all(f.exists() for f in [sp_file, np_file, iw_file]):
-        try:
-            sp = pd.read_csv(sp_file, index_col=0, parse_dates=True)
-            np_df = pd.read_csv(np_file, index_col=0, parse_dates=True)
-            iw = pd.read_csv(iw_file, index_col=0, parse_dates=True)
-
-            last_w = iw.dropna(how="all").iloc[-1]
-
-            # Derive IDM × risk_overlay
-            thresh_sp = max(1, int(len(sp.columns) * 0.5))
-            thresh_np = max(1, int(len(np_df.columns) * 0.5))
-            sp_recent_df = sp.dropna(thresh=thresh_sp)
-            np_recent_df = np_df.dropna(thresh=thresh_np)
-
-            if len(sp_recent_df) > 0 and len(np_recent_df) > 0:
-                sp_row = sp_recent_df.iloc[-1]
-                np_row = np_recent_df.iloc[-1]
-
-                idm_ro = None
-                for inst_name in sp.columns:
-                    s_val = sp_row.get(inst_name, np.nan)
-                    n_val = np_row.get(inst_name, np.nan)
-                    w_val = last_w.get(inst_name, np.nan)
-                    if (
-                        pd.notna(s_val) and pd.notna(n_val) and pd.notna(w_val)
-                        and s_val != 0 and w_val != 0
-                    ):
-                        idm_ro = n_val / (s_val * w_val)
-                        break
-
-                if idm_ro and idm_ro > 0:
-                    # avg |subsys_pos| over lookback ≈ vol_scalar (at avg forecast)
-                    avg_subsys = sp.abs().tail(POSITION_LOOKBACK).mean()
-
-                    # For each instrument, min_capital = capital × (0.5/(IDM×w)) / avg|subsys|
-                    inst_min_caps = {}
-                    for inst_name in sp.columns:
-                        w_val = last_w.get(inst_name, np.nan)
-                        avg_s = avg_subsys.get(inst_name, 0)
-                        if pd.isna(w_val) or w_val == 0 or avg_s == 0:
-                            continue
-                        vs_needed = 0.5 / (idm_ro * w_val)
-                        inst_min_caps[inst_name] = round(capital * vs_needed / avg_s)
-
-                    if inst_min_caps:
-                        # Use the P75 percentile as "practical min capital"
-                        # (not all instruments need to be active simultaneously)
-                        vals = sorted(inst_min_caps.values())
-                        p75_idx = int(len(vals) * 0.75)
-                        min_capital_est = vals[p75_idx] if p75_idx < len(vals) else vals[-1]
-        except Exception:
-            pass
+    # Untradeable instruments list (for explainer card)
+    untradeable = sorted(
+        [inst for inst, d in per_inst.items() if not d["tradeable"]],
+        key=lambda x: per_inst[x]["avg_pos"],
+    )
 
     return {
         "n_instruments": n_inst,
-        "active_count": active_count,
-        "active_pct": active_pct,
-        "avg_position": avg_pos,
-        "min_capital_est": min_capital_est,
+        "tradeable_count": tradeable_count,
+        "exec_pct": exec_pct,
+        "avg_position": avg_pos_all,
+        "untradeable": untradeable,
+        "lookback_days": min(EXEC_LOOKBACK, len(recent)),
         "per_instrument": per_inst,
     }
 
@@ -346,11 +275,12 @@ def main():
         # Compute capital efficiency from actual positions
         eff = compute_capital_efficiency(run_dir)
         if eff:
-            run_data["active_count"] = eff["active_count"]
-            run_data["active_pct"] = eff["active_pct"]
+            run_data["tradeable_count"] = eff["tradeable_count"]
+            run_data["exec_pct"] = eff["exec_pct"]
             run_data["avg_position"] = eff["avg_position"]
-            run_data["min_capital_est"] = eff["min_capital_est"]
-            print(f"    Executability: {eff['active_count']}/{eff['n_instruments']} active ({eff['active_pct']}%), avg|pos|={eff['avg_position']}")
+            run_data["untradeable"] = eff["untradeable"]
+            run_data["exec_lookback"] = eff["lookback_days"]
+            print(f"    Executability: {eff['tradeable_count']}/{eff['n_instruments']} tradeable ({eff['exec_pct']}%, 5Y avg|pos|≥0.5)")
         else:
             print(f"    Executability: N/A (missing data)")
 
