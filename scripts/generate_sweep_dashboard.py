@@ -188,6 +188,7 @@ def main():
             "classes": classes,
             "is_baseline": is_baseline,
             "n_instruments": len(instruments),
+            "capital": float(meta.get("meta", {}).get("capital", 0)),
             "sharpe": float(stats.get("sharpe", 0)),
             "ann_return": float(stats.get("ann_mean", 0)),
             "ann_vol": float(stats.get("ann_std", 0)),

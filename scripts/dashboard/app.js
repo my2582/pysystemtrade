@@ -1570,13 +1570,45 @@ function renderSweepMetricsTable(runs) {
   if (!container) return;
 
   const bestSR = Math.max(...runs.map(r => r.sharpe));
-  const worstDD = Math.min(...runs.map(r => r.avg_drawdown));
   const worstMDD = Math.min(...runs.map(r => r.max_drawdown ?? -999));
   const hasMDD = runs.some(r => r.max_drawdown != null);
+  const hasCapital = runs.some(r => r.capital && r.capital > 0);
+
+  // ── Executability explainer card ──
+  const explainerHtml = `
+    <div style="background:var(--sand-light);border:1px solid var(--border-subtle);border-left:4px solid #C4B68A;
+                border-radius:8px;padding:12px 16px;margin-bottom:12px;font-size:12px;line-height:1.6">
+      <div style="font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#8B7355;margin-bottom:6px">
+        ⚠ Why Smaller Accounts Cannot Use Larger Universes
+      </div>
+      <p style="color:var(--text-secondary);margin:0">
+        Each futures contract has a fixed <strong>nominal value</strong> (e.g. Nikkei ¥1,000,000 ≈ $6,500, US 10Y Bond $111,000).
+        pysystemtrade sizes positions as: <code style="background:#fff;padding:1px 5px;border-radius:3px">
+        Contracts = (Capital × vol_target × IDM × weight) ÷ (Nominal × annual_vol)</code>.
+        For a $100K account split across 19+ instruments, most high-value contracts round to <strong>0 contracts</strong> — effectively untradeable.
+        The 13-instrument $100K Macro Mini universe was hand-selected to include only <strong>micro-contracts and low-nominal instruments</strong>
+        where at least 1 contract is consistently achievable.
+      </p>
+    </div>`;
+
+  function fmtCapital(cap) {
+    if (!cap || cap === 0) return '—';
+    if (cap >= 1000000) return `$${(cap/1000000).toFixed(1)}M`;
+    return `$${(cap/1000).toFixed(0)}K`;
+  }
+
+  function capitalBadge(cap) {
+    if (!cap || cap === 0) return '<span style="color:var(--text-muted)">—</span>';
+    const color = cap <= 100000 ? '#8B7355' : cap <= 200000 ? '#265844' : '#55B786';
+    const bg = cap <= 100000 ? '#F5E8C133' : cap <= 200000 ? '#26584415' : '#55B78615';
+    return `<span style="background:${bg};color:${color};padding:2px 7px;border-radius:4px;font-weight:600;font-size:10px;font-family:var(--font-mono)">${fmtCapital(cap)}</span>`;
+  }
 
   let html = `<table class="data-table">
     <thead><tr>
-      <th>Rank</th><th>Universe</th><th>#Inst</th><th>Sharpe</th>
+      <th>Rank</th><th>Universe</th><th>#Inst</th>
+      ${hasCapital ? '<th title="Account size used in backtest">Capital</th>' : ''}
+      <th>Sharpe</th>
       <th>Return</th><th>Vol</th><th>Avg DD</th>${hasMDD ? '<th>Max DD</th>' : ''}<th>Sortino</th><th>Skew</th>
       <th>Asset Classes</th>
     </tr></thead><tbody>`;
@@ -1591,11 +1623,13 @@ function renderSweepMetricsTable(runs) {
     const mdd = r.max_drawdown != null ? r.max_drawdown : null;
     const mddCls = mdd != null && mdd === worstMDD ? ' style="color:#B85C4A;font-weight:700"' : '';
     const mddCell = hasMDD ? `<td${mddCls}>${mdd != null ? mdd.toFixed(1) + '%' : '—'}</td>` : '';
+    const capitalCell = hasCapital ? `<td>${capitalBadge(r.capital)}</td>` : '';
 
     html += `<tr${rowCls}>
       <td>${i + 1}</td>
       <td>${r.label}${tag}</td>
       <td>${r.n_instruments}</td>
+      ${capitalCell}
       <td${srCls}>${r.sharpe.toFixed(3)}${star}</td>
       <td>${r.ann_return.toFixed(1)}%</td>
       <td>${r.ann_vol.toFixed(1)}%</td>
@@ -1608,7 +1642,7 @@ function renderSweepMetricsTable(runs) {
   });
 
   html += '</tbody></table>';
-  container.innerHTML = html;
+  container.innerHTML = explainerHtml + html;
 }
 
 function renderSweepEquityChart(runs) {
