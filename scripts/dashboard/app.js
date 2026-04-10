@@ -2372,15 +2372,22 @@ function renderUniverseTab() {
       <th>Instrument</th><th>Description</th><th>Asset Class</th><th>CCY</th>
       <th style="text-align:right">Point Size</th><th style="text-align:right">Latest Price</th>
       <th style="text-align:right">Nominal Value (1 contract)</th>
+      <th style="text-align:center">Universe Tier</th>
     </tr></thead><tbody>`;
 
   let prevClass = '';
   sorted.forEach(r => {
     if (r.asset_class !== prevClass) {
-      html += `<tr><td colspan="7" style="background:var(--forest,#265844);color:#fff;font-weight:700;padding:6px 12px;font-size:12px">${r.asset_class || 'Unknown'}</td></tr>`;
+      html += `<tr><td colspan="8" style="background:var(--forest,#265844);color:#fff;font-weight:700;padding:6px 12px;font-size:12px">${r.asset_class || 'Unknown'}</td></tr>`;
       prevClass = r.asset_class;
     }
     const nomColor = r.nominal_value && r.nominal_value > 100000 ? 'color:#B85C4A;font-weight:600' : '';
+    
+    // Badges for universe tiers
+    const badges = [];
+    if (r.in_13) badges.push('<span style="background:#55B786;color:#fff;padding:2px 6px;border-radius:4px;font-size:10px;margin-right:4px">$100K (13)</span>');
+    if (r.in_25) badges.push('<span style="background:#265844;color:#FFF;padding:2px 6px;border-radius:4px;font-size:10px">$250K (25)</span>');
+
     html += `<tr>
       <td style="font-weight:600;font-family:var(--font-mono,monospace);font-size:12px">${r.instrument}</td>
       <td style="font-size:12px">${r.description}</td>
@@ -2389,6 +2396,7 @@ function renderUniverseTab() {
       <td style="text-align:right;font-family:var(--font-mono);font-size:12px">${fmt(r.pointsize)}</td>
       <td style="text-align:right;font-family:var(--font-mono);font-size:12px">${fmt(r.latest_price)}</td>
       <td style="text-align:right;font-family:var(--font-mono);font-size:12px;${nomColor}">${fmtNominal(r.nominal_value, r.currency)}</td>
+      <td style="text-align:center;white-space:nowrap">${badges.join('')}</td>
     </tr>`;
   });
   html += '</tbody></table>';
