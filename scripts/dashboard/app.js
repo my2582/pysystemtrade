@@ -149,7 +149,7 @@ async function loadData() {
       loadFile('data/contract_values.csv').catch(() => null),
       loadFile('data/spread_costs.csv').catch(() => null),
       loadFile('data/methodology.json').catch(() => null),
-      loadFile('data/sweep_summary.json').catch(() => null),
+      loadFile('sweep_summary.json').catch(() => null),
     ]);
 
     if (metaText) state.meta = JSON.parse(metaText);
@@ -1548,7 +1548,7 @@ async function renderSweep() {
   // Load sweep data if not in state
   if (!state.sweepData) {
     try {
-      const text = await loadFile('data/sweep_summary.json');
+      const text = await loadFile('sweep_summary.json');
       state.sweepData = JSON.parse(text);
     } catch {
       const el = document.getElementById('sweep-loading');
@@ -2472,6 +2472,207 @@ function renderUniverseTab() {
 
 
 // ── Tab Navigation ──
+// ══════════════════════════════════════════════════════════════════
+// FACTOR SR DECOMPOSITION TAB (Method B)
+// ══════════════════════════════════════════════════════════════════
+
+function renderFactorComboTab() {
+  if (!state.factorReturns || state.factorReturns.length === 0) {
+    document.getElementById('factor-combo-kpis').innerHTML = '<p style="color:var(--text-muted);padding:16px">No factor_returns.csv data available for this run.</p>';
+    return;
+  }
+
+  const rows = state.factorReturns;
+  const cols = Object.keys(rows[0]).filter(k => k !== 'index' && k !== '');
+
+  // Classify rules into 3 groups
+  const groups = {
+    'Trend (EWMAC)':          cols.filter(c => c.startsWith('momentum')),
+    'Carry':                  cols.filter(c => c.startsWith('carry')),
+    'CS Momentum':            cols.filter(c => c.startsWith('relmomentum')),
+  };
+
+  // Compute equal-weighted group daily returns
+  function groupReturn(row, keys) {
+    const vals = keys.map(k => parseFloat(row[k]) || 0).filter(v => !isNaN(v));
+    return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+  }
+
+  const trendRets  = rows.map(r => groupReturn(r, groups['Trend (EWMAC)']));
+  const carryRets  = rows.map(r => groupReturn(r, groups['Carry']));
+  const csmomRets  = rows.map(r => groupReturn(r, groups['CS Momentum']));
+  const dates      = rows.map(r => r.index || r['']);
+
+  // 4 cumulative combinations (equal-weighted across included groups)
+  const combos = [
+    { label: 'Trend only',             weights: [1, 0, 0] },
+    { label: 'Trend + Carry',          weights: [0.5, 0.5, 0] },
+    { label: 'Trend + Carry + CSMom',  weights: [1/3, 1/3, 1/3] },
+  ];
+
+  function comboSeries(w) {
+    return rows.map((_, i) => w[0]*trendRets[i] + w[1]*carryRets[i] + w[2]*csmomRets[i]);
+  }
+
+  function annualStats(rets) {
+    const mean = rets.reduce((a, b) => a + b, 0) / rets.length;
+    const variance = rets.reduce((s, r) => s + (r - mean) ** 2, 0) / rets.length;
+    const std = Math.sqrt(variance);
+    const annMean = mean * 256;
+    const annStd = std * Math.sqrt(256);
+    const sr = annStd > 0 ? annMean / annStd : 0;
+    const cumRets = rets.reduce((acc, r) => { acc.push((acc[acc.length-1] || 1) * (1 + r/100)); return acc; }, []);
+    const maxDD = cumRets.reduce((state, v, i) => {
+      const peak = Math.max(...cumRets.slice(0, i + 1));
+      return Math.min(state, (v - peak) / peak * 100);
+    }, 0);
+    return { annMean: annMean.toFixed(1), annStd: annStd.toFixed(1), sr: sr.toFixed(3), maxDD: maxDD.toFixed(1), cumRets };
+  }
+
+  const comboData = combos.map(c => ({ ...c, rets: comboSeries(c.weights), ...annualStats(comboSeries(c.weights)) }));
+
+  const COLORS = [PALETTE.charcoal30 || '#888', PALETTE.green || '#55B786', PALETTE.forest || '#265844'];
+
+  // KPI strip
+  const kpiEl = document.getElementById('factor-combo-kpis');
+  if (kpiEl) {
+    const lastSR = comboData[comboData.length - 1];
+    const firstSR = comboData[0];
+    const srLift = (parseFloat(lastSR.sr) - parseFloat(firstSR.sr)).toFixed(3);
+    kpiEl.innerHTML = [
+      ...comboData.map((c, i) => `<div class="kpi"><div class="kpi__label">${c.label}</div><div class="kpi__value" style="color:${COLORS[i]}">${c.sr}</div><div class="kpi__sub">Sharpe Ratio</div></div>`),
+      `<div class="kpi"><div class="kpi__label">SR Lift (3-factor vs Trend)</div><div class="kpi__value positive">+${srLift}</div><div class="kpi__sub">Diversification gain</div></div>`,
+    ].join('');
+  }
+
+  // Equity curve chart
+  destroyChart('factor-combo-equity-chart');
+  const ecCtx = document.getElementById('factor-combo-equity-chart');
+  if (ecCtx) {
+    state.charts['factor-combo-equity-chart'] = new Chart(ecCtx, {
+      type: 'line',
+      data: {
+        labels: dates,
+        datasets: comboData.map((c, i) => ({
+          label: c.label,
+          data: c.cumRets.map(v => ((v - 1) * 100).toFixed(2)),
+          borderColor: COLORS[i],
+          backgroundColor: i === 2 ? PALETTE.forest15 || '#26584415' : 'transparent',
+          fill: i === 2,
+          borderWidth: i === 2 ? 2.5 : 1.5,
+          borderDash: i === 0 ? [6,3] : i === 1 ? [3,2] : [],
+          pointRadius: 0,
+        }))
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top', align: 'end' },
+          tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw}%` } },
+        },
+        scales: {
+          x: { grid: { color: PALETTE.gridLine }, ticks: { maxTicksLimit: 12, font: { size: 10 } } },
+          y: { grid: { color: PALETTE.gridLine }, ticks: { callback: v => v + '%' } }
+        }
+      }
+    });
+  }
+
+  // SR bar chart
+  destroyChart('factor-combo-sr-chart');
+  const srCtx = document.getElementById('factor-combo-sr-chart');
+  if (srCtx) {
+    state.charts['factor-combo-sr-chart'] = new Chart(srCtx, {
+      type: 'bar',
+      data: {
+        labels: comboData.map(c => c.label),
+        datasets: [{
+          label: 'Sharpe Ratio',
+          data: comboData.map(c => parseFloat(c.sr)),
+          backgroundColor: COLORS,
+          borderRadius: 6,
+          barThickness: 40,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `SR: ${ctx.raw.toFixed(3)}` } } },
+        scales: {
+          x: { grid: { display: false } },
+          y: { grid: { color: PALETTE.gridLine }, title: { display: true, text: 'Sharpe Ratio' }, beginAtZero: true }
+        }
+      }
+    });
+  }
+
+  // Correlation matrix table
+  const corrEl = document.getElementById('factor-combo-corr-table');
+  if (corrEl) {
+    const series = [trendRets, carryRets, csmomRets];
+    const names = ['Trend', 'Carry', 'CS Momentum'];
+    function corr(a, b) {
+      const n = Math.min(a.length, b.length);
+      const ma = a.slice(0, n).reduce((s, v) => s + v, 0) / n;
+      const mb = b.slice(0, n).reduce((s, v) => s + v, 0) / n;
+      const cov = a.slice(0, n).reduce((s, v, i) => s + (v - ma) * (b[i] - mb), 0) / n;
+      const sa = Math.sqrt(a.slice(0, n).reduce((s, v) => s + (v - ma) ** 2, 0) / n);
+      const sb = Math.sqrt(b.slice(0, n).reduce((s, v) => s + (v - mb) ** 2, 0) / n);
+      return sa && sb ? cov / (sa * sb) : 0;
+    }
+    let html = `<table><thead><tr><th></th>${names.map(n => `<th>${n}</th>`).join('')}</tr></thead><tbody>`;
+    series.forEach((row, i) => {
+      html += `<tr><td style="font-weight:600">${names[i]}</td>`;
+      series.forEach((col, j) => {
+        const v = corr(row, col);
+        const bg = i === j ? 'background:#26584418' : v > 0.3 ? 'background:#B85C4A22' : v < -0.1 ? 'background:#55B78622' : '';
+        html += `<td style="text-align:center;${bg}">${v.toFixed(3)}</td>`;
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    corrEl.innerHTML = html;
+  }
+
+  // Rolling 3Y Sharpe
+  destroyChart('factor-combo-rolling-sr-chart');
+  const rCtx = document.getElementById('factor-combo-rolling-sr-chart');
+  if (rCtx) {
+    const window = 756; // ~3 years trading days
+    function rollingSR(rets, w) {
+      return rets.map((_, i) => {
+        if (i < w) return null;
+        const slice = rets.slice(i - w, i);
+        const mean = slice.reduce((a, b) => a + b, 0) / w;
+        const std = Math.sqrt(slice.reduce((s, v) => s + (v - mean) ** 2, 0) / w);
+        return std > 0 ? (mean / std) * Math.sqrt(256) : null;
+      });
+    }
+    state.charts['factor-combo-rolling-sr-chart'] = new Chart(rCtx, {
+      type: 'line',
+      data: {
+        labels: dates,
+        datasets: comboData.map((c, i) => ({
+          label: c.label,
+          data: rollingSR(c.rets, window),
+          borderColor: COLORS[i],
+          borderWidth: i === 2 ? 2 : 1.5,
+          borderDash: i === 0 ? [6, 3] : i === 1 ? [3, 2] : [],
+          pointRadius: 0,
+          spanGaps: false,
+        }))
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { position: 'top', align: 'end' }, tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw?.toFixed(3) ?? ''}` } } },
+        scales: {
+          x: { grid: { color: PALETTE.gridLine }, ticks: { maxTicksLimit: 10, font: { size: 10 } } },
+          y: { grid: { color: PALETTE.gridLine }, title: { display: true, text: '3Y Rolling Sharpe' } }
+        }
+      }
+    });
+  }
+}
+
 document.querySelectorAll('.tab-nav__item').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.tab-nav__item').forEach(t => t.classList.remove('active'));
@@ -2484,6 +2685,8 @@ document.querySelectorAll('.tab-nav__item').forEach(tab => {
     if (tab.dataset.tab === 'smaller-macro' && !smallerMacroLoaded) loadSmallerMacroData();
     if (tab.dataset.tab === 'macro-compare' && !compareLoaded) loadCompareData();
     if (tab.dataset.tab === 'universe' && !universeLoaded) loadUniverseData();
+    if (tab.dataset.tab === 'sweep') renderSweep();
+    if (tab.dataset.tab === 'factor-combo') renderFactorComboTab();
   });
 });
 

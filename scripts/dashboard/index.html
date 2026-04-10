@@ -46,6 +46,7 @@
   <div class="tab-nav__item" data-tab="macro-compare">Macro Compare</div>
   <div class="tab-nav__item" data-tab="universe">Universe</div>
   <div class="tab-nav__item" data-tab="sweep">Universe Sweep</div>
+  <div class="tab-nav__item" data-tab="factor-combo">Factor SR Decomposition</div>
   <div class="tab-nav__item" data-tab="comparison">Run Comparison</div>
 </nav>
 
@@ -579,6 +580,36 @@
 
   </section>
 
+  <!-- ──── TAB: Factor SR Decomposition (Method B) ──── -->
+  <section class="tab-content" id="tab-factor-combo">
+    <div class="card" style="margin-bottom:var(--space-lg)">
+      <div class="card__header">
+        <span class="card__title">Factor Combination SR Analysis</span>
+        <span class="info-tip" title="Incrementally combines Trend → Trend+Carry → Trend+Carry+CS Momentum using actual backtest factor_returns.csv. Equal-weighting within each group. Shows how portfolio SR improves with each additional strategy family.">ⓘ</span>
+      </div>
+      <p class="card__hint">How each additional strategy family improves portfolio Sharpe Ratio — computed from actual backtest factor returns (not simulated)</p>
+      <div class="grid grid-4" id="factor-combo-kpis" style="margin-bottom:var(--space-lg)"></div>
+      <div class="chart-wrap chart-wrap--tall"><canvas id="factor-combo-equity-chart"></canvas></div>
+    </div>
+    <div class="grid grid-2" style="margin-bottom:var(--space-lg)">
+      <div class="card">
+        <div class="card__header"><span class="card__title">Sharpe Ratio by Strategy Combination</span></div>
+        <div class="chart-wrap chart-wrap--medium"><canvas id="factor-combo-sr-chart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Factor Group Correlation Matrix</span>
+          <span class="info-tip" title="Annual correlation between factor group P&amp;L streams. Lower correlation = stronger diversification benefit = higher Sharpe.">ⓘ</span>
+        </div>
+        <div class="table-wrap" id="factor-combo-corr-table"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card__header"><span class="card__title">Rolling 3-Year Sharpe by Combination</span></div>
+      <div class="chart-wrap chart-wrap--medium"><canvas id="factor-combo-rolling-sr-chart"></canvas></div>
+    </div>
+  </section>
+
   <!-- ──── TAB 6: Run Comparison ──── -->
   <section class="tab-content" id="tab-comparison">
     <div class="card">
@@ -595,6 +626,6 @@
 
 </main>
 
-<script src="app.js?v=20260410b"></script>
+<script src="app.js?v=20260410c"></script>
 </body>
 </html>
