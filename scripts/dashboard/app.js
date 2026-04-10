@@ -1771,12 +1771,12 @@ function renderSweepCountChart(runs) {
   const counts = sorted.map(r => r.n_instruments);
   const srs = sorted.map(r => r.sharpe);
 
-  // Dynamic y1 axis: give SR values breathing room by padding 20% beyond data range
+  // Dynamic x1 axis: give SR values breathing room
   const srMin = Math.min(...srs);
   const srMax = Math.max(...srs);
   const srRange = srMax - srMin || 0.5;
-  const srAxisMin = Math.max(0, parseFloat((srMin - srRange * 0.3).toFixed(2)));
-  const srAxisMax = parseFloat((srMax + srRange * 0.3).toFixed(2));
+  const srAxisMin = Math.max(0, parseFloat((srMin - srRange * 0.4).toFixed(2)));
+  const srAxisMax = parseFloat((srMax + srRange * 0.4).toFixed(2));
 
   state.charts.sweepCount = new Chart(ctx, {
     type: 'bar',
@@ -1788,20 +1788,22 @@ function renderSweepCountChart(runs) {
           data: counts,
           backgroundColor: sorted.map(r => r.is_baseline ? PALETTE.forest : PALETTE.green + '99'),
           borderRadius: 4,
-          barThickness: 24,
-          yAxisID: 'y',
+          barThickness: 22,
+          xAxisID: 'x',
         },
         {
           label: 'Sharpe Ratio',
           data: srs,
           type: 'line',
           borderColor: PALETTE.forest,
-          borderWidth: 2,
-          pointRadius: 5,
+          backgroundColor: PALETTE.forest,
+          borderWidth: 2.5,
+          pointRadius: 6,
           pointBackgroundColor: sorted.map(r => r.is_baseline ? '#fff' : PALETTE.forest),
           pointBorderColor: PALETTE.forest,
           pointBorderWidth: 2,
-          yAxisID: 'y1',
+          tension: 0.3,
+          xAxisID: 'x1',
         }
       ]
     },
@@ -1820,15 +1822,18 @@ function renderSweepCountChart(runs) {
         }
       },
       scales: {
-        x: { display: false },
+        x: {
+          display: false,
+          grid: { display: false },
+        },
         y: { grid: { display: false }, ticks: { font: { size: 9 } } },
-        y1: {
-          position: 'right',
-          grid: { color: 'rgba(38,88,68,0.08)', drawOnChartArea: true },
-          title: { display: true, text: 'Sharpe Ratio', font: { size: 10 } },
+        x1: {
+          position: 'top',
+          grid: { color: 'rgba(38,88,68,0.1)', drawOnChartArea: true },
+          title: { display: true, text: 'Sharpe Ratio', font: { size: 10 }, color: PALETTE.forest },
           min: srAxisMin,
           max: srAxisMax,
-          ticks: { callback: v => v.toFixed(2), font: { size: 9 }, maxTicksLimit: 6 }
+          ticks: { callback: v => v.toFixed(2), font: { size: 9 }, maxTicksLimit: 6, color: PALETTE.forest }
         }
       }
     }
