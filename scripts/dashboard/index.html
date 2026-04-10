@@ -680,6 +680,15 @@
       </div>
     </div>
 
+    <!-- Cross-reference to Methodology -->
+    <div class="card" style="margin-top:var(--space-lg);background:var(--sand-light);border-left:3px solid var(--border-subtle)">
+      <div style="padding:var(--space-sm) var(--space-md);display:flex;align-items:center;gap:var(--space-md);flex-wrap:wrap">
+        <span style="font-size:13px;color:var(--text-muted)">📐 Reference Documentation:</span>
+        <a href="#" onclick="document.querySelector('[data-tab=methodology]').click();setTimeout(()=>{const el=document.getElementById('methodology-executability');el.classList.remove('collapsed');el.scrollIntoView({behavior:'smooth',block:'start'})},300);return false" style="font-size:12px;font-weight:600;color:var(--forest);text-decoration:underline;cursor:pointer">Min Account Size & Executability Formulas →</a>
+        <a href="#" onclick="document.querySelector('[data-tab=methodology]').click();setTimeout(()=>{const el=document.getElementById('methodology-trading-costs');el.classList.remove('collapsed');el.scrollIntoView({behavior:'smooth',block:'start'})},300);return false" style="font-size:12px;font-weight:600;color:var(--forest);text-decoration:underline;cursor:pointer">Trading Cost Model Reference →</a>
+      </div>
+    </div>
+
   </section>
 
   <!-- ──── TAB: Factor SR Decomposition (Method B) ──── -->
