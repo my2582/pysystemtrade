@@ -1289,6 +1289,8 @@ function renderMethodology() {
   renderMethodologyRisk();
   renderMethodologyRules();
   renderSpreadCostChart();
+  renderMethodologyExecutability();
+  renderMethodologyTradingCosts();
 }
 
 function renderMethodologyPipeline() {
@@ -1524,6 +1526,295 @@ function renderSpreadCostChart() {
       }
     }
   });
+}
+
+// ══════════════════════════════════════════════════════════════════
+// Reference Documents
+// ══════════════════════════════════════════════════════════════════
+
+function renderMethodologyExecutability() {
+  const el = document.getElementById('methodology-executability');
+  if (!el) return;
+  el.classList.add('collapsed'); // start collapsed
+
+  const m = state.methodology || {};
+  const capital = m.capital || 200000;
+  const volTarget = m.vol_target_pct || 25;
+  const snap = state.positionSnapshot || [];
+  const iw = state.instrumentWeights;
+  const lastWeights = iw && iw.length > 0 ? iw[iw.length - 1] : {};
+
+  // Build instrument table with real data
+  const instRows = snap.map(r => {
+    const inst = r.Instrument;
+    const avgPos = parseFloat(r['Avg |Position|'] || 0);
+    const weight = parseFloat(lastWeights[inst] || 0);
+    const cv = parseFloat(r['Contract Value ($)'] || 0);
+    const tradeable = avgPos >= 0.5;
+    return { inst, avgPos, weight, cv, tradeable };
+  }).sort((a, b) => b.avgPos - a.avgPos);
+
+  const tradeableCount = instRows.filter(r => r.tradeable).length;
+  const totalCount = instRows.length;
+
+  // Pick a good worked example: a borderline (near 0.5) instrument
+  const exInst = instRows.find(r => r.avgPos > 0.3 && r.avgPos < 1.5) || instRows[0];
+
+  el.innerHTML = `
+  <!-- Section: Overview -->
+  <div class="ref-section">
+    <div class="ref-section__title">Overview — What Determines Executability?</div>
+    <div class="ref-text">
+      A futures instrument is <strong>tradeable</strong> at a given capital level if the system can consistently hold ≥ 1 integer contract.
+      Since positions are rounded to integers, fractional positions (e.g., 0.3 contracts) become <strong>zero</strong> — the system has a signal but cannot act on it.
+      Executability measures the percentage of instruments where this rounding does not eliminate the position.
+    </div>
+    <div class="ref-callout">
+      <strong>Current Result:</strong> ${tradeableCount}/${totalCount} instruments tradeable
+      (${(tradeableCount/totalCount*100).toFixed(1)}%) at $${(capital/1000).toFixed(0)}K capital.
+    </div>
+  </div>
+
+  <!-- Section: Position Sizing Formula -->
+  <div class="ref-section">
+    <div class="ref-section__title">Position Sizing Formula</div>
+    <div class="ref-text">
+      pysystemtrade computes the <strong>notional (fractional) position</strong> for each instrument as:
+    </div>
+    <div class="ref-formula">
+      <span class="var">notional_position</span> = <span class="var">subsystem_position</span> × <span class="var">IDM</span> × <span class="var">instrument_weight</span><br><br>
+      where:<br>
+      <span class="var">subsystem_position</span> = (<span class="var">Capital</span> × <span class="var">vol_target</span>) / (<span class="var">σ_price</span> × <span class="var">Pointsize</span> × √256) × (<span class="var">forecast</span> / 10)<br><br>
+      <span class="var">rounded_position</span> = round(<span class="var">notional_position</span>) → integer contracts
+    </div>
+    <div class="ref-text">
+      <strong>Key variables:</strong>
+    </div>
+    <table class="ref-table">
+      <thead><tr><th>Variable</th><th>Source</th><th>Description</th><th>Current Value</th></tr></thead>
+      <tbody>
+        <tr><td>Capital</td><td>config.yaml</td><td>Notional trading capital</td><td>$${capital.toLocaleString()}</td></tr>
+        <tr><td>vol_target</td><td>methodology.json</td><td>Annual % vol target ÷ 100</td><td>${volTarget}% → ${(volTarget/100).toFixed(2)}</td></tr>
+        <tr><td>σ_price</td><td>daily returns</td><td>Daily price standard deviation (points)</td><td>Per instrument</td></tr>
+        <tr><td>Pointsize</td><td>instrumentconfig.csv</td><td>Contract multiplier ($ per point)</td><td>Per instrument</td></tr>
+        <tr><td>IDM</td><td>Estimated</td><td>Instrument Diversification Multiplier</td><td>~2.5 (25 inst)</td></tr>
+        <tr><td>instrument_weight</td><td>instrument_weights.csv</td><td>Portfolio weight (sums to ~1.0)</td><td>~${(1/totalCount).toFixed(3)} avg</td></tr>
+        <tr><td>forecast</td><td>combForecast</td><td>Combined forecast, scaled to avg |f|=10</td><td>-20 to +20</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section: Worked Example -->
+  <div class="ref-section">
+    <div class="ref-section__title">Worked Example: ${exInst.inst}</div>
+    <div class="ref-formula">
+      Given: <span class="var">Capital</span> = <span class="val">$${capital.toLocaleString()}</span>,
+      <span class="var">w</span> = <span class="val">${exInst.weight.toFixed(4)}</span>,
+      <span class="var">IDM</span> ≈ <span class="val">2.5</span>,
+      <span class="var">vol_target</span> = <span class="val">${(volTarget/100).toFixed(2)}</span>,
+      <span class="var">Contract Value</span> ≈ <span class="val">$${exInst.cv.toLocaleString()}</span><br><br>
+
+      Avg |notional_position| = <span class="val">${exInst.avgPos.toFixed(4)}</span>
+      → rounded ≈ ${Math.round(exInst.avgPos)} contract(s)
+      → <span class="result">${exInst.tradeable ? '✅ TRADEABLE (≥ 0.5)' : '❌ UNTRADEABLE (< 0.5)'}</span><br><br>
+
+      <em>Intuition: At avg forecast (|f|=10), Capital×IDM×w×vol_target / (σ×Pointsize×√256) ≈ ${exInst.avgPos.toFixed(2)}.</em><br>
+      <em>This means you can typically hold ~${Math.max(1, Math.round(exInst.avgPos))} contract(s) in ${exInst.inst}.</em>
+    </div>
+  </div>
+
+  <!-- Section: Executability Metric -->
+  <div class="ref-section">
+    <div class="ref-section__title">Executability Metric Definition</div>
+    <div class="ref-formula">
+      <span class="var">Exec Rate</span> = (# instruments with <span class="var">avg |notional_pos|</span> ≥ 0.5 over last 5Y) / <span class="var">total instruments</span><br><br>
+      Data source: <span class="val">notional_positions.csv</span>, last 1280 trading days (≈ 5 years)<br>
+      Threshold: <span class="val">0.5</span> = on average can hold ≥ 1 contract<br><br>
+      Grades: <span class="tradeable">PRODUCTION ≥ 80%</span> · <span style="color:#8B7355;font-weight:600">RESEARCH ≥ 60%</span> · <span class="untradeable">THEORETICAL < 60%</span>
+    </div>
+    <div class="ref-callout warning">
+      <strong>Why 5 years, not full history?</strong>
+      Full-history averages are inflated by decades of cheaper contract prices.
+      Example: GOLD_micro averaged 12+ contracts in 1975–2000 (gold at $200/oz) vs ~0.9 contracts today ($3,000/oz).
+      The 5-year window balances recency with stability.
+    </div>
+  </div>
+
+  <!-- Section: Full Instrument Table -->
+  <div class="ref-section">
+    <div class="ref-section__title">All Instruments — Executability Detail (${totalCount} instruments, $${(capital/1000).toFixed(0)}K)</div>
+    <table class="ref-table">
+      <thead><tr>
+        <th></th><th>Instrument</th><th>Inst Weight</th><th>Contract Value</th>
+        <th>Avg |Position| (full history)</th><th>Tradeable?</th>
+      </tr></thead>
+      <tbody>
+        ${instRows.map((r, i) => `<tr>
+          <td>${i + 1}</td>
+          <td>${r.inst}</td>
+          <td>${r.weight.toFixed(4)}</td>
+          <td>$${r.cv.toLocaleString()}</td>
+          <td class="${r.tradeable ? 'tradeable' : 'untradeable'}">${r.avgPos.toFixed(4)}</td>
+          <td class="${r.tradeable ? 'tradeable' : 'untradeable'}">${r.tradeable ? '✅ Yes' : '❌ No'}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Section: Micro/Mini Alternatives -->
+  <div class="ref-section">
+    <div class="ref-section__title">Micro/Mini Contract Alternatives</div>
+    <div class="ref-text">
+      Some untradeable instruments have smaller contract variants available in pysystemtrade.
+      Switching reduces the contract value, making the position more executable — but at a higher trading cost.
+    </div>
+    <table class="ref-table">
+      <thead><tr><th>Current</th><th>Contract Value</th><th>Alternative</th><th>CV (est)</th><th>Reduction</th><th>SR Cost Mult</th><th>Data?</th></tr></thead>
+      <tbody>
+        <tr><td>CRUDE_W / BRENT-LAST</td><td>$116K–$130K</td><td>CRUDE_W_micro (MCL)</td><td>~$11.6K</td><td>1/10</td><td>1.7×</td><td>✅ 1988–</td></tr>
+        <tr><td>JGB</td><td>$877K</td><td>JGB-mini</td><td>~$87.7K</td><td>1/10</td><td>4.3×</td><td>✅ 2001–</td></tr>
+        <tr class="untradeable"><td>GILT</td><td>$112K</td><td>—</td><td>—</td><td>—</td><td>—</td><td>❌ None</td></tr>
+        <tr class="untradeable"><td>BUND</td><td>$135K</td><td>—</td><td>—</td><td>—</td><td>—</td><td>❌ None</td></tr>
+        <tr class="untradeable"><td>FTSE100</td><td>$132K</td><td>—</td><td>—</td><td>—</td><td>—</td><td>❌ None</td></tr>
+        <tr class="untradeable"><td>GASOIL</td><td>$151K</td><td>—</td><td>—</td><td>—</td><td>—</td><td>❌ None</td></tr>
+        <tr class="untradeable"><td>SILVER</td><td>$59K</td><td>SILVER-mini (bigger!)</td><td>~$148K</td><td>2.5×</td><td>—</td><td>⚠️ Name misleading</td></tr>
+        <tr><td>GOLD_micro</td><td>$30K</td><td>—</td><td>—</td><td>—</td><td>—</td><td>Already smallest (10oz)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  `;
+}
+
+
+function renderMethodologyTradingCosts() {
+  const el = document.getElementById('methodology-trading-costs');
+  if (!el) return;
+  el.classList.add('collapsed'); // start collapsed
+
+  const snap = state.positionSnapshot || [];
+  const sc = state.spreadCosts || [];
+
+  // Build cost table from spread_costs.csv
+  const costRows = sc.map(r => {
+    const inst = r.instrument;
+    const snapRow = snap.find(s => s.Instrument === inst);
+    const spreadPts = parseFloat(r.spread_points || 0);
+    const costUsd = parseFloat(r.cost_usd || 0);
+    const costBps = parseFloat(r.cost_bps || 0);
+    return { inst, spreadPts, costUsd, costBps };
+  }).sort((a, b) => b.costUsd - a.costUsd);
+
+  el.innerHTML = `
+  <!-- Section: Cost Components -->
+  <div class="ref-section">
+    <div class="ref-section__title">Cost Components in pysystemtrade</div>
+    <div class="ref-text">
+      Every simulated trade incurs costs from two independent sources: <strong>slippage</strong> (bid-ask spread) and <strong>commission</strong>.
+      These are combined into a single <strong>SR cost</strong> (Sharpe Ratio cost) metric that normalizes costs by volatility, making them comparable across instruments.
+    </div>
+    <table class="ref-table">
+      <thead><tr><th>Component</th><th>Source File</th><th>Field</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>price_slippage</td><td>spreadcosts.csv</td><td>SpreadCost</td><td>Half bid-ask spread in <strong>price points</strong>. One-way cost per contract.</td></tr>
+        <tr><td>PerBlock</td><td>instrumentconfig.csv</td><td>PerBlock</td><td>Fixed commission per contract (USD). E.g., IB commission.</td></tr>
+        <tr><td>Percentage</td><td>instrumentconfig.csv</td><td>Percentage</td><td>Commission as % of notional value. Usually 0 for futures.</td></tr>
+        <tr><td>PerTrade</td><td>instrumentconfig.csv</td><td>PerTrade</td><td>Fixed fee per order (regardless of size). Usually 0.</td></tr>
+      </tbody>
+    </table>
+    <div class="ref-callout">
+      <strong>Commission rule:</strong> Total commission = <code>max(PerBlock × contracts, PerTrade, Percentage × notional)</code>.
+      For futures, PerBlock dominates (Percentage and PerTrade are typically 0).
+    </div>
+  </div>
+
+  <!-- Section: SR Cost Formula -->
+  <div class="ref-section">
+    <div class="ref-section__title">SR Cost Formula (Sharpe-Normalized Cost per Trade)</div>
+    <div class="ref-formula">
+      <span class="var">SR_cost_per_trade</span> = <span class="var">cost_in_currency</span> / <span class="var">annual_σ_in_currency</span><br><br>
+      where:<br>
+      <span class="var">cost_in_currency</span> = <span class="var">SpreadCost</span> × <span class="var">Pointsize</span> + <span class="var">PerBlock</span><br>
+      <span class="var">annual_σ_in_currency</span> = <span class="var">annual_σ_price</span> × <span class="var">Pointsize</span><br><br>
+      Expanding:<br>
+      <span class="var">SR_cost</span> = <span class="var">SpreadCost</span> / <span class="var">annual_σ_price</span>  +  <span class="var">PerBlock</span> / (<span class="var">annual_σ_price</span> × <span class="var">Pointsize</span>)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ↑ <em>spread component</em> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ↑ <em>commission component</em><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>(Pointsize cancels!)</em> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>(Pointsize does NOT cancel)</em>
+    </div>
+    <div class="ref-callout warning">
+      <strong>Why micro contracts cost more:</strong><br>
+      1. <strong>Wider spread</strong> → Higher SpreadCost value → Spread component increases.<br>
+      2. <strong>Commission ÷ smaller Pointsize</strong> → Commission component increases because the denominator shrinks.
+    </div>
+  </div>
+
+  <!-- Section: Worked Example -->
+  <div class="ref-section">
+    <div class="ref-section__title">Worked Example: CRUDE_W vs CRUDE_W_micro</div>
+    <div class="ref-formula">
+      Given: <span class="var">annual_σ_price</span> ≈ <span class="val">15 points/year</span> (crude oil ~$1/day volatility × √256)<br><br>
+
+      <strong>CRUDE_W (Standard, 1000 bbl):</strong><br>
+      &nbsp;&nbsp;Spread: <span class="val">0.012</span> / <span class="val">15</span> = <span class="val">0.000800</span><br>
+      &nbsp;&nbsp;Commission: <span class="val">$2.37</span> / (<span class="val">15</span> × <span class="val">1,000</span>) = <span class="val">0.000158</span><br>
+      &nbsp;&nbsp;Total: <span class="result">0.000958 SR per trade</span><br><br>
+
+      <strong>CRUDE_W_micro (MCL, 100 bbl):</strong><br>
+      &nbsp;&nbsp;Spread: <span class="val">0.017</span> / <span class="val">15</span> = <span class="val">0.001133</span> <em>(42% wider)</em><br>
+      &nbsp;&nbsp;Commission: <span class="val">$0.77</span> / (<span class="val">15</span> × <span class="val">100</span>) = <span class="val">0.000513</span> <em>(3.2× higher)</em><br>
+      &nbsp;&nbsp;Total: <span class="result">0.001647 SR per trade (1.7× more expensive)</span>
+    </div>
+  </div>
+
+  <!-- Section: Total Annual Cost -->
+  <div class="ref-section">
+    <div class="ref-section__title">Total Annual Cost = Trading + Holding</div>
+    <div class="ref-formula">
+      <span class="var">SR_total</span> = (<span class="var">turnover</span> × <span class="var">SR_per_trade</span>) + (<span class="var">2 × rolls_per_year</span> × <span class="var">SR_per_trade</span>)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↑ <em>trading cost</em> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↑ <em>holding cost (roll)</em><br><br>
+      <em>Turnover = # full position turnovers per year (see Position Analytics tab).</em><br>
+      <em>Rolls = futures contract rolls, each requiring a buy + sell = 2 × SR_per_trade.</em>
+    </div>
+  </div>
+
+  <!-- Section: Micro vs Standard Comparison -->
+  <div class="ref-section">
+    <div class="ref-section__title">Micro vs Standard: SR Cost Multiplier</div>
+    <div class="ref-text">
+      Smaller contracts improve executability but cost more per trade. The trade-off:
+    </div>
+    <table class="ref-table">
+      <thead><tr><th>Pair</th><th>Std SpreadCost</th><th>Micro SpreadCost</th><th>Std PerBlock</th><th>Micro PerBlock</th><th>Std Pointsize</th><th>Micro Pointsize</th><th>SR Cost Mult</th></tr></thead>
+      <tbody>
+        <tr><td>GOLD → GOLD_micro</td><td>0.096</td><td>0.088</td><td>$2.47</td><td>$0.77</td><td>100</td><td>10</td><td class="untradeable">1.4×</td></tr>
+        <tr><td>SP500 → SP500_micro</td><td>0.130</td><td>0.130</td><td>$2.25</td><td>$0.62</td><td>50</td><td>5</td><td class="untradeable">1.5×</td></tr>
+        <tr><td>CRUDE_W → micro</td><td>0.012</td><td>0.017</td><td>$2.37</td><td>$0.77</td><td>1,000</td><td>100</td><td class="untradeable">1.7×</td></tr>
+        <tr><td>COPPER → micro</td><td>0.00047</td><td>0.00070</td><td>$2.47</td><td>$1.47</td><td>25,000</td><td>2,500</td><td class="untradeable">2.3×</td></tr>
+        <tr><td>JGB → JGB-mini</td><td>0.005</td><td>0.023</td><td>¥500</td><td>¥85</td><td>1M</td><td>100K</td><td class="untradeable">4.3×</td></tr>
+      </tbody>
+    </table>
+    <div class="ref-callout">
+      <strong>Rule of thumb:</strong> Micro contracts are 1.4–2× more expensive per SR unit for liquid products (Gold, S&P, Crude).
+      JGB-mini is an outlier at 4.3× due to extremely wide spreads. Use micro contracts only when the executability gain justifies the cost increase.
+    </div>
+  </div>
+
+  <!-- Section: Current Instrument Costs -->
+  <div class="ref-section">
+    <div class="ref-section__title">Current Universe — Spread Costs (from backtest)</div>
+    <table class="ref-table">
+      <thead><tr><th>#</th><th>Instrument</th><th>Spread (pts)</th><th>Cost (USD)</th><th>Cost (bps)</th></tr></thead>
+      <tbody>
+        ${costRows.map((r, i) => `<tr>
+          <td>${i + 1}</td>
+          <td>${r.inst}</td>
+          <td>${r.spreadPts.toFixed(6)}</td>
+          <td>$${r.costUsd.toFixed(2)}</td>
+          <td>${r.costBps.toFixed(2)}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>
+  `;
 }
 
 // ── Helpers ──

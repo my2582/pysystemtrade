@@ -999,3 +999,94 @@ tr.clickable-row:hover {
   margin-top: 3px;
   line-height: 1.4;
 }
+
+/* ─── Reference Document Styles ─── */
+.ref-body {
+  padding: var(--space-md) var(--space-lg);
+  transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+  overflow: hidden;
+}
+.ref-body.collapsed {
+  max-height: 0 !important;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.ref-section {
+  margin-bottom: var(--space-lg);
+}
+.ref-section__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--forest);
+  margin-bottom: var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ref-section__title::before {
+  content: '▸';
+  font-size: 11px;
+}
+.ref-formula {
+  background: var(--sand-light);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--forest);
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.8;
+  margin: 8px 0;
+  overflow-x: auto;
+}
+.ref-formula .var { color: var(--forest); font-weight: 600; }
+.ref-formula .val { color: #8B7355; }
+.ref-formula .result { color: #B85C4A; font-weight: 700; }
+.ref-text {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin: 6px 0;
+}
+.ref-table {
+  width: 100%;
+  font-size: 11px;
+  border-collapse: collapse;
+  margin: 8px 0;
+}
+.ref-table th {
+  background: var(--sand-light);
+  font-weight: 600;
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 2px solid var(--border-subtle);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-secondary);
+}
+.ref-table td {
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.ref-table tr:hover { background: var(--sand-light); }
+.ref-table .tradeable { color: var(--forest); font-weight: 600; }
+.ref-table .untradeable { color: #B85C4A; font-weight: 600; }
+.ref-callout {
+  background: #EFFDF6;
+  border: 1px solid #55B78644;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 11px;
+  line-height: 1.6;
+  margin: 10px 0;
+}
+.ref-callout.warning {
+  background: #FFF4E5;
+  border-color: #F5E8C1;
+}
+.ref-callout strong { color: var(--forest); }
+.ref-callout.warning strong { color: #8B7355; }
