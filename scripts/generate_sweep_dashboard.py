@@ -4,6 +4,7 @@ Generate sweep_summary.json for the dashboard Universe Sweep tab.
 Consolidates equity curves (weekly sampled) + metrics from all sweep runs + v6 baseline.
 """
 import json
+import yaml
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -26,6 +27,121 @@ CLASS_MAP = {
     "arki_v4_optimized": {"label": "Full 25 (+ Energy)", "classes": ["Equity", "Bond", "Ags", "FX", "Metals", "Energy"]},
     "arki_100k_13inst": {"label": "$100K Macro Mini (13 inst)", "classes": ["Equity", "Bond", "Metals", "OilGas", "Ags"]},
 }
+
+VOL_TARGET_DEFAULT = 25.0  # annual % vol target
+SIGMA_CLIP = 0.10  # clip daily returns beyond 10% (roll artifacts)
+SIGMA_LOOKBACK = 256  # trading days for volatility estimation
+
+
+def compute_min_capital(run_dir):
+    """
+    Compute per-instrument minimum capital required to hold >= 0.5 contracts
+    at average forecast, using pysystemtrade's position sizing formula.
+
+    From positionsizing.py:
+      subsys_pos = (Capital × vol_target%) / (sqrt(256) × contract_value × σ_daily)
+
+    For notional_pos >= 0.5 at avg forecast:
+      0.5 = IDM × weight × subsys_pos
+      => Capital_min = (0.5 × sqrt(256) × contract_value × σ_daily) / (IDM × weight × vol_target%)
+
+    Returns: {"per_instrument": {inst: min_cap}, "sum": float, "max": float,
+             "idm": float, "n_tradeable": int}
+    """
+    run_dir = Path(run_dir)
+
+    cv_file = run_dir / "contract_values.csv"
+    iw_file = run_dir / "instrument_weights.csv"
+    sp_file = run_dir / "subsystem_positions.csv"
+    np_file = run_dir / "notional_positions.csv"
+
+    if not all(f.exists() for f in [cv_file, iw_file, sp_file, np_file]):
+        return None
+
+    cv = pd.read_csv(cv_file, index_col=0, parse_dates=True)
+    iw = pd.read_csv(iw_file, index_col=0, parse_dates=True)
+    sp = pd.read_csv(sp_file, index_col=0, parse_dates=True)
+    np_df = pd.read_csv(np_file, index_col=0, parse_dates=True)
+
+    # Read vol_target from config.yaml
+    vol_target_pct = VOL_TARGET_DEFAULT
+    config_file = run_dir / "config.yaml"
+    if config_file.exists():
+        try:
+            with open(config_file) as f:
+                cfg = yaml.safe_load(f)
+            vol_target_pct = float(cfg.get("vol_target", VOL_TARGET_DEFAULT))
+        except Exception:
+            pass
+
+    # Last instrument weights
+    last_w = iw.dropna(how="all").iloc[-1]
+
+    # Derive IDM × risk_overlay from position data
+    # notional_pos = subsystem_pos × IDM × weight × risk_overlay
+    # => IDM_RO = notional / (subsystem × weight)
+    thresh_sp = max(1, int(len(sp.columns) * 0.5))
+    thresh_np = max(1, int(len(np_df.columns) * 0.5))
+    sp_recent = sp.dropna(thresh=thresh_sp)
+    np_recent = np_df.dropna(thresh=thresh_np)
+
+    if len(sp_recent) == 0 or len(np_recent) == 0:
+        return None
+
+    sp_row = sp_recent.iloc[-1]
+    np_row = np_recent.iloc[-1]
+
+    idm = None
+    for inst in sp.columns:
+        s_val = sp_row.get(inst, np.nan)
+        n_val = np_row.get(inst, np.nan)
+        w_val = last_w.get(inst, np.nan)
+        if (
+            pd.notna(s_val) and pd.notna(n_val) and pd.notna(w_val)
+            and s_val != 0 and w_val != 0
+        ):
+            idm = n_val / (s_val * w_val)
+            break
+
+    if idm is None or idm <= 0:
+        return None
+
+    # Last mostly-complete row of contract values
+    cv_thresh = max(1, int(len(cv.columns) * 0.5))
+    last_cv = cv.dropna(thresh=cv_thresh).iloc[-1]
+
+    # Compute per-instrument minimum capital
+    per_inst = {}
+    sqrt_256 = np.sqrt(SIGMA_LOOKBACK)
+
+    for inst in cv.columns:
+        series = cv[inst].dropna()
+        if len(series) < 100:
+            continue
+
+        pct_ret = series.pct_change(fill_method=None).dropna()
+        pct_clipped = pct_ret.clip(-SIGMA_CLIP, SIGMA_CLIP)
+        sigma_daily = pct_clipped.tail(SIGMA_LOOKBACK).std()
+
+        bv = last_cv.get(inst, np.nan)
+        w = last_w.get(inst, np.nan)
+
+        if pd.isna(bv) or pd.isna(w) or w == 0 or sigma_daily == 0 or pd.isna(sigma_daily):
+            continue
+
+        min_cap = (0.5 * sqrt_256 * bv * sigma_daily) / (idm * w * vol_target_pct)
+        per_inst[inst] = round(min_cap)
+
+    if not per_inst:
+        return None
+
+    return {
+        "per_instrument": per_inst,
+        "sum": sum(per_inst.values()),
+        "max": max(per_inst.values()),
+        "idm": round(idm, 4),
+        "n_tradeable": len(per_inst),
+    }
 
 
 def find_latest_sweep_runs():
@@ -200,6 +316,21 @@ def main():
             "equity_weekly": equity,
             "rolling_sharpe_3y": rolling_sr,
         }
+
+        # Compute minimum required capital
+        min_cap = compute_min_capital(run_dir)
+        if min_cap:
+            run_data["min_capital_sum"] = min_cap["sum"]
+            run_data["min_capital_max"] = min_cap["max"]
+            run_data["min_capital_idm"] = min_cap["idm"]
+            run_data["min_capital_per_inst"] = min_cap["per_instrument"]
+            capital_val = run_data["capital"]
+            if capital_val > 0 and min_cap["sum"] > 0:
+                run_data["headroom"] = round(capital_val / min_cap["sum"], 2)
+            print(f"    Min Capital: ${min_cap['sum']:,} (sum), ${min_cap['max']:,} (max), IDM={min_cap['idm']:.3f}")
+        else:
+            print(f"    Min Capital: N/A (missing data)")
+
         summary["runs"].append(run_data)
 
     # Compute marginal contributions
