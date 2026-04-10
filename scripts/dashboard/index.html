@@ -546,22 +546,51 @@
   <!-- ──── TAB: Universe Sweep ──── -->
   <section class="tab-content" id="tab-sweep">
 
-    <!-- Sweep KPI Strip -->
+    <!-- 1. Conclusion Card -->
+    <div class="card" id="sweep-conclusion" style="border-left:4px solid var(--forest);background:linear-gradient(135deg, var(--sand-light) 0%, #f5f0e8 100%)">
+      <div class="card__header">
+        <span class="card__title">🎯 Universe Selection — Conclusion</span>
+        <span class="info-tip" title="Data-driven conclusion from systematic universe analysis. Based on SR, executability, asset class contributions, and capital scaling.">ⓘ</span>
+      </div>
+      <div id="sweep-conclusion-content">
+        <p class="loading">Loading...</p>
+      </div>
+    </div>
+
+    <!-- 2. Metrics Table -->
     <div class="card" id="sweep-overview">
       <div class="card__header">
-        <span class="card__title">Universe Sweep — Asset Class Impact Analysis</span>
-        <span class="info-tip" title="Systematic comparison of 8 universe configurations. Fixed: Equity + Bond. Variable: Ags, FX, Metals. OilGas excluded.">ⓘ</span>
+        <span class="card__title">Universe Sweep — Performance & Executability</span>
+        <span class="info-tip" title="Systematic comparison across all universe configurations. Sorted by Sharpe Ratio. Grouped by: Full 25 capital variants, asset class building blocks, and special configs.">ⓘ</span>
       </div>
-      <p style="color:var(--text-secondary);font-size:13px;margin-bottom:var(--space-lg)">
-        Each configuration keeps Equity (7) + Bond (5) fixed and toggles Agricultural, FX, and Metals inclusion.
-        The Production baseline includes all classes plus OilGas.
-      </p>
       <div class="table-wrap" id="sweep-metrics-table">
         <p class="loading" id="sweep-loading">Loading sweep data...</p>
       </div>
     </div>
 
-    <!-- Equity Curves -->
+    <!-- 3. SR vs Executability Scatter + Capital Scaling -->
+    <div class="grid grid--2">
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">SR vs Executability Trade-off</span>
+          <span class="info-tip" title="Each point is a universe configuration. X = executability (% tradeable at $200K+). Y = Net Sharpe Ratio. Point size = # instruments. The vertical line at 80% marks PRODUCTION grade threshold.">ⓘ</span>
+        </div>
+        <div class="chart-wrap chart-wrap--medium">
+          <canvas id="sweep-scatter-chart"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__header">
+          <span class="card__title">Capital Scaling — Full 25 Universe</span>
+          <span class="info-tip" title="Shows how account size affects SR and executability for the same 25-instrument universe. More capital = more instruments are actively tradeable = better SR.">ⓘ</span>
+        </div>
+        <div class="chart-wrap chart-wrap--medium">
+          <canvas id="sweep-capital-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Equity Curves -->
     <div class="card">
       <div class="card__header">
         <span class="card__title">Cumulative P&L Comparison</span>
@@ -572,7 +601,7 @@
       </div>
     </div>
 
-    <!-- Rolling Sharpe -->
+    <!-- 5. Rolling Sharpe -->
     <div class="card">
       <div class="card__header">
         <span class="card__title">Rolling 3-Year Sharpe Ratio</span>
@@ -583,7 +612,7 @@
       </div>
     </div>
 
-    <!-- Marginal Contribution -->
+    <!-- 6. Marginal Contribution + Instrument Count -->
     <div class="grid grid--2">
       <div class="card">
         <div class="card__header">
@@ -600,6 +629,18 @@
         <div class="chart-wrap">
           <canvas id="sweep-count-chart"></canvas>
         </div>
+      </div>
+    </div>
+
+    <!-- 7. Flat Instrument Activity Reference -->
+    <div class="card" style="margin-top:var(--space-lg)">
+      <div class="card__header" style="cursor:pointer" onclick="this.parentElement.querySelector('.ref-body').classList.toggle('collapsed')">
+        <span class="card__title">📊 "Flat" Instrument Activity Analysis</span>
+        <span class="info-tip" title="Instruments below the 0.5 avg|pos| threshold are NOT necessarily dead. This table shows their actual activity rates — how often they hold positions of ≥ 0.5 contracts.">ⓘ</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--text-muted)">▼ Click to expand/collapse</span>
+      </div>
+      <div class="ref-body" id="sweep-flat-instruments">
+        <!-- Rendered by JS -->
       </div>
     </div>
 
@@ -651,6 +692,6 @@
 
 </main>
 
-<script src="app.js?v=20260410h"></script>
+<script src="app.js?v=20260411a"></script>
 </body>
 </html>

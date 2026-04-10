@@ -1849,11 +1849,15 @@ async function renderSweep() {
   }
 
   const data = state.sweepData;
+  renderSweepConclusion(data);
   renderSweepMetricsTable(data.runs);
+  renderSweepScatterChart(data.runs);
+  renderSweepCapitalChart(data);
   renderSweepEquityChart(data.runs);
   renderSweepRollingSR(data.runs);
   renderSweepMarginalChart(data.marginal_contributions);
   renderSweepCountChart(data.runs);
+  renderSweepFlatInstruments(data.runs);
 }
 
 function renderSweepMetricsTable(runs) {
@@ -1956,11 +1960,15 @@ function renderSweepMetricsTable(runs) {
 
   runs.forEach((r, i) => {
     const isBest = r.sharpe === bestSR;
-    const rowCls = r.is_baseline ? ' style="background:var(--mint)"' : '';
+    const isFull25 = r.group === 'full25';
+    const isSpecial = r.group === 'special';
+    const rowBg = isFull25 ? ' style="background:var(--mint)"' :
+                  isSpecial ? ' style="background:#F5E8C120"' : '';
     const srCls = isBest ? ' style="color:var(--forest);font-weight:700"' : '';
     const skewCls = r.skew > 0 ? ' style="color:var(--forest)"' : r.skew < -0.5 ? ' style="color:#8B4513"' : '';
     const star = isBest ? ' ★' : '';
-    const tag = r.is_baseline ? ' <span style="background:var(--forest);color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;margin-left:4px">BASELINE</span>' : '';
+    const tag = isBest ? ' <span style="background:var(--forest);color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;margin-left:4px">BEST SR</span>' :
+                isFull25 ? ' <span style="background:var(--forest);color:#fff;padding:1px 6px;border-radius:3px;font-size:9px;margin-left:4px;opacity:0.7">◆ Full 25</span>' : '';
     const mdd = r.max_drawdown != null ? r.max_drawdown : null;
     const mddCls = mdd != null && mdd === worstMDD ? ' style="color:#B85C4A;font-weight:700"' : '';
     const mddCell = hasMDD ? `<td${mddCls}>${mdd != null ? mdd.toFixed(1) + '%' : '—'}</td>` : '';
@@ -1968,7 +1976,7 @@ function renderSweepMetricsTable(runs) {
     const execCell = hasExec ? `<td style="white-space:nowrap">${execBadge(r)}</td>` : '';
     const avgPosCell = hasExec ? `<td style="font-family:var(--font-mono);font-size:10px;font-weight:600">${r.avg_position != null ? r.avg_position.toFixed(2) : '—'}</td>` : '';
 
-    html += `<tr${rowCls}>
+    html += `<tr${rowBg}>
       <td>${i + 1}</td>
       <td>${r.label}${tag}</td>
       <td>${r.n_instruments}</td>
@@ -2218,6 +2226,358 @@ function renderSweepCountChart(runs) {
     }
   });
 }
+
+// ══════════════════════════════════════════════════════════════════
+// SWEEP: Conclusion Card
+// ══════════════════════════════════════════════════════════════════
+
+function renderSweepConclusion(data) {
+  const container = document.getElementById('sweep-conclusion-content');
+  if (!container) return;
+
+  const c = data.conclusion;
+  if (!c) { container.innerHTML = '<p style="color:var(--text-muted)">No conclusion data available.</p>'; return; }
+
+  const variants = c.capital_variants || [];
+  const bestVariant = variants.length > 0 ? variants[variants.length - 1] : null;
+
+  // KPI strips
+  let kpiHtml = `<div class="grid grid-4" style="margin-bottom:var(--space-md)">`;
+
+  // Recommended universe
+  kpiHtml += `<div class="kpi-card" style="border-top:3px solid var(--forest)">
+    <div class="kpi-card__label">Recommended</div>
+    <div class="kpi-card__value" style="font-size:22px;color:var(--forest)">${c.recommended_universe}</div>
+    <div class="kpi-card__sub">${c.recommended_reason}</div>
+  </div>`;
+
+  // SR range
+  if (variants.length >= 2) {
+    const srs = variants.map(v => v.sr);
+    kpiHtml += `<div class="kpi-card">
+      <div class="kpi-card__label">SR Range</div>
+      <div class="kpi-card__value" style="font-size:22px">${Math.min(...srs).toFixed(3)} — ${Math.max(...srs).toFixed(3)}</div>
+      <div class="kpi-card__sub">Across ${variants.length} capital tiers</div>
+    </div>`;
+  }
+
+  // Best exec
+  if (bestVariant) {
+    kpiHtml += `<div class="kpi-card">
+      <div class="kpi-card__label">Best Capital</div>
+      <div class="kpi-card__value" style="font-size:22px">${bestVariant.label}</div>
+      <div class="kpi-card__sub">Exec ${bestVariant.exec_pct}% · SR ${bestVariant.sr.toFixed(3)}</div>
+    </div>`;
+  }
+
+  // Top contributor
+  if (c.top_contributor) {
+    kpiHtml += `<div class="kpi-card">
+      <div class="kpi-card__label">#1 Asset Class</div>
+      <div class="kpi-card__value" style="font-size:22px">${c.top_contributor}</div>
+      <div class="kpi-card__sub">+${c.top_contribution_sr.toFixed(3)} SR marginal</div>
+    </div>`;
+  }
+  kpiHtml += `</div>`;
+
+  // Findings bullets
+  const findings = (c.findings || []).filter(f => f);
+  let findingsHtml = '';
+  if (findings.length > 0) {
+    findingsHtml = `<div style="display:flex;flex-direction:column;gap:5px;font-size:12px;line-height:1.6;color:var(--text-secondary);
+                        padding:12px 16px;background:var(--sand-base);border-radius:6px;border:1px solid var(--border-subtle)">
+      <div style="font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--forest);margin-bottom:4px">
+        Key Findings
+      </div>
+      ${findings.map(f => `<div>• ${f}</div>`).join('')}
+    </div>`;
+  }
+
+  container.innerHTML = kpiHtml + findingsHtml;
+}
+
+
+// ══════════════════════════════════════════════════════════════════
+// SWEEP: SR vs Executability Scatter Plot
+// ══════════════════════════════════════════════════════════════════
+
+function renderSweepScatterChart(runs) {
+  destroyChart('sweepScatter');
+  const ctx = document.getElementById('sweep-scatter-chart');
+  if (!ctx) return;
+
+  const filtered = runs.filter(r => r.exec_pct != null);
+  if (filtered.length === 0) return;
+
+  // Build scatter data with point sizes proportional to instrument count
+  const groupColors = {
+    full25: PALETTE.forest,
+    asset_class: '#C4B68A',
+    special: '#8B7355',
+  };
+
+  const data = filtered.map(r => ({
+    x: r.exec_pct,
+    y: r.sharpe,
+    label: r.label,
+    n: r.n_instruments,
+    group: r.group || 'asset_class',
+    capital: r.capital,
+  }));
+
+  state.charts.sweepScatter = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [{
+        data: data.map(d => ({ x: d.x, y: d.y })),
+        pointRadius: data.map(d => Math.max(6, d.n / 2.5)),
+        pointHoverRadius: data.map(d => Math.max(8, d.n / 2.2)),
+        backgroundColor: data.map(d => groupColors[d.group] + 'CC'),
+        borderColor: data.map(d => groupColors[d.group]),
+        borderWidth: 2,
+        pointStyle: data.map(d => d.group === 'full25' ? 'rectRot' : 'circle'),
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              const d = data[ctx.dataIndex];
+              return [`${d.label}`, `SR: ${d.y.toFixed(3)}`, `Exec: ${d.x}%`, `N: ${d.n}`, `Capital: $${(d.capital/1000).toFixed(0)}K`];
+            }
+          }
+        },
+        annotation: {
+          annotations: {
+            prodLine: {
+              type: 'line',
+              xMin: 80, xMax: 80,
+              borderColor: PALETTE.forest + '44',
+              borderWidth: 2,
+              borderDash: [6, 4],
+              label: {
+                content: 'PRODUCTION 80%',
+                display: true,
+                position: 'start',
+                font: { size: 9, weight: '600' },
+                color: PALETTE.forest,
+                backgroundColor: 'transparent',
+              }
+            },
+            srTarget: {
+              type: 'line',
+              yMin: 0.8, yMax: 0.8,
+              borderColor: '#C4B68A44',
+              borderWidth: 1,
+              borderDash: [4, 4],
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Executability (% tradeable, 5Y avg|pos|≥0.5)', font: { size: 11 } },
+          min: 45, max: 95,
+          grid: { color: PALETTE.gridLine },
+          ticks: { callback: v => v + '%' }
+        },
+        y: {
+          title: { display: true, text: 'Net Sharpe Ratio', font: { size: 11 } },
+          min: 0.3,
+          grid: { color: PALETTE.gridLine },
+        }
+      }
+    },
+    plugins: [{
+      // Draw labels next to each point
+      afterDatasetsDraw(chart) {
+        const { ctx: c } = chart;
+        const meta = chart.getDatasetMeta(0);
+        c.save();
+        c.font = '10px Inter, sans-serif';
+        meta.data.forEach((pt, i) => {
+          const d = data[i];
+          const short = d.label.replace('Full 25 ', 'F25·').replace('+ ', '+').replace('$100K Macro Mini (13 inst)', '$100K');
+          c.fillStyle = d.group === 'full25' ? PALETTE.forest : '#666';
+          c.textAlign = 'left';
+          c.fillText(short, pt.x + 8, pt.y - 4);
+        });
+        c.restore();
+      }
+    }]
+  });
+}
+
+
+// ══════════════════════════════════════════════════════════════════
+// SWEEP: Capital Scaling Chart (Full 25 only)
+// ══════════════════════════════════════════════════════════════════
+
+function renderSweepCapitalChart(data) {
+  destroyChart('sweepCapital');
+  const ctx = document.getElementById('sweep-capital-chart');
+  if (!ctx || !data.conclusion) return;
+
+  const variants = data.conclusion.capital_variants || [];
+  if (variants.length < 2) {
+    ctx.parentElement.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:40px 0">Need ≥2 capital variants for scaling chart</p>';
+    return;
+  }
+
+  const labels = variants.map(v => `$${(v.capital / 1000).toFixed(0)}K`);
+  const srs = variants.map(v => v.sr);
+  const execs = variants.map(v => v.exec_pct);
+  const mdds = variants.map(v => v.max_drawdown ? Math.abs(v.max_drawdown) : 0);
+
+  state.charts.sweepCapital = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Exec %',
+          data: execs,
+          backgroundColor: PALETTE.forest + '55',
+          borderColor: PALETTE.forest,
+          borderWidth: 1,
+          borderRadius: 4,
+          yAxisID: 'y1',
+          order: 2,
+        },
+        {
+          label: 'Net SR',
+          data: srs,
+          type: 'line',
+          borderColor: PALETTE.forest,
+          backgroundColor: PALETTE.forest,
+          borderWidth: 2.5,
+          pointRadius: 7,
+          pointBackgroundColor: '#fff',
+          pointBorderColor: PALETTE.forest,
+          pointBorderWidth: 2.5,
+          yAxisID: 'y',
+          order: 1,
+        },
+        {
+          label: 'Max DD %',
+          data: mdds,
+          type: 'line',
+          borderColor: '#B85C4A',
+          backgroundColor: '#B85C4A',
+          borderWidth: 2,
+          pointRadius: 5,
+          borderDash: [4, 3],
+          pointBackgroundColor: '#B85C4A',
+          yAxisID: 'y1',
+          order: 1,
+        },
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              if (ctx.dataset.label === 'Net SR') return `SR: ${ctx.raw.toFixed(3)}`;
+              if (ctx.dataset.label === 'Max DD %') return `Max DD: -${ctx.raw.toFixed(1)}%`;
+              return `Exec: ${ctx.raw.toFixed(1)}%`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          type: 'linear',
+          position: 'left',
+          title: { display: true, text: 'Net Sharpe Ratio', font: { size: 10 } },
+          grid: { color: PALETTE.gridLine },
+          suggestedMin: 0.9,
+        },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          title: { display: true, text: 'Exec% / Max DD%', font: { size: 10 } },
+          grid: { display: false },
+          suggestedMin: 0, suggestedMax: 100,
+          ticks: { callback: v => v + '%' },
+        },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
+
+
+// ══════════════════════════════════════════════════════════════════
+// SWEEP: Flat Instrument Activity Reference
+// ══════════════════════════════════════════════════════════════════
+
+function renderSweepFlatInstruments(runs) {
+  const container = document.getElementById('sweep-flat-instruments');
+  if (!container) return;
+
+  // Use the Full 25 $200K run (reference)
+  const refRun = runs.find(r => r.id === 'arki_v4_optimized') || runs.find(r => r.group === 'full25');
+  if (!refRun || !refRun.flat_instruments || refRun.flat_instruments.length === 0) {
+    container.innerHTML = '<p style="color:var(--text-muted);padding:16px">No flat instruments found — all instruments are active.</p>';
+    return;
+  }
+
+  const flats = refRun.flat_instruments;
+  const activeCount = flats.filter(f => f.active_pct > 0).length;
+
+  let html = `
+  <div style="padding:12px 16px;background:var(--sand-light);border-radius:6px;margin-bottom:12px;font-size:12px;line-height:1.6;
+              border:1px solid var(--border-subtle);border-left:3px solid #C4B68A">
+    <strong>"Flat" ≠ "Dead"</strong> — ${activeCount} of ${flats.length} sub-threshold instruments are
+    active 14-44% of the time. Mr. Greedy enters positions when the signal exceeds the cost threshold
+    and stays flat otherwise. This is <strong>intended behavior</strong>, not a data bug.
+    <br><span style="color:var(--text-muted)">Reference: ${refRun.label} (${refRun.n_instruments} instruments)</span>
+  </div>
+  <table class="data-table" style="font-size:11px">
+    <thead><tr>
+      <th>Instrument</th>
+      <th title="Average absolute notional position over last 5 years">Avg |Pos|</th>
+      <th title="% of days with |position| ≥ 0.5 contracts">Active %</th>
+      <th title="Maximum absolute position seen in the 5-year window">Peak |Pos|</th>
+      <th>Status</th>
+    </tr></thead>
+    <tbody>`;
+
+  flats.forEach(f => {
+    const status = f.active_pct >= 30 ? '🟢 Active' :
+                   f.active_pct >= 10 ? '🟡 Intermittent' :
+                   f.active_pct > 0  ? '🟠 Rare' : '🔴 Dormant';
+    const barWidth = Math.min(f.active_pct, 100);
+    const barColor = f.active_pct >= 30 ? PALETTE.forest : f.active_pct >= 10 ? '#C4B68A' : '#B85C4A';
+
+    html += `<tr>
+      <td style="font-weight:600;font-family:var(--font-mono)">${f.code}</td>
+      <td style="font-family:var(--font-mono)">${f.avg_pos.toFixed(3)}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="width:60px;height:8px;background:var(--sand-light);border-radius:4px;overflow:hidden;border:1px solid var(--border-subtle)">
+            <div style="width:${barWidth}%;height:100%;background:${barColor};border-radius:3px"></div>
+          </div>
+          <span style="font-family:var(--font-mono);font-size:10px">${f.active_pct.toFixed(1)}%</span>
+        </div>
+      </td>
+      <td style="font-family:var(--font-mono)">${f.max_pos.toFixed(1)}</td>
+      <td style="font-size:10px">${status}</td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
 
 // ══════════════════════════════════════════════════════════════════
 // ARKI MACRO TAB
