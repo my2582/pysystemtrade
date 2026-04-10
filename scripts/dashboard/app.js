@@ -1387,6 +1387,68 @@ function renderMethodologyRisk() {
   </div>`;
 }
 
+// ── Factor methodology profiles (static data) ──
+const FACTOR_PROFILES = {
+  'Trend (EWMAC)': {
+    color: '#265844', icon: '📈',
+    rationale: 'Captures persistent macro-economic trends and investor under-reaction to new information. Markets that rise (fall) tend to continue rising (falling) due to anchoring bias and slow institutional reallocation.',
+    params: 'Each rule is defined by two EWMA half-lives (fast/slow). Smaller numbers (e.g. L16) = faster-reacting, more trades, higher costs. Blending multiple speeds reduces whipsaw losses and smooths regime transitions.',
+    profile: [
+      { label: 'Return Skew',      value: 'Positive ↑', sub: 'Rare large wins offset frequent small losses', color: '#55B786' },
+      { label: 'Win Rate',         value: '~40%',        sub: 'Low — but tail profits are outsized',         color: '#6B6B6B' },
+      { label: 'Crisis Alpha',     value: 'Strong ✓',   sub: 'Best in 2008, 2022 systemic dislocations',    color: '#265844' },
+      { label: 'Best Environment', value: 'Trending',    sub: 'Strong directional macro regimes',            color: '#265844' },
+    ]
+  },
+  'Carry': {
+    color: '#55B786', icon: '💰',
+    rationale: 'Collects a structural risk premium embedded in futures term structure. Buys contracts in backwardation (nearby > deferred) and sells in contango, harvesting the roll yield without requiring price direction.',
+    params: 'The raw carry signal is the annualized roll yield derived from near vs. deferred contract prices. A smoothing parameter controls signal responsiveness to curve shape changes, reducing noise from temporary distortions.',
+    profile: [
+      { label: 'Return Skew',      value: 'Negative ↓', sub: 'Steady gains, occasional sharp losses',       color: '#C4B68A' },
+      { label: 'Win Rate',         value: '~60%',        sub: 'High — produces consistent daily edge',       color: '#55B786' },
+      { label: 'Crisis Alpha',     value: 'Weak ✗',      sub: 'Vulnerable to sudden liquidity shocks',       color: '#B85C4A' },
+      { label: 'Best Environment', value: 'Risk-On / Range', sub: 'Diversifies Trend losses in low-vol regimes', color: '#55B786' },
+    ]
+  },
+  'Cross-Sectional Momentum': {
+    color: '#C4B68A', icon: '⚖️',
+    rationale: 'Tracks capital rotation across the universe. Instead of asking "is this going up?", it asks "is this outperforming its peers?". Buys relative winners and sells relative losers within the same time horizon.',
+    params: 'Each rule computes the n-day cumulative return of each instrument, then subtracts the cross-sectional mean to compute a relative rank score. Multiple lookback windows blend to capture different rotation cycles.',
+    profile: [
+      { label: 'Market Neutrality',    value: 'True ✓',    sub: 'Profits even in uniformly falling markets', color: '#265844' },
+      { label: 'Crisis Alpha',         value: 'Moderate',   sub: 'Effective when dispersion persists',        color: '#C4B68A' },
+      { label: 'Corr. to Trend',       value: 'Low',        sub: 'Key diversifier — maximises portfolio SR',  color: '#55B786' },
+      { label: 'Best Environment',     value: 'High Dispersion', sub: 'Wide spread between winners and losers', color: '#265844' },
+    ]
+  }
+};
+
+function renderFactorProfileCard(profile) {
+  const metricsHtml = profile.profile.map(p => `
+    <div class="factor-profile__metric">
+      <div class="factor-profile__metric-label">${p.label}</div>
+      <div class="factor-profile__metric-value" style="color:${p.color}">${p.value}</div>
+      <div class="factor-profile__metric-sub">${p.sub}</div>
+    </div>
+  `).join('');
+  return `
+    <div class="factor-profile-card" style="border-left-color:${profile.color}">
+      <div class="factor-profile__header">
+        <span class="factor-profile__icon">${profile.icon}</span>
+        <div style="flex:1">
+          <div class="factor-profile__section-title" style="color:${profile.color}">Economic Rationale</div>
+          <p class="factor-profile__text">${profile.rationale}</p>
+        </div>
+      </div>
+      <div class="factor-profile__section-title" style="color:${profile.color};margin-top:10px">Parameter Meaning</div>
+      <p class="factor-profile__text">${profile.params}</p>
+      <div class="factor-profile__section-title" style="color:${profile.color};margin-top:10px">Performance Profile</div>
+      <div class="factor-profile__grid">${metricsHtml}</div>
+    </div>
+  `;
+}
+
 function renderMethodologyRules() {
   const m = state.methodology || {};
   const rules = m.trading_rules || {};
@@ -1408,19 +1470,24 @@ function renderMethodologyRules() {
     }),
   };
 
-  el.innerHTML = Object.entries(families).map(([family, entries]) => `
-    <div class="methodology-family">
-      <div class="methodology-family__title">${family}</div>
-      <table class="methodology-rules-table">
-        <thead><tr><th>Rule</th><th>Parameters</th></tr></thead>
-        <tbody>${entries.map(([name, info]) => {
-          const params = info.params || {};
-          const paramStr = Object.entries(params).map(([k,v]) => `${k}=${v}`).join(', ');
-          return `<tr><td class="td-name">${name}</td><td style="font-family:var(--font-mono);font-size:11px">${paramStr || '—'}</td></tr>`;
-        }).join('')}</tbody>
-      </table>
-    </div>
-  `).join('');
+  el.innerHTML = Object.entries(families).map(([family, entries]) => {
+    const rowsHtml = entries.map(([name, info]) => {
+      const params = info.params || {};
+      const paramStr = Object.entries(params).map(([k,v]) => `${k}=${v}`).join(', ');
+      return `<tr><td class="td-name">${name}</td><td style="font-family:var(--font-mono);font-size:11px">${paramStr || '—'}</td></tr>`;
+    }).join('');
+    const profileCard = FACTOR_PROFILES[family] ? renderFactorProfileCard(FACTOR_PROFILES[family]) : '';
+    return `
+      <div class="methodology-family">
+        <div class="methodology-family__title">${family}</div>
+        ${profileCard}
+        <table class="methodology-rules-table" style="margin-top:var(--space-sm)">
+          <thead><tr><th>Rule</th><th>Parameters</th></tr></thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </div>
+    `;
+  }).join('');
 }
 
 function renderSpreadCostChart() {
