@@ -1,5 +1,14 @@
 # pysystemtrade — Arki Project Rules
 
+## 0. Core Principle: Native Utilization & Consistency (최상위 원칙)
+
+> **pysystemtrade를 최대한 이용한다. pysystemtrade의 구현에 맞춰 일관성을 갖춘다.**
+
+- 성과 지표, 수식, 상수를 구현할 때 pysystemtrade가 이미 제공하는 기능이 있는지 **반드시 먼저 확인**한다.
+- 있으면 `System` 객체를 통해 사용한다 (CSV를 직접 파싱하거나 수식을 직접 구현하지 않는다).
+- 없으면 `scripts/`에 새로 작성하되, pysystemtrade의 상수(N=256 등)와 수식 컨벤션을 따른다.
+- KI 참조: `~/.gemini/antigravity/knowledge/pysystemtrade_architecture/` — 스테이지별 메서드, 파라미터 맵, 공식 기록.
+
 ## 1. Upstream Preservation (CRITICAL)
 
 This repo is a **fork** of `robcarver17/pysystemtrade` (`upstream` remote).
