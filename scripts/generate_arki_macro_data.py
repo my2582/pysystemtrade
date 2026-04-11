@@ -64,6 +64,13 @@ def load_multi_factor(filepath):
 
 
 def compute_stats(returns, label=""):
+    """Compute performance stats from monthly return series.
+
+    SR uses pysystemtrade's method (accountCurve.sharpe):
+      ann_mean = sum(returns) / number_of_years  (arithmetic, NOT CAGR)
+      ann_std  = std(returns) × √(times_per_year)
+      sharpe   = ann_mean / ann_std
+    """
     n = len(returns)
     if n == 0:
         return {}
@@ -71,9 +78,12 @@ def compute_stats(returns, label=""):
     cumulative = (1 + returns).cumprod()
     total_return = cumulative.iloc[-1] - 1
     years = n / 12
-    ann_mean = (1 + total_return) ** (1 / years) - 1 if years > 0 else 0
+
+    # pysystemtrade method: arithmetic annualization
+    ann_mean = returns.sum() / years if years > 0 else 0
     ann_std = returns.std() * np.sqrt(ann_factor)
     sharpe = ann_mean / ann_std if ann_std > 0 else 0
+
     downside = returns[returns < 0].std() * np.sqrt(ann_factor)
     sortino = ann_mean / downside if downside > 0 else 0
     cummax = cumulative.cummax()
@@ -86,10 +96,15 @@ def compute_stats(returns, label=""):
     avg_loss = returns[returns < 0].mean() if (returns < 0).any() else 0
     gain_loss_ratio = abs(avg_gain / avg_loss) if avg_loss != 0 else 0
     profit_factor = abs(returns[returns > 0].sum() / returns[returns < 0].sum()) if returns[returns < 0].sum() != 0 else 0
+
+    # CAGR is kept as a separate metric (distinct from ann_mean used for SR)
+    cagr = (1 + total_return) ** (1 / years) - 1 if years > 0 else 0
+
     return {
         "label": label,
         "total_return": round(total_return * 100, 2),
-        "cagr": round(ann_mean * 100, 2),
+        "cagr": round(cagr * 100, 2),
+        "ann_mean": round(ann_mean * 100, 2),
         "ann_vol": round(ann_std * 100, 2),
         "sharpe": round(sharpe, 3),
         "sortino": round(sortino, 3),

@@ -3096,9 +3096,9 @@ function renderUniverseCompare() {
 
   let html = `<table><thead><tr>
     <th>#</th><th>Universe</th><th>N</th><th>Total $</th>
-    <th title="Combined Monthly SR: CAGR ÷ (monthly σ × √12)">Combined SR</th>
-    <th title="MF Daily SR: annualized from daily returns (√256). Matches Universe Sweep tab.">MF Daily SR</th>
-    <th title="MF Monthly SR: CAGR ÷ (monthly σ × √12). Lower than Daily SR due to compounding & vol drag.">MF Monthly SR</th>
+    <th title="Combined SR: pysystemtrade method on monthly data (N=12)">Combined SR</th>
+    <th title="MF Daily SR: pysystemtrade native (N=256). Same as Universe Sweep.">MF Daily SR</th>
+    <th title="MF Monthly SR: pysystemtrade method on monthly data (N=12).">MF Monthly SR</th>
     <th>SR Lift</th>
     <th>CAGR</th><th>Max DD</th><th>Ann Vol</th><th>ρ (Mini↔MF)</th>
   </tr></thead><tbody>`;
@@ -3131,10 +3131,11 @@ function renderUniverseCompare() {
   const srNote = universeCompareData.sr_methodology;
   if (srNote) {
     html += `<div style="margin-top:var(--space-sm);padding:var(--space-sm) var(--space-md);background:#fdf9ee;border-left:3px solid #C4B68A;font-size:11px;color:var(--text-muted);line-height:1.6">
-      <strong>📐 SR Methodology Note:</strong><br>
-      <strong>MF Daily SR</strong> = ${srNote.mf_daily_sr}<br>
-      <strong>MF Monthly SR</strong> = ${srNote.mf_monthly_sr}<br>
-      <strong>Why different?</strong> ${srNote.why_different}
+      <strong>📐 SR Method: pysystemtrade accountCurve.sharpe()</strong><br>
+      <code>ann_mean = sum(returns) / years &nbsp;|&nbsp; ann_std = std × √N &nbsp;|&nbsp; SR = ann_mean / ann_std</code><br>
+      <strong>MF Daily SR</strong>: ${srNote.mf_daily_sr}<br>
+      <strong>Combined / MF Monthly SR</strong>: ${srNote.combined_sr}<br>
+      <em>${srNote.note}</em>
     </div>`;
   }
 

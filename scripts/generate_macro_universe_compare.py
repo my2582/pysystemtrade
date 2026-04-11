@@ -86,16 +86,25 @@ def compute_daily_sr(filepath):
 
 
 def compute_stats(returns):
-    """Compute performance stats from monthly return series."""
+    """Compute performance stats from monthly return series.
+
+    SR uses pysystemtrade's method (accountCurve.sharpe):
+      ann_mean = sum(returns) / number_of_years  (arithmetic, NOT CAGR)
+      ann_std  = std(returns) × √(times_per_year)
+      sharpe   = ann_mean / ann_std
+    """
     n = len(returns)
     if n == 0:
         return {}
     cumulative = (1 + returns).cumprod()
     total_return = cumulative.iloc[-1] - 1
     years = n / 12
-    ann_mean = (1 + total_return) ** (1 / years) - 1 if years > 0 else 0
+
+    # pysystemtrade method: arithmetic annualization
+    ann_mean = returns.sum() / years if years > 0 else 0
     ann_std = returns.std() * np.sqrt(12)
     sharpe = ann_mean / ann_std if ann_std > 0 else 0
+
     downside = returns[returns < 0].std() * np.sqrt(12)
     sortino = ann_mean / downside if downside > 0 else 0
     cummax = cumulative.cummax()
@@ -104,8 +113,13 @@ def compute_stats(returns):
     avg_dd = drawdown[drawdown < 0].mean() if (drawdown < 0).any() else 0
     calmar = ann_mean / abs(max_dd) if max_dd != 0 else 0
     hit_rate = (returns > 0).sum() / n
+
+    # CAGR is kept as a separate metric (distinct from ann_mean used for SR)
+    cagr = (1 + total_return) ** (1 / years) - 1 if years > 0 else 0
+
     return {
-        "cagr": round(ann_mean * 100, 2),
+        "cagr": round(cagr * 100, 2),
+        "ann_mean": round(ann_mean * 100, 2),
         "ann_vol": round(ann_std * 100, 2),
         "sharpe": round(sharpe, 3),
         "sortino": round(sortino, 3),
@@ -288,11 +302,10 @@ def main():
 
     # SR methodology note
     sr_note = {
-        "mf_daily_sr": "Annualized from daily returns (√256). Same as pysystemtrade stats and Universe Sweep.",
-        "mf_monthly_sr": "CAGR ÷ monthly vol (√12). Lower due to compounding, volatility drag, and monthly resampling.",
-        "combined_sr": "Same methodology as Monthly SR, applied to the capital-weighted Mini+MF blend.",
-        "why_different": "Daily SR ≈ monthly_mean × √256/std ≈ 1.08. Monthly SR uses CAGR/(std×√12) ≈ 0.75. "
-                        "The gap (~0.3) is expected: CAGR < arithmetic mean (due to vol drag) and monthly vol > daily vol × √21 (due to autocorrelation of trend strategies).",
+        "method": "pysystemtrade accountCurve.sharpe() — ann_mean = sum/years, ann_std = std × √N, SR = ann_mean/ann_std",
+        "mf_daily_sr": "From daily returns with N=256 (BUSINESS_DAYS_IN_YEAR). Native pysystemtrade output.",
+        "combined_sr": "Same pysystemtrade method on monthly data (N=12). Gap from daily SR (~0.2–0.3) is due to monthly aggregation smoothing volatility.",
+        "note": "CAGR is reported separately and is NOT used for SR calculation. SR uses arithmetic annualization per pysystemtrade convention.",
     }
 
     output = {
