@@ -1,13 +1,13 @@
 # pysystemtrade — Arki Project Rules
 
-## 0. Core Principle: Native Utilization & Consistency (최상위 원칙)
+## 0. Core Principle: Native Utilization & Consistency
 
-> **pysystemtrade를 최대한 이용한다. pysystemtrade의 구현에 맞춰 일관성을 갖춘다.**
+> **Maximize use of pysystemtrade's native modules. Align all custom code to pysystemtrade's conventions for consistency.**
 
-- 성과 지표, 수식, 상수를 구현할 때 pysystemtrade가 이미 제공하는 기능이 있는지 **반드시 먼저 확인**한다.
-- 있으면 `System` 객체를 통해 사용한다 (CSV를 직접 파싱하거나 수식을 직접 구현하지 않는다).
-- 없으면 `scripts/`에 새로 작성하되, pysystemtrade의 상수(N=256 등)와 수식 컨벤션을 따른다.
-- KI 참조: `~/.gemini/antigravity/knowledge/pysystemtrade_architecture/` — 스테이지별 메서드, 파라미터 맵, 공식 기록.
+- Before implementing any metric, formula, or data extraction, **always check first** whether pysystemtrade already provides it.
+- If it does, use the `System` object (do not parse CSVs directly or re-implement formulas).
+- If it does not, write new code in `scripts/` only, following pysystemtrade's constants (N=256) and formula conventions (arithmetic SR).
+- KI reference: `~/.gemini/antigravity/knowledge/pysystemtrade_architecture/` — stage methods, parameter maps, canonical formulas.
 
 ## 1. Upstream Preservation (CRITICAL)
 
@@ -61,7 +61,7 @@ Never construct pandas loops to replicate what `system.accounts.portfolio()` alr
 ### Sharpe Ratio — use pysystemtrade's canonical formula:
 ```python
 ann_mean = sum(returns) / number_of_years     # arithmetic, NOT CAGR
-ann_std  = std(returns) × √(times_per_year)   # BDay=256, Month=12
+ann_std  = std(returns) * sqrt(times_per_year) # BDay=256, Month=12
 sharpe   = ann_mean / ann_std
 ```
 Source: `systems/accounts/curves/account_curve.py:209-241`
@@ -69,7 +69,7 @@ Source: `systems/accounts/curves/account_curve.py:209-241`
 ### Constants:
 - Business days/year: **256** (not 252)
 - Months/year: **12**
-- Vol scalar daily: **√256 = 16.0**
+- Vol scalar daily: **sqrt(256) = 16.0**
 
 ## 4. Data Layer
 
@@ -77,7 +77,7 @@ Source: `systems/accounts/curves/account_curve.py:209-241`
 - **Prototyping**: `csvFuturesSimData` (static CSVs)
 - New instruments need: price seed to parquet, spread costs to MongoDB, entry in `instrumentconfig.csv`
 
-## 5. Config Priority (highest → lowest)
+## 5. Config Priority (highest to lowest)
 
 1. Backtest YAML (`scripts/backtest_config/arki_production.yaml`)
 2. Private config (`private/private_config.yaml`)
