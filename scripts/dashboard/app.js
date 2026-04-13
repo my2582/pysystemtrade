@@ -3082,6 +3082,22 @@ async function loadUniverseCompareData() {
     renderUniverseCompare();
   } catch (e) {
     console.warn('Universe compare data not found:', e.message);
+    // Hide all universe-compare dependent containers
+    const table = document.getElementById('macro-universe-table');
+    if (table) table.closest('.card').style.display = 'none';
+    // Hide equity overlay, SR compare, drawdown charts and their parent cards
+    ['macro-universe-equity-chart', 'macro-universe-sr-compare-chart', 'macro-universe-drawdown-chart'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { const card = el.closest('.card'); if (card) card.style.display = 'none'; }
+    });
+    // Hide the grid wrapper for SR/Drawdown pair and the dashed separator
+    const compareSection = document.getElementById('tab-macro-compare');
+    if (compareSection) {
+      const grids = compareSection.querySelectorAll('.grid.grid-2');
+      if (grids[0]) grids[0].style.display = 'none'; // SR + Drawdown grid
+      const hr = compareSection.querySelector('hr');
+      if (hr) hr.style.display = 'none';
+    }
   }
 }
 
