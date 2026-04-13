@@ -18,7 +18,7 @@ DASHBOARD_DIR = PROJECT_ROOT / "scripts" / "dashboard"
 
 # --- Configuration ---
 MINI_FILE = PROJECT_ROOT / "data" / "arki_macro" / "arki_macro_mini_returns.xlsx"
-MF200_FILE = PROJECT_ROOT / "results" / "runs" / "20260405_0147_arki_v4_optimized" / "daily_returns.csv"
+MF_FILE  = PROJECT_ROOT / "results" / "runs" / "20260413_1758_full24_250k_v15" / "daily_returns.csv"
 MF100_FILE = PROJECT_ROOT / "results" / "runs" / "20260409_1028_arki_100k_13inst" / "daily_returns.csv"
 INST_CONFIG = PROJECT_ROOT / "data" / "futures" / "csvconfig" / "instrumentconfig.csv"
 
@@ -27,10 +27,10 @@ SCENARIOS = {
     "original": {
         "label": "Arki Macro",
         "mini_capital": 100_000,
-        "mf_capital": 200_000,
-        "mf_file": MF200_FILE,
-        "mf_label": "Multi-Factor ($200K, 25 inst)",
-        "mf_inst_count": 25,
+        "mf_capital": 250_000,  # actual run capital (full24_250k_v15, vol=15%)
+        "mf_file": MF_FILE,
+        "mf_label": "Multi-Factor ($250K, 24 inst, vol=15%)",
+        "mf_inst_count": 24,
     },
     "smaller": {
         "label": "Smaller Arki Macro",
@@ -276,7 +276,7 @@ def build_universe_info(instruments_list):
     IB_CONFIG = PROJECT_ROOT / "sysbrokers" / "IB" / "config" / "ib_config_futures.csv"
     ibcfg = pd.read_csv(IB_CONFIG) if IB_CONFIG.exists() else pd.DataFrame()
 
-    INSTS_25 = ['SP500_micro','NASDAQ_micro','DAX','NIKKEI','FTSE100','IBEX_mini','FTSECHINAA',
+    INSTS_25 = ['SP500_micro','NASDAQ_micro','DAX','NIKKEI','FTSE100','IBEX_mini',
                 'US10','US5','BUND','GILT','JGB','GOLD_micro','SILVER','COPPER-micro',
                 'CRUDE_W','BRENT-LAST','GASOIL','AUD_micro','MXP','YENEUR',
                 'SUGAR11','COTTON','LEANHOG','COCOA_LDN']
@@ -341,7 +341,8 @@ def main():
     orig["meta"]["generated"] = datetime.now().isoformat()
     orig["meta"]["components"] = [
         {"name": "Arki Macro Mini", "capital": 100_000, "leverage": 1.6},
-        {"name": "Arki Multi-Factor", "capital": 200_000, "leverage": None},
+        {"name": "Arki Multi-Factor", "capital": 250_000, "leverage": None,
+         "run": "20260413_1758_full24_250k_v15", "vol_target": "15%", "instruments": 24},
     ]
 
     DASHBOARD_DIR.mkdir(parents=True, exist_ok=True)
