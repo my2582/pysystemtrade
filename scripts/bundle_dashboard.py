@@ -118,11 +118,15 @@ def build_embedded_store(run_dir: Path) -> str:
     if sweep_data:
         store["data/sweep_summary.json"] = sweep_data
 
-    # Dashboard-root JSON files
+    # Dashboard-root JSON files — register under both root and data/ paths
+    # because app.js loads some via "sweep_summary.json" and others via
+    # "data/sweep_summary.json" depending on context
     for fname in DASHBOARD_JSONS:
         content = read_safe(DASH_DIR / fname)
         if content:
             store[fname] = content
+            if f"data/{fname}" not in store:
+                store[f"data/{fname}"] = content
 
     # Universe compare (may be in data/)
     uc = read_safe(run_dir / "arki_macro_universe_compare.json")
