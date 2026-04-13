@@ -1,6 +1,6 @@
 # Instrument Universe
 
-## Current Universe: 25 Instruments (v4)
+## Current Universe: 24 Instruments (v4.1, FTSECHINAA removed)
 
 | # | Instrument | Asset Class | Contract Value ($) | Status |
 |---|---|---|---|---|
@@ -10,8 +10,7 @@
 | 4 | NIKKEI | Equity | 5,358,500 | Large (produces small positions) |
 | 5 | FTSE100 | Equity | 104,380 | Large (produces small positions) |
 | 6 | IBEX_mini | Equity | 12,499 | Affordable — **added in v3** |
-| 7 | FTSECHINAA | Equity | 13,389 | Affordable — **added in v3** |
-| 8 | US10 | Bond | 111,016 | Large (produces small positions) |
+| 7 | US10 | Bond | 111,016 | Large (produces small positions) |
 | 9 | US5 | Bond | 106,576 | Large (produces small positions) |
 | 10 | BUND | Bond | 125,550 | Large (produces small positions) |
 | 11 | GILT | Bond | 88,580 | Marginal |
@@ -34,7 +33,7 @@
 
 | Asset Class | Count | Instruments |
 |---|---|---|
-| Equity | 7 | SP500_micro, NASDAQ_micro, DAX, NIKKEI, FTSE100, IBEX_mini, FTSECHINAA |
+| Equity | 6 | SP500_micro, NASDAQ_micro, DAX, NIKKEI, FTSE100, IBEX_mini |
 | Bond | 5 | US10, US5, BUND, GILT, JGB |
 | Metals | 3 | GOLD_micro, SILVER, COPPER-micro |
 | Energy | 3 | CRUDE_W, BRENT-LAST, GASOIL |

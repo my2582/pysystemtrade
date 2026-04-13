@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
 Generate a pure, static reference dictionary for all available instruments.
-This script produces `arki_universe_info.json`, which acts merely as a lookup table
-for instrument metadata (Pointsize, AssetClass, Currency, etc.).
+This script produces `arki_universe_info.json`, which acts solely as a lookup table
+for immutable instrument specifications (Pointsize, AssetClass, Currency, Description).
 
-It does not contain any stateful flags (e.g., `in_mf`, `in_13`) like the old implementation did.
-The dashboard frontend will join this static dictionary with the active run's metadata 
-(`state.meta.instruments`) to render the Universe tab contextually.
+It deliberately excludes runtime-dependent values like latest_price and nominal_value.
+Those are calculated at backtest time via system.data and exported per-run by
+backtest_runner.py (see position_snapshot.csv, spread_costs.csv).
 """
 
 import json
@@ -40,22 +40,10 @@ def build_pure_universe_dict():
         ib = ibcfg[ibcfg["Instrument"] == inst] if len(ibcfg) > 0 else pd.DataFrame()
         ib_symbol = ib["IBSymbol"].values[0] if len(ib) > 0 else ""
         ib_exchange = ib["IBExchange"].values[0] if len(ib) > 0 else ""
-        
-        # Best effort to fetch latest price for nominal calculation
-        price_file = PROJECT_ROOT / "data" / "futures" / "multiple_prices_csv" / f"{inst}.csv"
-        latest_price = None
-        if price_file.exists():
-            try:
-                pdf = pd.read_csv(price_file)
-                if "PRICE" in pdf.columns:
-                    latest_price = pdf["PRICE"].dropna().iloc[-1]
-            except Exception:
-                pass
-                
+
         pointsize = float(r.get("Pointsize", 1))
-        nominal = round(latest_price * pointsize, 0) if latest_price else None
-        
-        # Append pure metadata. Note: NO 'in_mf' or run-specific flags here.
+
+        # Immutable specs only. No latest_price / nominal_value.
         universe.append({
             "instrument": inst,
             "ib_symbol": ib_symbol,
@@ -64,8 +52,6 @@ def build_pure_universe_dict():
             "asset_class": r.get("AssetClass", ""),
             "currency": r.get("Currency", ""),
             "pointsize": pointsize,
-            "latest_price": round(latest_price, 2) if latest_price else None,
-            "nominal_value": nominal,
         })
         
     return universe

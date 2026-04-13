@@ -6,9 +6,7 @@
     "description": "ICE U.S. Conforming 30-year Fixed Mortgage Rate Lock Weighted APR",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 5000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 5000.0
   },
   {
     "instrument": "30YRJUMBO",
@@ -17,9 +15,7 @@
     "description": "ICE U.S.Jumbo 30-year Fixed Mortgage Rate Lock Weighted APR",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 5000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 5000.0
   },
   {
     "instrument": "AEX",
@@ -28,9 +24,7 @@
     "description": "Netherlands equity index AEX",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 200.0,
-    "latest_price": 883.25,
-    "nominal_value": 176650.0
+    "pointsize": 200.0
   },
   {
     "instrument": "AEX_mini",
@@ -39,9 +33,7 @@
     "description": "AEX mini",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 20.0,
-    "latest_price": 883.25,
-    "nominal_value": 17665.0
+    "pointsize": 20.0
   },
   {
     "instrument": "ALUMINIUM",
@@ -50,9 +42,7 @@
     "description": "NYMEX Aluminum Index",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 25.0,
-    "latest_price": 2310.0,
-    "nominal_value": 57750.0
+    "pointsize": 25.0
   },
   {
     "instrument": "ALUMINIUM_LME",
@@ -61,9 +51,7 @@
     "description": "High-Grade Primary Aluminium",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 25.0,
-    "latest_price": 2335.0,
-    "nominal_value": 58375.0
+    "pointsize": 25.0
   },
   {
     "instrument": "AMERIBOR-1M",
@@ -72,9 +60,7 @@
     "description": "CBOE One-Month AMERIBOR Average Rate Index",
     "asset_class": "STIR",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "AMERIBOR-3M",
@@ -83,9 +69,7 @@
     "description": "CBOE AMERIBOR Term-90",
     "asset_class": "STIR",
     "currency": "USD",
-    "pointsize": 25.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 25.0
   },
   {
     "instrument": "AMERIBOR-T30",
@@ -94,9 +78,7 @@
     "description": "Cboe AMERIBOR Term-30 Futures Index",
     "asset_class": "STIR",
     "currency": "USD",
-    "pointsize": 25.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 25.0
   },
   {
     "instrument": "AMX",
@@ -105,9 +87,7 @@
     "description": "AMX INDEX",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "ASX",
@@ -116,9 +96,7 @@
     "description": "Australian equity index ASX200",
     "asset_class": "Equity",
     "currency": "AUD",
-    "pointsize": 25.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 25.0
   },
   {
     "instrument": "ATX",
@@ -127,9 +105,7 @@
     "description": "ATX - Austrian Traded Index - DTB",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "AUD",
@@ -138,9 +114,7 @@
     "description": "AUDUSD currency",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 100000.0,
-    "latest_price": 0.65,
-    "nominal_value": 65330.0
+    "pointsize": 100000.0
   },
   {
     "instrument": "AUD-ICE",
@@ -149,9 +123,7 @@
     "description": "AUD.USD",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 100000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100000.0
   },
   {
     "instrument": "AUD-SGX",
@@ -160,9 +132,7 @@
     "description": "SGX Australian Dollar in US Dollar Futures",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 25000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 25000.0
   },
   {
     "instrument": "AUDCAD",
@@ -171,9 +141,7 @@
     "description": "Australlian dollar CAD",
     "asset_class": "FX",
     "currency": "CAD",
-    "pointsize": 200000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 200000.0
   },
   {
     "instrument": "AUDJPY",
@@ -182,9 +150,7 @@
     "description": "Australlian dollar Yen CME",
     "asset_class": "FX",
     "currency": "JPY",
-    "pointsize": 200000.0,
-    "latest_price": 97.72,
-    "nominal_value": 19544000.0
+    "pointsize": 200000.0
   },
   {
     "instrument": "AUDJPY-SGX",
@@ -193,9 +159,7 @@
     "description": "SGX Australian Dollar in Japanese Yen Futures",
     "asset_class": "FX",
     "currency": "JPY",
-    "pointsize": 25000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 25000.0
   },
   {
     "instrument": "AUD_micro",
@@ -204,9 +168,7 @@
     "description": "AUDUSD micro",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 10000.0,
-    "latest_price": 0.65,
-    "nominal_value": 6533.0
+    "pointsize": 10000.0
   },
   {
     "instrument": "AUSCASH",
@@ -215,9 +177,7 @@
     "description": "30 Day Interbank Cash Rate",
     "asset_class": "STIR",
     "currency": "AUD",
-    "pointsize": 2466.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 2466.0
   },
   {
     "instrument": "BARLEY",
@@ -226,9 +186,7 @@
     "description": "Barley Futures (ASX)",
     "asset_class": "Ags",
     "currency": "AUD",
-    "pointsize": 20.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 20.0
   },
   {
     "instrument": "BB3M",
@@ -237,9 +195,7 @@
     "description": "Three-Month Bloomberg Short-Term Bank Yield",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 2500.0,
-    "latest_price": 94.82,
-    "nominal_value": 237038.0
+    "pointsize": 2500.0
   },
   {
     "instrument": "BBCOMM",
@@ -248,9 +204,7 @@
     "description": "Bloomberg Commodity Index",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 99.49,
-    "nominal_value": 9949.0
+    "pointsize": 100.0
   },
   {
     "instrument": "BEL20",
@@ -259,9 +213,7 @@
     "description": "BEL 20 Index (BFX@)",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "BITCOIN",
@@ -270,9 +222,7 @@
     "description": "Micro Bitcoin",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 0.1,
-    "latest_price": 71530.0,
-    "nominal_value": 7153.0
+    "pointsize": 0.1
   },
   {
     "instrument": "BITCOIN-BAKKT",
@@ -281,9 +231,7 @@
     "description": "Bakkt Bitcoin",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 1.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1.0
   },
   {
     "instrument": "BOBL",
@@ -292,9 +240,7 @@
     "description": "German 5 year bond Bobl",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": 118.25,
-    "nominal_value": 118250.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "BONO",
@@ -303,9 +249,7 @@
     "description": "ES 10 year bonds",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": 124.97,
-    "nominal_value": 124970.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "BONO-MEFF",
@@ -314,9 +258,7 @@
     "description": "10 Year Government Bond",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "BONO10",
@@ -325,9 +267,7 @@
     "description": "10 Year Bond",
     "asset_class": "Bond",
     "currency": "MXP",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "BONO3",
@@ -336,9 +276,7 @@
     "description": "3 Year Bond",
     "asset_class": "Bond",
     "currency": "MXP",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "BOVESPA",
@@ -347,9 +285,7 @@
     "description": "Bovespa Index - USD",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 1.0,
-    "latest_price": 131515.0,
-    "nominal_value": 131515.0
+    "pointsize": 1.0
   },
   {
     "instrument": "BOVESPA-HK",
@@ -358,9 +294,7 @@
     "description": "Brazil Bovespa Stock Index HK",
     "asset_class": "Equity",
     "currency": "HKD",
-    "pointsize": 5.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 5.0
   },
   {
     "instrument": "BRE",
@@ -369,9 +303,7 @@
     "description": "BREUSD currency",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 100000.0,
-    "latest_price": 0.2,
-    "nominal_value": 19905.0
+    "pointsize": 100000.0
   },
   {
     "instrument": "BRENT",
@@ -380,9 +312,7 @@
     "description": "NYMEX Brent Financial Futures Index",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "BRENT-LAST",
@@ -391,9 +321,7 @@
     "description": "Brent Crude Oil - Last Day",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 86.05,
-    "nominal_value": 86050.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "BRENT_W",
@@ -402,9 +330,7 @@
     "description": "Brent crude summer",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 85.35,
-    "nominal_value": 85350.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "BRR",
@@ -413,9 +339,7 @@
     "description": "CME CF Bitcoin Reference Rate",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 5.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 5.0
   },
   {
     "instrument": "BRREUR",
@@ -424,9 +348,7 @@
     "description": "CME CF Bitcoin-Euro Reference Rate",
     "asset_class": "Metals",
     "currency": "EUR",
-    "pointsize": 5.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 5.0
   },
   {
     "instrument": "BTP",
@@ -435,9 +357,7 @@
     "description": "Italian 10 year bond BTP",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": 119.01,
-    "nominal_value": 119010.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "BTP3",
@@ -446,9 +366,7 @@
     "description": "Short-Term Euro-BTP Italian Government Bond",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": 105.88,
-    "nominal_value": 105880.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "BTP5",
@@ -457,9 +375,7 @@
     "description": "Mid-Term Euro-BTP Italian Government Bond",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "BUND",
@@ -468,9 +384,7 @@
     "description": "German 10 year bond Bund",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": 125.55,
-    "nominal_value": 125550.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "BUTTER",
@@ -479,9 +393,7 @@
     "description": "CME Cash-Settled Butter Futures",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 200.0,
-    "latest_price": 287.75,
-    "nominal_value": 57550.0
+    "pointsize": 200.0
   },
   {
     "instrument": "BUXL",
@@ -490,9 +402,7 @@
     "description": "German Buxl 15 to 30 year bond",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": 135.8,
-    "nominal_value": 135800.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "CAC",
@@ -501,9 +411,7 @@
     "description": "French equity index CAC40",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 10.0,
-    "latest_price": 8223.5,
-    "nominal_value": 82235.0
+    "pointsize": 10.0
   },
   {
     "instrument": "CAD",
@@ -512,9 +420,7 @@
     "description": "CADUSD currency",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 100000.0,
-    "latest_price": 0.74,
-    "nominal_value": 73940.0
+    "pointsize": 100000.0
   },
   {
     "instrument": "CAD10",
@@ -523,9 +429,7 @@
     "description": "Canadian 10 year bond",
     "asset_class": "Bond",
     "currency": "CAD",
-    "pointsize": 1000.0,
-    "latest_price": 120.34,
-    "nominal_value": 120340.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "CAD2",
@@ -534,9 +438,7 @@
     "description": "Canadian 2 year bond",
     "asset_class": "Bond",
     "currency": "CAD",
-    "pointsize": 1000.0,
-    "latest_price": 103.08,
-    "nominal_value": 103085.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "CAD5",
@@ -545,9 +447,7 @@
     "description": "Canadian 5 year bond",
     "asset_class": "Bond",
     "currency": "CAD",
-    "pointsize": 1000.0,
-    "latest_price": 111.47,
-    "nominal_value": 111470.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "CADJPY",
@@ -556,9 +456,7 @@
     "description": "CAD.JPY",
     "asset_class": "FX",
     "currency": "JPY",
-    "pointsize": 200000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 200000.0
   },
   {
     "instrument": "CADJPY2",
@@ -567,9 +465,7 @@
     "description": "CAD.JPY",
     "asset_class": "FX",
     "currency": "JPY",
-    "pointsize": 200000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 200000.0
   },
   {
     "instrument": "CADSTIR",
@@ -578,9 +474,7 @@
     "description": "Canadian STIR Bank acceptance",
     "asset_class": "STIR",
     "currency": "CAD",
-    "pointsize": 2500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 2500.0
   },
   {
     "instrument": "CAD_micro",
@@ -589,9 +483,7 @@
     "description": "CADUSD_micro",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 10000.0,
-    "latest_price": 0.74,
-    "nominal_value": 7394.0
+    "pointsize": 10000.0
   },
   {
     "instrument": "CAN-ENERGY",
@@ -600,9 +492,7 @@
     "description": "S&P TSE CAN Energy Index",
     "asset_class": "Sector",
     "currency": "CAD",
-    "pointsize": 200.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 200.0
   },
   {
     "instrument": "CAN-FINANCE",
@@ -611,9 +501,7 @@
     "description": "S&P TSE CAN Financials Index",
     "asset_class": "Sector",
     "currency": "CAD",
-    "pointsize": 200.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 200.0
   },
   {
     "instrument": "CAN-GOLD",
@@ -622,9 +510,7 @@
     "description": "S&P TSE CAN Gold Index",
     "asset_class": "Sector",
     "currency": "CAD",
-    "pointsize": 200.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 200.0
   },
   {
     "instrument": "CAN-TECH",
@@ -633,9 +519,7 @@
     "description": "S&P TSE CAN Info Tech Index",
     "asset_class": "Sector",
     "currency": "CAD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "CANNABIS_small",
@@ -644,9 +528,7 @@
     "description": "Small Cannabis",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "CANOLA",
@@ -655,9 +537,7 @@
     "description": "Rapeseed (Canola) in CAD",
     "asset_class": "Ags",
     "currency": "CAD",
-    "pointsize": 20.0,
-    "latest_price": 636.1,
-    "nominal_value": 12722.0
+    "pointsize": 20.0
   },
   {
     "instrument": "CETES",
@@ -666,9 +546,7 @@
     "description": "91 Day Treasury Bill",
     "asset_class": "STIR",
     "currency": "MXP",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "CH10",
@@ -677,9 +555,7 @@
     "description": "Swiss Federal Long-Term Bonds",
     "asset_class": "Bond",
     "currency": "CHF",
-    "pointsize": 1000.0,
-    "latest_price": 150.43,
-    "nominal_value": 150430.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "CHEESE",
@@ -688,9 +564,7 @@
     "description": "Cheese",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 20000.0,
-    "latest_price": 1.59,
-    "nominal_value": 31800.0
+    "pointsize": 20000.0
   },
   {
     "instrument": "CHF",
@@ -699,9 +573,7 @@
     "description": "CHFUSD currency",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 125000.0,
-    "latest_price": 1.12,
-    "nominal_value": 139775.0
+    "pointsize": 125000.0
   },
   {
     "instrument": "CHFJPY",
@@ -710,9 +582,7 @@
     "description": "CHFJPY",
     "asset_class": "FX",
     "currency": "JPY",
-    "pointsize": 250000.0,
-    "latest_price": 167.26,
-    "nominal_value": 41813750.0
+    "pointsize": 250000.0
   },
   {
     "instrument": "CHFJPY-ICE",
@@ -721,9 +591,7 @@
     "description": "CHFJPY",
     "asset_class": "FX",
     "currency": "JPY",
-    "pointsize": 250000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 250000.0
   },
   {
     "instrument": "CHF_micro",
@@ -732,9 +600,7 @@
     "description": "CHFUSD micro",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 12500.0,
-    "latest_price": 1.12,
-    "nominal_value": 13978.0
+    "pointsize": 12500.0
   },
   {
     "instrument": "CHINA120",
@@ -743,9 +609,7 @@
     "description": "CES China 120 Index",
     "asset_class": "Equity",
     "currency": "HKD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "CHINAA-CON",
@@ -754,9 +618,7 @@
     "description": "MSCI China A 50 Connect Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 25.0,
-    "latest_price": 1919.4,
-    "nominal_value": 47985.0
+    "pointsize": 25.0
   },
   {
     "instrument": "CLP",
@@ -765,9 +627,7 @@
     "description": "Chilean peso",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 50000000.0,
-    "latest_price": 0.0,
-    "nominal_value": 51050.0
+    "pointsize": 50000000.0
   },
   {
     "instrument": "CNH",
@@ -776,9 +636,7 @@
     "description": "SGX US Dollar in offshore Chinese Renminbi (CNH)",
     "asset_class": "FX",
     "currency": "CNH",
-    "pointsize": 100000.0,
-    "latest_price": 7.25,
-    "nominal_value": 724640.0
+    "pointsize": 100000.0
   },
   {
     "instrument": "CNH-CME",
@@ -787,9 +645,7 @@
     "description": "CNHUSD on CME",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 1000000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000000.0
   },
   {
     "instrument": "CNH-CME_micro",
@@ -798,9 +654,7 @@
     "description": "CHNHUSD micro CME",
     "asset_class": "FX",
     "currency": "CNH",
-    "pointsize": 10000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10000.0
   },
   {
     "instrument": "CNH-HK",
@@ -809,9 +663,7 @@
     "description": "CNHUSD on HK",
     "asset_class": "FX",
     "currency": "CNH",
-    "pointsize": 100000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100000.0
   },
   {
     "instrument": "CNH-onshore",
@@ -820,9 +672,7 @@
     "description": "SGX onshore Chinese Renminbi (CNY) in US Dollar Futures (CY@SGX)",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 500000.0,
-    "latest_price": 0.14,
-    "nominal_value": 69100.0
+    "pointsize": 500000.0
   },
   {
     "instrument": "CNHEUR",
@@ -831,9 +681,7 @@
     "description": "CNHEUR",
     "asset_class": "FX",
     "currency": "EUR",
-    "pointsize": 1000000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000000.0
   },
   {
     "instrument": "COAL",
@@ -842,9 +690,7 @@
     "description": "ICE Rotterdam Coal",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 119.55,
-    "nominal_value": 119550.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "COAL-GEORDIE",
@@ -853,9 +699,7 @@
     "description": "ICE Coals to Newcastle",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 133.0,
-    "nominal_value": 133000.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "COAL-RICH-BAY",
@@ -864,9 +708,7 @@
     "description": "ICE Richards Bay Coal",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "COCOA",
@@ -875,9 +717,7 @@
     "description": "Cocoa NY",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": 9306.0,
-    "nominal_value": 93060.0
+    "pointsize": 10.0
   },
   {
     "instrument": "COCOA_LDN",
@@ -886,9 +726,7 @@
     "description": "Cocoa London",
     "asset_class": "Ags",
     "currency": "GBP",
-    "pointsize": 10.0,
-    "latest_price": 7725.0,
-    "nominal_value": 77250.0
+    "pointsize": 10.0
   },
   {
     "instrument": "COFFEE",
@@ -897,9 +735,7 @@
     "description": "Coffee",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 375.0,
-    "latest_price": 188.05,
-    "nominal_value": 70519.0
+    "pointsize": 375.0
   },
   {
     "instrument": "COPPER",
@@ -908,9 +744,7 @@
     "description": "Copper",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 25000.0,
-    "latest_price": 4.04,
-    "nominal_value": 101075.0
+    "pointsize": 25000.0
   },
   {
     "instrument": "COPPER-micro",
@@ -919,9 +753,7 @@
     "description": "Copper micro",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 2500.0,
-    "latest_price": 4.01,
-    "nominal_value": 10028.0
+    "pointsize": 2500.0
   },
   {
     "instrument": "COPPER-mini",
@@ -930,9 +762,7 @@
     "description": "COMEX MINY Copper",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 12500.0,
-    "latest_price": 4.01,
-    "nominal_value": 50100.0
+    "pointsize": 12500.0
   },
   {
     "instrument": "COPPER_LME",
@@ -941,9 +771,7 @@
     "description": "Grade A Copper - LME",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 25.0,
-    "latest_price": 8859.5,
-    "nominal_value": 221488.0
+    "pointsize": 25.0
   },
   {
     "instrument": "CORN",
@@ -952,9 +780,7 @@
     "description": "Corn",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": 477.75,
-    "nominal_value": 23888.0
+    "pointsize": 50.0
   },
   {
     "instrument": "CORN-EURO",
@@ -963,9 +789,7 @@
     "description": "Corn",
     "asset_class": "Ags",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "CORN-JPN",
@@ -974,9 +798,7 @@
     "description": "Corn - Japan",
     "asset_class": "Ags",
     "currency": "JPY",
-    "pointsize": 50000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50000.0
   },
   {
     "instrument": "CORN_mini",
@@ -985,9 +807,7 @@
     "description": "Corn mini",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": 442.0,
-    "nominal_value": 4420.0
+    "pointsize": 10.0
   },
   {
     "instrument": "CORRA",
@@ -996,9 +816,7 @@
     "description": "3 Month CORRA",
     "asset_class": "STIR",
     "currency": "CAD",
-    "pointsize": 2500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 2500.0
   },
   {
     "instrument": "COTTON",
@@ -1007,9 +825,7 @@
     "description": "NYMEX Cotton index",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 50000.0,
-    "latest_price": 0.91,
-    "nominal_value": 45690.0
+    "pointsize": 50000.0
   },
   {
     "instrument": "COTTON2",
@@ -1018,9 +834,7 @@
     "description": "Cotton #2",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 500.0,
-    "latest_price": 91.97,
-    "nominal_value": 45985.0
+    "pointsize": 500.0
   },
   {
     "instrument": "CRUDE_ICE",
@@ -1029,9 +843,7 @@
     "description": "West Texas Intermediate Light Sweet Crude Oil ICE",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 82.42,
-    "nominal_value": 82420.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "CRUDE_W",
@@ -1040,9 +852,7 @@
     "description": "Light sweet crude Winter",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 77.68,
-    "nominal_value": 77680.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "CRUDE_W_micro",
@@ -1051,9 +861,7 @@
     "description": "micro WTI crude oil",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 81.45,
-    "nominal_value": 8145.0
+    "pointsize": 100.0
   },
   {
     "instrument": "CRUDE_W_mini",
@@ -1062,9 +870,7 @@
     "description": "Light sweet crude Winter mini",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 500.0,
-    "latest_price": 82.22,
-    "nominal_value": 41112.0
+    "pointsize": 500.0
   },
   {
     "instrument": "CRYPTO_small",
@@ -1073,9 +879,7 @@
     "description": "Small Cryptocurrency",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "CZK",
@@ -1084,9 +888,7 @@
     "description": "Czech koruna",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 4000000.0,
-    "latest_price": 0.04,
-    "nominal_value": 170528.0
+    "pointsize": 4000000.0
   },
   {
     "instrument": "DAX",
@@ -1095,9 +897,7 @@
     "description": "DAX 30 Index (Deutsche Aktien Xchange 30)",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 1.0,
-    "latest_price": 23313.0,
-    "nominal_value": 23313.0
+    "pointsize": 1.0
   },
   {
     "instrument": "DIVDAX",
@@ -1106,9 +906,7 @@
     "description": "DivDAX Price Index",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 200.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 200.0
   },
   {
     "instrument": "DIVDAX-DIVI",
@@ -1117,9 +915,7 @@
     "description": "DivDAX Dividend Points Index",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "DIVDAX-DIVI2",
@@ -1128,9 +924,7 @@
     "description": "DAX Dividend Points Index",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "DJSTX-SMALL",
@@ -1139,9 +933,7 @@
     "description": "Dow Jones STOXX Small 200 Index",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 337.4,
-    "nominal_value": 16870.0
+    "pointsize": 50.0
   },
   {
     "instrument": "DJUBS",
@@ -1150,9 +942,7 @@
     "description": "Dow Jones-UBS Commodity Index",
     "asset_class": "Ags",
     "currency": "EUR",
-    "pointsize": 250.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 250.0
   },
   {
     "instrument": "DOW",
@@ -1161,9 +951,7 @@
     "description": "Micro E-Mini Dow Jones Industrial Average Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 0.5,
-    "latest_price": 40140.0,
-    "nominal_value": 20070.0
+    "pointsize": 0.5
   },
   {
     "instrument": "DOW_YEN",
@@ -1172,9 +960,7 @@
     "description": "OSE Dow Jones Industrial Average",
     "asset_class": "Equity",
     "currency": "JPY",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "DOW_mini",
@@ -1183,9 +969,7 @@
     "description": "Mini Sized Dow Jones Industrial Average $5",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 5.0,
-    "latest_price": 40140.0,
-    "nominal_value": 200700.0
+    "pointsize": 5.0
   },
   {
     "instrument": "DX",
@@ -1194,9 +978,7 @@
     "description": "US Dollar Index",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 104.27,
-    "nominal_value": 104270.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "EDOLLAR",
@@ -1205,9 +987,7 @@
     "description": "US STIR Eurodollar",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 2500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 2500.0
   },
   {
     "instrument": "EPRA-EURO",
@@ -1216,9 +996,7 @@
     "description": "FTSE EPRA-NAREIT Euro Zone",
     "asset_class": "Housing",
     "currency": "EUR",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "EPRA-EUROPE",
@@ -1227,9 +1005,7 @@
     "description": "FTSE EPRA-NAREIT Europe",
     "asset_class": "Housing",
     "currency": "EUR",
-    "pointsize": 10.0,
-    "latest_price": 1642.0,
-    "nominal_value": 16420.0
+    "pointsize": 10.0
   },
   {
     "instrument": "ETHANOL",
@@ -1238,9 +1014,7 @@
     "description": "Ethanol CME",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 29000.0,
-    "latest_price": 2.16,
-    "nominal_value": 62669.0
+    "pointsize": 29000.0
   },
   {
     "instrument": "ETHER-micro",
@@ -1249,9 +1023,7 @@
     "description": "Ethereum micro",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 0.1,
-    "latest_price": 3604.5,
-    "nominal_value": 360.0
+    "pointsize": 0.1
   },
   {
     "instrument": "ETHEREUM",
@@ -1260,9 +1032,7 @@
     "description": "CME CF Ether-Dollar Reference Rate",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": 3604.5,
-    "nominal_value": 180225.0
+    "pointsize": 50.0
   },
   {
     "instrument": "ETHRREUR",
@@ -1271,9 +1041,7 @@
     "description": "CME CF Ether-Euro Reference Rate",
     "asset_class": "Metals",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-AUTO",
@@ -1282,9 +1050,7 @@
     "description": "Dow Jones STOXX 600 Automobiles & Parts",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 701.2,
-    "nominal_value": 35060.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-BANKS",
@@ -1293,9 +1059,7 @@
     "description": "Dow Jones Euro STOXX Banks Index",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 135.4,
-    "nominal_value": 6770.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-BANKS-DIVI",
@@ -1304,9 +1068,7 @@
     "description": "EURO STOXX Banks Index Dividend Futures",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "EU-BANKS2",
@@ -1315,9 +1077,7 @@
     "description": "Dow Jones STOXX 600 Banks",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-BASIC",
@@ -1326,9 +1086,7 @@
     "description": "Dow Jones STOXX 600 Basic Resources Index",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 551.9,
-    "nominal_value": 27595.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-CHEM",
@@ -1337,9 +1095,7 @@
     "description": "Dow Jones STOXX 600 Chemicals",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 1339.2,
-    "nominal_value": 66960.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-CONSTRUCTION",
@@ -1348,9 +1104,7 @@
     "description": "Dow Jones STOXX 600 Construction & Materials",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 708.7,
-    "nominal_value": 35435.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DIV30",
@@ -1359,9 +1113,7 @@
     "description": "Dow Jones Euro STOXX Select Dividend 30 Index",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 10.0,
-    "latest_price": 1632.0,
-    "nominal_value": 16320.0
+    "pointsize": 10.0
   },
   {
     "instrument": "EU-DIV30-DVP",
@@ -1370,9 +1122,7 @@
     "description": "Euro Stoxx Select Dividend 30 DVP",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "EU-DIV50",
@@ -1381,9 +1131,7 @@
     "description": "Dow Jones EURO STOXX 50 Index-Dividenden",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "EU-DJ-AUTO",
@@ -1392,9 +1140,7 @@
     "description": "Dow Jones Euro STOXX 600 Automobile & Parts",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-BASIC",
@@ -1403,9 +1149,7 @@
     "description": "Dow Jones Euro STOXX Basic Resources",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-CHEM",
@@ -1414,9 +1158,7 @@
     "description": "Dow Jones Euro STOXX Chemicals",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-CONSTRUCTION",
@@ -1425,9 +1167,7 @@
     "description": "Dow Jones Euro STOXX Construction",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-FINANCE",
@@ -1436,9 +1176,7 @@
     "description": "Dow Jones Euro STOXX Financial Services Index",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-FOOD",
@@ -1447,9 +1185,7 @@
     "description": "Dow Jones Euro STOXX Food&Beverages",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-HEALTH",
@@ -1458,9 +1194,7 @@
     "description": "Dow Jones Euro STOXX Healthcare",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-HOUSE",
@@ -1469,9 +1203,7 @@
     "description": "Dow Jones Euro STOXX Personal & Household Goods",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-INDUSTRY",
@@ -1480,9 +1212,7 @@
     "description": "Dow Jones Euro STOXX Industrial Goods&Services",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-INDUSTRY2",
@@ -1491,9 +1221,7 @@
     "description": "Dow Jones STOXX 600 Industrial Goods & Services Index",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-INSURE",
@@ -1502,9 +1230,7 @@
     "description": "Dow Jones Euro STOXX Insurance",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-MEDIA",
@@ -1513,9 +1239,7 @@
     "description": "Dow Jones Euro STOXX Media Index",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-OIL",
@@ -1524,9 +1248,7 @@
     "description": "Dow Jones Euro STOXX Oil & Gas",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 361.4,
-    "nominal_value": 18070.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-RETAIL",
@@ -1535,9 +1257,7 @@
     "description": "Dow Jones Euro STOXX Retail",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-TECH",
@@ -1546,9 +1266,7 @@
     "description": "Dow Jones Euro STOXX Technology",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 1120.2,
-    "nominal_value": 56010.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-TELECOM",
@@ -1557,9 +1275,7 @@
     "description": "Dow Jones Euro STOXX Telecommunications",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 283.6,
-    "nominal_value": 14180.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-TRAVEL",
@@ -1568,9 +1284,7 @@
     "description": "Dow Jones Euro STOXX Travel & Leisure",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-DJ-UTIL",
@@ -1579,9 +1293,7 @@
     "description": "Dow Jones Euro STOXX Utilities Index",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 361.2,
-    "nominal_value": 18060.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-ESG",
@@ -1590,9 +1302,7 @@
     "description": "STOXX Europe ESG Leaders Select 30",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "EU-FINANCE",
@@ -1601,9 +1311,7 @@
     "description": "Dow Jones STOXX 600 Financial Services Index",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-FOOD",
@@ -1612,9 +1320,7 @@
     "description": "Dow Jones STOXX 600 Food & Beverage Index",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 714.5,
-    "nominal_value": 35725.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-HEALTH",
@@ -1623,9 +1329,7 @@
     "description": "Dow Jones STOXX 600 Healthcare",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 1145.6,
-    "nominal_value": 57280.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-HOUSE",
@@ -1634,9 +1338,7 @@
     "description": "Dow Jones STOXX 600 Personal & Household Goods",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 1079.0,
-    "nominal_value": 53950.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-INSURE",
@@ -1645,9 +1347,7 @@
     "description": "Dow Jones STOXX 600 Insurance",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 375.1,
-    "nominal_value": 18755.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-MEDIA",
@@ -1656,9 +1356,7 @@
     "description": "Dow Jones STOXX 600 Media",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 454.7,
-    "nominal_value": 22735.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-MID",
@@ -1667,9 +1365,7 @@
     "description": "Dow Jones STOXX MID 200 Index",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 530.7,
-    "nominal_value": 26535.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-OIL",
@@ -1678,9 +1374,7 @@
     "description": "Dow Jones STOXX 600 Oil & Gas",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 364.0,
-    "nominal_value": 18200.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-REALESTATE",
@@ -1689,9 +1383,7 @@
     "description": "Dow Jones STOXX 600 Real Estate",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 128.5,
-    "nominal_value": 6425.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-RETAIL",
@@ -1700,9 +1392,7 @@
     "description": "Dow Jones STOXX 600 Retail",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 446.2,
-    "nominal_value": 22310.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-TECH",
@@ -1711,9 +1401,7 @@
     "description": "Dow Jones STOXX 600 Technology",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 861.1,
-    "nominal_value": 43055.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-TELECOM",
@@ -1722,9 +1410,7 @@
     "description": "Dow Jones STOXX 600 Telecommunications",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-TRAVEL",
@@ -1733,9 +1419,7 @@
     "description": "Dow Jones STOXX 600 Travel & Leisure",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 262.1,
-    "nominal_value": 13105.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EU-UTILS",
@@ -1744,9 +1428,7 @@
     "description": "Dow Jones STOXX 600 Utilities",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 367.5,
-    "nominal_value": 18375.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EUA",
@@ -1755,9 +1437,7 @@
     "description": "ECX EU carbon emissions allowance futures",
     "asset_class": "OilGas",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": 64.19,
-    "nominal_value": 64190.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "EUIRS10",
@@ -1766,9 +1446,7 @@
     "description": "10 year euro swapnote",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "EUIRS2",
@@ -1777,9 +1455,7 @@
     "description": "2 Year euro swapnote",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "EUIRS5",
@@ -1788,9 +1464,7 @@
     "description": "5 year euro swapnote",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "EUR",
@@ -1799,9 +1473,7 @@
     "description": "EURUSD currency",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 125000.0,
-    "latest_price": 1.08,
-    "nominal_value": 135269.0
+    "pointsize": 125000.0
   },
   {
     "instrument": "EUR-ICE",
@@ -1810,9 +1482,7 @@
     "description": "EUR.USD",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 125000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 125000.0
   },
   {
     "instrument": "EURAUD",
@@ -1821,9 +1491,7 @@
     "description": "EURAUD",
     "asset_class": "FX",
     "currency": "AUD",
-    "pointsize": 125000.0,
-    "latest_price": 1.66,
-    "nominal_value": 207050.0
+    "pointsize": 125000.0
   },
   {
     "instrument": "EURAUD-ICE",
@@ -1832,9 +1500,7 @@
     "description": "EUR.AUD",
     "asset_class": "FX",
     "currency": "AUD",
-    "pointsize": 125000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 125000.0
   },
   {
     "instrument": "EURCAD",
@@ -1843,9 +1509,7 @@
     "description": "EURCAD",
     "asset_class": "FX",
     "currency": "CAD",
-    "pointsize": 125000.0,
-    "latest_price": 1.46,
-    "nominal_value": 182950.0
+    "pointsize": 125000.0
   },
   {
     "instrument": "EURCAD-ICE",
@@ -1854,9 +1518,7 @@
     "description": "EUR.CAD",
     "asset_class": "FX",
     "currency": "CAD",
-    "pointsize": 125000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 125000.0
   },
   {
     "instrument": "EURCHF",
@@ -1865,9 +1527,7 @@
     "description": "Euro/chf",
     "asset_class": "FX",
     "currency": "CHF",
-    "pointsize": 125000.0,
-    "latest_price": 0.97,
-    "nominal_value": 120975.0
+    "pointsize": 125000.0
   },
   {
     "instrument": "EURCHF-ICE",
@@ -1876,9 +1536,7 @@
     "description": "Euro/chf",
     "asset_class": "FX",
     "currency": "CHF",
-    "pointsize": 125000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 125000.0
   },
   {
     "instrument": "EURCZK",
@@ -1887,9 +1545,7 @@
     "description": "CZK.EUR",
     "asset_class": "FX",
     "currency": "EUR",
-    "pointsize": 4000000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 4000000.0
   },
   {
     "instrument": "EURHUF",
@@ -1898,9 +1554,7 @@
     "description": "HUF.EUR",
     "asset_class": "FX",
     "currency": "EUR",
-    "pointsize": 30000000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 30000000.0
   },
   {
     "instrument": "EURIBOR",
@@ -1909,9 +1563,7 @@
     "description": "Three Month EURIBOR",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 2500.0,
-    "latest_price": 97.7,
-    "nominal_value": 244250.0
+    "pointsize": 2500.0
   },
   {
     "instrument": "EURIBOR-ICE",
@@ -1920,9 +1572,7 @@
     "description": "3 Month EURIBOR Interest Rate",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 2500.0,
-    "latest_price": 97.7,
-    "nominal_value": 244237.0
+    "pointsize": 2500.0
   },
   {
     "instrument": "EURINR",
@@ -1931,9 +1581,7 @@
     "description": "EURINR",
     "asset_class": "FX",
     "currency": "INR",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "EURMXP",
@@ -1942,9 +1590,7 @@
     "description": "EURMXP",
     "asset_class": "FX",
     "currency": "MXP",
-    "pointsize": 10000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10000.0
   },
   {
     "instrument": "EURO600",
@@ -1953,9 +1599,7 @@
     "description": "Dow Jones STOXX 600 Index",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 510.8,
-    "nominal_value": 25540.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EURO600-ESG",
@@ -1964,9 +1608,7 @@
     "description": "STOXX Europe 600 ESG-X",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "EUROFIRST100",
@@ -1975,9 +1617,7 @@
     "description": "FTSEurofirst 80 NEW",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "EUROFIRST80",
@@ -1986,9 +1626,7 @@
     "description": "FTSEurofirst 80 NEW",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "EUROSTX",
@@ -1997,9 +1635,7 @@
     "description": "European equity index EUROSTOXX50",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 10.0,
-    "latest_price": 5045.0,
-    "nominal_value": 50450.0
+    "pointsize": 10.0
   },
   {
     "instrument": "EUROSTX-CORE",
@@ -2008,9 +1644,7 @@
     "description": "ISHARES CORE EURO STOXX 50",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "EUROSTX-DJ",
@@ -2019,9 +1653,7 @@
     "description": "Dow Jones STOXX50",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "EUROSTX-LARGE",
@@ -2030,9 +1662,7 @@
     "description": "Euro Stoxx Large",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 537.5,
-    "nominal_value": 26875.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EUROSTX-MID",
@@ -2041,9 +1671,7 @@
     "description": "Euro Stoxx Mid",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EUROSTX-PRICE",
@@ -2052,9 +1680,7 @@
     "description": "Dow Jones Euro STOXX Price Index",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "EUROSTX-SMALL",
@@ -2063,9 +1689,7 @@
     "description": "Euro Stoxx Small",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 330.9,
-    "nominal_value": 16545.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EUROSTX200-LARGE",
@@ -2074,9 +1698,7 @@
     "description": "Dow Jones STOXX Large 200 Index",
     "asset_class": "Sector",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 530.9,
-    "nominal_value": 26545.0
+    "pointsize": 50.0
   },
   {
     "instrument": "EUR_micro",
@@ -2085,9 +1707,7 @@
     "description": "EURUSD micro",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 12500.0,
-    "latest_price": 1.08,
-    "nominal_value": 13526.0
+    "pointsize": 12500.0
   },
   {
     "instrument": "EUR_mini",
@@ -2096,9 +1716,7 @@
     "description": "EURUSD mini",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 62500.0,
-    "latest_price": 1.08,
-    "nominal_value": 67638.0
+    "pointsize": 62500.0
   },
   {
     "instrument": "FANG",
@@ -2107,9 +1725,7 @@
     "description": "NYSE FANG index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 5.0,
-    "latest_price": 10142.4,
-    "nominal_value": 50712.0
+    "pointsize": 5.0
   },
   {
     "instrument": "FED",
@@ -2118,9 +1734,7 @@
     "description": "30 Day Fed Funds",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 4167.0,
-    "latest_price": 95.1,
-    "nominal_value": 396303.0
+    "pointsize": 4167.0
   },
   {
     "instrument": "FEEDCOW",
@@ -2129,9 +1743,7 @@
     "description": "Feeder cattle",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 500.0,
-    "latest_price": 258.82,
-    "nominal_value": 129412.0
+    "pointsize": 500.0
   },
   {
     "instrument": "FTSE100",
@@ -2140,9 +1752,7 @@
     "description": "FTSE100 Index",
     "asset_class": "Equity",
     "currency": "GBP",
-    "pointsize": 10.0,
-    "latest_price": 10438.0,
-    "nominal_value": 104380.0
+    "pointsize": 10.0
   },
   {
     "instrument": "FTSE100-DIV",
@@ -2151,9 +1761,7 @@
     "description": "FTSE 100 Dividend Index",
     "asset_class": "Equity",
     "currency": "GBP",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "FTSE250",
@@ -2162,9 +1770,7 @@
     "description": "FTSE 250",
     "asset_class": "Equity",
     "currency": "GBP",
-    "pointsize": 2.0,
-    "latest_price": 19969.0,
-    "nominal_value": 39938.0
+    "pointsize": 2.0
   },
   {
     "instrument": "FTSEAFRICA40",
@@ -2173,9 +1779,7 @@
     "description": "FTSE-JSE Africa Top40 Index",
     "asset_class": "Equity",
     "currency": "HKD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "FTSECHINAA",
@@ -2184,9 +1788,7 @@
     "description": "FTSE/Xinhua China A50",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 1.0,
-    "latest_price": 12138.0,
-    "nominal_value": 12138.0
+    "pointsize": 1.0
   },
   {
     "instrument": "FTSECHINAA-CSOP",
@@ -2195,9 +1797,7 @@
     "description": "CSOP FTSE CHINA A50 ETF-HKD",
     "asset_class": "Equity",
     "currency": "HKD",
-    "pointsize": 5000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 5000.0
   },
   {
     "instrument": "FTSECHINAA-IS",
@@ -2206,9 +1806,7 @@
     "description": "ISHARES FTSE CHINA A50 E-HKD",
     "asset_class": "Equity",
     "currency": "HKD",
-    "pointsize": 5000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 5000.0
   },
   {
     "instrument": "FTSECHINAH",
@@ -2217,9 +1815,7 @@
     "description": "FTSE China H50",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 2.0,
-    "latest_price": 11130.0,
-    "nominal_value": 22260.0
+    "pointsize": 2.0
   },
   {
     "instrument": "FTSEINDO",
@@ -2228,9 +1824,7 @@
     "description": "FTSE Indonesia Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 5.0,
-    "latest_price": 3807.0,
-    "nominal_value": 19035.0
+    "pointsize": 5.0
   },
   {
     "instrument": "FTSETAIWAN",
@@ -2239,9 +1833,7 @@
     "description": "FTSE Taiwan RIC Capped Price Return TWD Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 40.0,
-    "latest_price": 1737.0,
-    "nominal_value": 69480.0
+    "pointsize": 40.0
   },
   {
     "instrument": "FTSEVIET",
@@ -2250,9 +1842,7 @@
     "description": "FTSE Vietnam 30 Price Return Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 5.0,
-    "latest_price": 1964.0,
-    "nominal_value": 9820.0
+    "pointsize": 5.0
   },
   {
     "instrument": "GAS-LAST",
@@ -2261,9 +1851,7 @@
     "description": "Natural Gas Last Day Financial Futures Index",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 10000.0,
-    "latest_price": 1.75,
-    "nominal_value": 17490.0
+    "pointsize": 10000.0
   },
   {
     "instrument": "GAS-PEN",
@@ -2272,9 +1860,7 @@
     "description": "Natural Gas Penultimate Financial Futures Index",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 10000.0,
-    "latest_price": 1.71,
-    "nominal_value": 17100.0
+    "pointsize": 10000.0
   },
   {
     "instrument": "GASOIL",
@@ -2283,9 +1869,7 @@
     "description": "ICE-EU Low Sulphur Gasoil",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 797.75,
-    "nominal_value": 79775.0
+    "pointsize": 100.0
   },
   {
     "instrument": "GASOILINE",
@@ -2294,9 +1878,7 @@
     "description": "RBOB Gasoline US",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 42000.0,
-    "latest_price": 2.69,
-    "nominal_value": 112879.0
+    "pointsize": 42000.0
   },
   {
     "instrument": "GASOILINE_ICE",
@@ -2305,9 +1887,7 @@
     "description": "ICE NYH RBOB Gasoline",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 42000.0,
-    "latest_price": 2.69,
-    "nominal_value": 112917.0
+    "pointsize": 42000.0
   },
   {
     "instrument": "GASOILINE_micro",
@@ -2316,9 +1896,7 @@
     "description": "NYMEX micro Gasoline RBOB Index",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 4200.0,
-    "latest_price": 2.72,
-    "nominal_value": 11427.0
+    "pointsize": 4200.0
   },
   {
     "instrument": "GAS_NL",
@@ -2327,9 +1905,7 @@
     "description": "Dutch TTF Natural Gas Futures",
     "asset_class": "OilGas",
     "currency": "EUR",
-    "pointsize": 1.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1.0
   },
   {
     "instrument": "GAS_UK",
@@ -2338,9 +1914,7 @@
     "description": "Natural gas UK",
     "asset_class": "OilGas",
     "currency": "GBP",
-    "pointsize": 31000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 31000.0
   },
   {
     "instrument": "GAS_US",
@@ -2349,9 +1923,7 @@
     "description": "Natural gas US",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 10000.0,
-    "latest_price": 2.35,
-    "nominal_value": 23450.0
+    "pointsize": 10000.0
   },
   {
     "instrument": "GAS_US_mini",
@@ -2360,9 +1932,7 @@
     "description": "Natural gas US mini",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 2500.0,
-    "latest_price": 1.76,
-    "nominal_value": 4388.0
+    "pointsize": 2500.0
   },
   {
     "instrument": "GBP",
@@ -2371,9 +1941,7 @@
     "description": "GBPUSD currency",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 62500.0,
-    "latest_price": 1.26,
-    "nominal_value": 78919.0
+    "pointsize": 62500.0
   },
   {
     "instrument": "GBP-ICE",
@@ -2382,9 +1950,7 @@
     "description": "GBP.USD",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 62500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 62500.0
   },
   {
     "instrument": "GBPCHF",
@@ -2393,9 +1959,7 @@
     "description": "GBPCHF",
     "asset_class": "FX",
     "currency": "CHF",
-    "pointsize": 125000.0,
-    "latest_price": 1.13,
-    "nominal_value": 141150.0
+    "pointsize": 125000.0
   },
   {
     "instrument": "GBPCHF-ICE",
@@ -2404,9 +1968,7 @@
     "description": "GBP.CHF",
     "asset_class": "FX",
     "currency": "CHF",
-    "pointsize": 125000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 125000.0
   },
   {
     "instrument": "GBPEUR",
@@ -2415,9 +1977,7 @@
     "description": "GBPEUR currency",
     "asset_class": "FX",
     "currency": "GBP",
-    "pointsize": 125000.0,
-    "latest_price": 0.86,
-    "nominal_value": 107125.0
+    "pointsize": 125000.0
   },
   {
     "instrument": "GBPEUR-ICE",
@@ -2426,9 +1986,7 @@
     "description": "GBP",
     "asset_class": "FX",
     "currency": "GBP",
-    "pointsize": 125000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 125000.0
   },
   {
     "instrument": "GBPINR",
@@ -2437,9 +1995,7 @@
     "description": "GBPINR",
     "asset_class": "FX",
     "currency": "INR",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "GBPJPY",
@@ -2448,9 +2004,7 @@
     "description": "GBPJPY",
     "asset_class": "FX",
     "currency": "JPY",
-    "pointsize": 125000.0,
-    "latest_price": 188.87,
-    "nominal_value": 23608750.0
+    "pointsize": 125000.0
   },
   {
     "instrument": "GBPJPY-ICE",
@@ -2459,9 +2013,7 @@
     "description": "GBP.JPY",
     "asset_class": "FX",
     "currency": "JPY",
-    "pointsize": 125000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 125000.0
   },
   {
     "instrument": "GBP_micro",
@@ -2470,9 +2022,7 @@
     "description": "GBPUSD_micro",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 6250.0,
-    "latest_price": 1.26,
-    "nominal_value": 7892.0
+    "pointsize": 6250.0
   },
   {
     "instrument": "GICS",
@@ -2481,9 +2031,7 @@
     "description": "S&P-GSCI Index",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": 582.05,
-    "nominal_value": 145512.0
+    "pointsize": 250.0
   },
   {
     "instrument": "GICS-EXCESS",
@@ -2492,9 +2040,7 @@
     "description": "S&P GSCI Excess Return Index",
     "asset_class": "CommodityIndex",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "GILT",
@@ -2503,9 +2049,7 @@
     "description": "UK 10 year bonds Long Gilt",
     "asset_class": "Bond",
     "currency": "GBP",
-    "pointsize": 1000.0,
-    "latest_price": 88.58,
-    "nominal_value": 88580.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "GILT2",
@@ -2514,9 +2058,7 @@
     "description": "Short gilt",
     "asset_class": "Bond",
     "currency": "GBP",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "GILT5",
@@ -2525,9 +2067,7 @@
     "description": "Medium gilt",
     "asset_class": "Bond",
     "currency": "GBP",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "GOLD",
@@ -2536,9 +2076,7 @@
     "description": "Gold",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 4686.5,
-    "nominal_value": 468650.0
+    "pointsize": 100.0
   },
   {
     "instrument": "GOLD-CHINA",
@@ -2547,9 +2085,7 @@
     "description": "Shanghai Gold Exchange Gold Benchmark PM Price Index - CNH Futures",
     "asset_class": "Metals",
     "currency": "CNH",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "GOLD-CHINA-USD",
@@ -2558,9 +2094,7 @@
     "description": "Shanghai Gold Exchange Gold Benchmark PM Price Index - USD Futures",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 32.15,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 32.15
   },
   {
     "instrument": "GOLD-CN-HK",
@@ -2569,9 +2103,7 @@
     "description": "CNH Gold Futures in HK",
     "asset_class": "Metals",
     "currency": "CNH",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "GOLD-HK",
@@ -2580,9 +2112,7 @@
     "description": "USD Gold futures in HK",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "GOLD-JPN",
@@ -2591,9 +2121,7 @@
     "description": "Gold (Standard) - Japan",
     "asset_class": "Metals",
     "currency": "JPY",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "GOLD-JPN_mini",
@@ -2602,9 +2130,7 @@
     "description": "Gold (Mini) - Japan",
     "asset_class": "Metals",
     "currency": "JPY",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "GOLD-mini",
@@ -2613,9 +2139,7 @@
     "description": "Gold mini",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": 2254.25,
-    "nominal_value": 112712.0
+    "pointsize": 50.0
   },
   {
     "instrument": "GOLD_micro",
@@ -2624,9 +2148,7 @@
     "description": "Gold micro",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": 2255.0,
-    "nominal_value": 22550.0
+    "pointsize": 10.0
   },
   {
     "instrument": "HANG",
@@ -2635,9 +2157,7 @@
     "description": "Hong Kong equity index Hang Seng",
     "asset_class": "Equity",
     "currency": "HKD",
-    "pointsize": 50.0,
-    "latest_price": 16570.0,
-    "nominal_value": 828500.0
+    "pointsize": 50.0
   },
   {
     "instrument": "HANG-DIV",
@@ -2646,9 +2166,7 @@
     "description": "HSI Dividend Point Index",
     "asset_class": "Equity",
     "currency": "HKD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "HANGENT",
@@ -2657,9 +2175,7 @@
     "description": "Hang Seng China Enterprise Index",
     "asset_class": "Equity",
     "currency": "HKD",
-    "pointsize": 50.0,
-    "latest_price": 5814.0,
-    "nominal_value": 290700.0
+    "pointsize": 50.0
   },
   {
     "instrument": "HANGENT-GTR",
@@ -2668,9 +2184,7 @@
     "description": "Hang Seng China Enterprises Gross Total Return Index",
     "asset_class": "Equity",
     "currency": "HKD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "HANGENT-NTR",
@@ -2679,9 +2193,7 @@
     "description": "Hang Seng China Enterprises Net Total Return Index",
     "asset_class": "Equity",
     "currency": "HKD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "HANGENT_mini",
@@ -2690,9 +2202,7 @@
     "description": "Hang Seng China Enterprise Index mini",
     "asset_class": "Equity",
     "currency": "HKD",
-    "pointsize": 10.0,
-    "latest_price": 5814.0,
-    "nominal_value": 58140.0
+    "pointsize": 10.0
   },
   {
     "instrument": "HANGTECH",
@@ -2701,9 +2211,7 @@
     "description": "Hang Seng TECH Index",
     "asset_class": "Equity",
     "currency": "HKD",
-    "pointsize": 50.0,
-    "latest_price": 3472.0,
-    "nominal_value": 173600.0
+    "pointsize": 50.0
   },
   {
     "instrument": "HANG_mini",
@@ -2712,9 +2220,7 @@
     "description": "Hong Kong equity index Hang Seng mini",
     "asset_class": "Equity",
     "currency": "HKD",
-    "pointsize": 10.0,
-    "latest_price": 16570.0,
-    "nominal_value": 165700.0
+    "pointsize": 10.0
   },
   {
     "instrument": "HEAT-DEG-AMS",
@@ -2723,9 +2229,7 @@
     "description": "Amsterdam Schiphol Heating Degree Day Index",
     "asset_class": "Weather",
     "currency": "GBP",
-    "pointsize": 20.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 20.0
   },
   {
     "instrument": "HEAT-DEG-LON",
@@ -2734,9 +2238,7 @@
     "description": "London Heating Degree Day Index",
     "asset_class": "Weather",
     "currency": "GBP",
-    "pointsize": 20.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 20.0
   },
   {
     "instrument": "HEAT-DEG-NY",
@@ -2745,9 +2247,7 @@
     "description": "New York Heating Day Degree Index",
     "asset_class": "Weather",
     "currency": "USD",
-    "pointsize": 20.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 20.0
   },
   {
     "instrument": "HEATOIL",
@@ -2756,9 +2256,7 @@
     "description": "Heating oil",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 42000.0,
-    "latest_price": 2.62,
-    "nominal_value": 109843.0
+    "pointsize": 42000.0
   },
   {
     "instrument": "HEATOIL-ICE",
@@ -2767,9 +2265,7 @@
     "description": "ICE HEATING OIL",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 42000.0,
-    "latest_price": 2.62,
-    "nominal_value": 110027.0
+    "pointsize": 42000.0
   },
   {
     "instrument": "HEATOIL-mini",
@@ -2778,9 +2274,7 @@
     "description": "NYMEX MINY Heating Oil Index",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 21000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 21000.0
   },
   {
     "instrument": "HEATOIL_micro",
@@ -2789,9 +2283,7 @@
     "description": "Micro NY Harbor ULSD",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 4200.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 4200.0
   },
   {
     "instrument": "HIBOR",
@@ -2800,9 +2292,7 @@
     "description": "3 Month HIBOR Interest Rate",
     "asset_class": "STIR",
     "currency": "HKD",
-    "pointsize": 5000000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 5000000.0
   },
   {
     "instrument": "HIGHYIELD",
@@ -2811,9 +2301,7 @@
     "description": "iBoxx iShares $ High Yield Corporate Bond Index TR",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 154.67,
-    "nominal_value": 154670.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "HOUSE-BO",
@@ -2822,9 +2310,7 @@
     "description": "Boston Housing Index",
     "asset_class": "Housing",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 250.0
   },
   {
     "instrument": "HOUSE-CG",
@@ -2833,9 +2319,7 @@
     "description": "Chicago Housing Index",
     "asset_class": "Housing",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 250.0
   },
   {
     "instrument": "HOUSE-DC",
@@ -2844,9 +2328,7 @@
     "description": "Washington DC Housing Index",
     "asset_class": "Housing",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 250.0
   },
   {
     "instrument": "HOUSE-DN",
@@ -2855,9 +2337,7 @@
     "description": "Denver Housing Index",
     "asset_class": "Housing",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 250.0
   },
   {
     "instrument": "HOUSE-LA",
@@ -2866,9 +2346,7 @@
     "description": "Los Angeles Housing Index",
     "asset_class": "Housing",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 250.0
   },
   {
     "instrument": "HOUSE-LV",
@@ -2877,9 +2355,7 @@
     "description": "Las Vegas Housing Index",
     "asset_class": "Housing",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 250.0
   },
   {
     "instrument": "HOUSE-MI",
@@ -2888,9 +2364,7 @@
     "description": "Miami Housing Index",
     "asset_class": "Housing",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 250.0
   },
   {
     "instrument": "HOUSE-NY",
@@ -2899,9 +2373,7 @@
     "description": "New York Housing Index",
     "asset_class": "Housing",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 250.0
   },
   {
     "instrument": "HOUSE-SD",
@@ -2910,9 +2382,7 @@
     "description": "San Diego Housing Index",
     "asset_class": "Housing",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 250.0
   },
   {
     "instrument": "HOUSE-SF",
@@ -2921,9 +2391,7 @@
     "description": "San Francisco Housing Index",
     "asset_class": "Housing",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 250.0
   },
   {
     "instrument": "HOUSE-US",
@@ -2932,9 +2400,7 @@
     "description": "Housing Index Composite",
     "asset_class": "Housing",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": 336.2,
-    "nominal_value": 84050.0
+    "pointsize": 250.0
   },
   {
     "instrument": "HSCEI-DIV",
@@ -2943,9 +2409,7 @@
     "description": "HSCEI Dividend Point Index",
     "asset_class": "Equity",
     "currency": "HKD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "HUF",
@@ -2954,9 +2418,7 @@
     "description": "Hungarian forint",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 30000000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 30000000.0
   },
   {
     "instrument": "HUFEUR",
@@ -2965,9 +2427,7 @@
     "description": "HUFEUR",
     "asset_class": "FX",
     "currency": "EUR",
-    "pointsize": 30000000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 30000000.0
   },
   {
     "instrument": "IBEX",
@@ -2976,9 +2436,7 @@
     "description": "Spanish equity index IBEX",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 10.0,
-    "latest_price": 11067.0,
-    "nominal_value": 110670.0
+    "pointsize": 10.0
   },
   {
     "instrument": "IBEX_mini",
@@ -2987,9 +2445,7 @@
     "description": "IBEX 35 mini",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 1.0,
-    "latest_price": 11068.0,
-    "nominal_value": 11068.0
+    "pointsize": 1.0
   },
   {
     "instrument": "IG",
@@ -2998,9 +2454,7 @@
     "description": "iBoxx iShares $ Investment Grade Corporate Bond Index TR",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 133.07,
-    "nominal_value": 133070.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "IND-BANK",
@@ -3009,9 +2463,7 @@
     "description": "Nifty Bank",
     "asset_class": "Equity",
     "currency": "INR",
-    "pointsize": 1.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1.0
   },
   {
     "instrument": "IND-FIN",
@@ -3020,9 +2472,7 @@
     "description": "NSE Nifty Financial Services Index Futures",
     "asset_class": "Equity",
     "currency": "INR",
-    "pointsize": 1.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1.0
   },
   {
     "instrument": "INR",
@@ -3031,9 +2481,7 @@
     "description": "Indian Rupee",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 500.0,
-    "latest_price": 119.86,
-    "nominal_value": 59930.0
+    "pointsize": 500.0
   },
   {
     "instrument": "INR-SGX",
@@ -3042,9 +2490,7 @@
     "description": "SGX Indian Rupee in US Dollar Futures",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 200.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 200.0
   },
   {
     "instrument": "INR-SGX1",
@@ -3053,9 +2499,7 @@
     "description": "SGX USD-INR (USD) Futures",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "INR-SGX2",
@@ -3064,9 +2508,7 @@
     "description": "SGX USD/INR (USD) Month-end",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "INR-micro",
@@ -3075,9 +2517,7 @@
     "description": "Indian Rupee",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "IPC",
@@ -3086,9 +2526,7 @@
     "description": "Mexico Bolsa (IPC) Index",
     "asset_class": "Equity",
     "currency": "MXP",
-    "pointsize": 2.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 2.0
   },
   {
     "instrument": "IRON",
@@ -3097,9 +2535,7 @@
     "description": "SGX TSI Iron Ore Futures",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 101.05,
-    "nominal_value": 10105.0
+    "pointsize": 100.0
   },
   {
     "instrument": "IRON-CME",
@@ -3108,9 +2544,7 @@
     "description": "Iron Ore 62% Fe CFR China (TSI) Futures",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "IRON-HK",
@@ -3119,9 +2553,7 @@
     "description": "TSI Iron Ore Fines 62% Fe CFR China Index (HKFE)",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "IRS",
@@ -3130,9 +2562,7 @@
     "description": "Israeli shekel",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 1000000.0,
-    "latest_price": 0.27,
-    "nominal_value": 273320.0
+    "pointsize": 1000000.0
   },
   {
     "instrument": "JGB",
@@ -3141,9 +2571,7 @@
     "description": "Standardized 6% 10-Year Japanese Government Bond",
     "asset_class": "Bond",
     "currency": "JPY",
-    "pointsize": 1000000.0,
-    "latest_price": 130.13,
-    "nominal_value": 130130000.0
+    "pointsize": 1000000.0
   },
   {
     "instrument": "JGB-SGX-mini",
@@ -3152,9 +2580,7 @@
     "description": "SGX Mini JGB Index",
     "asset_class": "Bond",
     "currency": "JPY",
-    "pointsize": 100000.0,
-    "latest_price": 145.69,
-    "nominal_value": 14569000.0
+    "pointsize": 100000.0
   },
   {
     "instrument": "JGB-mini",
@@ -3163,9 +2589,7 @@
     "description": "Mini 10 Year JGB",
     "asset_class": "Bond",
     "currency": "JPY",
-    "pointsize": 100000.0,
-    "latest_price": 145.8,
-    "nominal_value": 14580000.0
+    "pointsize": 100000.0
   },
   {
     "instrument": "JP-REALESTATE",
@@ -3174,9 +2598,7 @@
     "description": "TSE REIT Index",
     "asset_class": "Sector",
     "currency": "JPY",
-    "pointsize": 1000.0,
-    "latest_price": 1783.5,
-    "nominal_value": 1783500.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "JPY",
@@ -3185,9 +2607,7 @@
     "description": "JPYUSD currency",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 12500000.0,
-    "latest_price": 0.01,
-    "nominal_value": 83569.0
+    "pointsize": 12500000.0
   },
   {
     "instrument": "JPY-SGX",
@@ -3196,9 +2616,7 @@
     "description": "SGX US Dollar in Japanese Yen Futures (Standard)",
     "asset_class": "FX",
     "currency": "JPY",
-    "pointsize": 100000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100000.0
   },
   {
     "instrument": "JPY-SGX-TITAN",
@@ -3207,9 +2625,7 @@
     "description": "SGX US Dollar in Japanese Yen Futures (Titan)",
     "asset_class": "FX",
     "currency": "JPY",
-    "pointsize": 500000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500000.0
   },
   {
     "instrument": "JPYINR",
@@ -3218,9 +2634,7 @@
     "description": "JPYINR",
     "asset_class": "FX",
     "currency": "INR",
-    "pointsize": 100000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100000.0
   },
   {
     "instrument": "JPY_micro",
@@ -3229,9 +2643,7 @@
     "description": "USD.JPY",
     "asset_class": "FX",
     "currency": "JPY",
-    "pointsize": 10000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10000.0
   },
   {
     "instrument": "JPY_mini",
@@ -3240,9 +2652,7 @@
     "description": "JPYUSD mini",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 6250000.0,
-    "latest_price": 0.01,
-    "nominal_value": 41781.0
+    "pointsize": 6250000.0
   },
   {
     "instrument": "KOSDAQ",
@@ -3251,9 +2661,7 @@
     "description": "KOSDAQ 150 Index",
     "asset_class": "Equity",
     "currency": "KRW",
-    "pointsize": 10000.0,
-    "latest_price": 1525.7,
-    "nominal_value": 15257000.0
+    "pointsize": 10000.0
   },
   {
     "instrument": "KOSPI",
@@ -3262,9 +2670,7 @@
     "description": "Korean equity index KOSPI",
     "asset_class": "Equity",
     "currency": "KRW",
-    "pointsize": 250000.0,
-    "latest_price": 377.7,
-    "nominal_value": 94425000.0
+    "pointsize": 250000.0
   },
   {
     "instrument": "KOSPI300",
@@ -3273,9 +2679,7 @@
     "description": "KOSPI300 Index",
     "asset_class": "Equity",
     "currency": "KRW",
-    "pointsize": 50000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50000.0
   },
   {
     "instrument": "KOSPI_mini",
@@ -3284,9 +2688,7 @@
     "description": "KOSPI mini",
     "asset_class": "Equity",
     "currency": "KRW",
-    "pointsize": 50000.0,
-    "latest_price": 375.12,
-    "nominal_value": 18756000.0
+    "pointsize": 50000.0
   },
   {
     "instrument": "KR10",
@@ -3295,9 +2697,7 @@
     "description": "Korean 10 year bond",
     "asset_class": "Bond",
     "currency": "KRW",
-    "pointsize": 1000000.0,
-    "latest_price": 113.29,
-    "nominal_value": 113290000.0
+    "pointsize": 1000000.0
   },
   {
     "instrument": "KR3",
@@ -3306,9 +2706,7 @@
     "description": "Korean 3 year bond",
     "asset_class": "Bond",
     "currency": "KRW",
-    "pointsize": 1000000.0,
-    "latest_price": 104.76,
-    "nominal_value": 104760000.0
+    "pointsize": 1000000.0
   },
   {
     "instrument": "KRW",
@@ -3317,9 +2715,7 @@
     "description": "KRWUSD SGX",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 125000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 125000.0
   },
   {
     "instrument": "KRWJPY",
@@ -3328,9 +2724,7 @@
     "description": "SGX Korean Won in Japanese Yen Futures",
     "asset_class": "FX",
     "currency": "JPY",
-    "pointsize": 25000000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 25000000.0
   },
   {
     "instrument": "KRWUSD",
@@ -3339,9 +2733,7 @@
     "description": "Korean Won",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 125000000.0,
-    "latest_price": 0.0,
-    "nominal_value": 92875.0
+    "pointsize": 125000000.0
   },
   {
     "instrument": "KRWUSD_mini",
@@ -3350,9 +2742,7 @@
     "description": "SGX Korean Won in US Dollar Futures (Mini)",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 25000.0,
-    "latest_price": 0.74,
-    "nominal_value": 18620.0
+    "pointsize": 25000.0
   },
   {
     "instrument": "LEAD_LME",
@@ -3361,9 +2751,7 @@
     "description": "Lead - LME",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 25.0,
-    "latest_price": 2052.5,
-    "nominal_value": 51312.0
+    "pointsize": 25.0
   },
   {
     "instrument": "LEANHOG",
@@ -3372,9 +2760,7 @@
     "description": "Lean hogs",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 400.0,
-    "latest_price": 104.0,
-    "nominal_value": 41600.0
+    "pointsize": 400.0
   },
   {
     "instrument": "LIBOR1",
@@ -3383,9 +2769,7 @@
     "description": "1 Month LIBOR (Int. Rate)",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 2500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 2500.0
   },
   {
     "instrument": "LIVECOW",
@@ -3394,9 +2778,7 @@
     "description": "Live cattle",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 400.0,
-    "latest_price": 180.25,
-    "nominal_value": 72100.0
+    "pointsize": 400.0
   },
   {
     "instrument": "LUMBER",
@@ -3405,9 +2787,7 @@
     "description": "Random Length Lumber",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 110.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 110.0
   },
   {
     "instrument": "LUMBER-new",
@@ -3416,9 +2796,7 @@
     "description": "Random Length Lumber - mini",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 27.5,
-    "latest_price": 604.5,
-    "nominal_value": 16624.0
+    "pointsize": 27.5
   },
   {
     "instrument": "MARS-ARGUS",
@@ -3427,9 +2805,7 @@
     "description": "Mars (Argus) vs. WTI Trade Month Futures",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "MIB",
@@ -3438,9 +2814,7 @@
     "description": "FTSE MIB INDEX",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 5.0,
-    "latest_price": 34200.0,
-    "nominal_value": 171000.0
+    "pointsize": 5.0
   },
   {
     "instrument": "MIB-DIVI",
@@ -3449,9 +2823,7 @@
     "description": "FTSE MIB Dividend Index",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 5.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 5.0
   },
   {
     "instrument": "MIB_micro",
@@ -3460,9 +2832,7 @@
     "description": "FTSE MIB INDEX Micro",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 0.2,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 0.2
   },
   {
     "instrument": "MIB_mini",
@@ -3471,9 +2841,7 @@
     "description": "FTSE MIB INDEX Mini",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 1.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1.0
   },
   {
     "instrument": "MID-DAX",
@@ -3482,9 +2850,7 @@
     "description": "Midcap DAX",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 1.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1.0
   },
   {
     "instrument": "MILK",
@@ -3493,9 +2859,7 @@
     "description": "Milk class III",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 2000.0,
-    "latest_price": 16.64,
-    "nominal_value": 33280.0
+    "pointsize": 2000.0
   },
   {
     "instrument": "MILKDRY",
@@ -3504,9 +2868,7 @@
     "description": "NON FAT DRY MILK INDEX",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 440.0,
-    "latest_price": 124.12,
-    "nominal_value": 54615.0
+    "pointsize": 440.0
   },
   {
     "instrument": "MILKWET",
@@ -3515,9 +2877,7 @@
     "description": "Class IV Milk - 200k lbs",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 2000.0,
-    "latest_price": 20.0,
-    "nominal_value": 40000.0
+    "pointsize": 2000.0
   },
   {
     "instrument": "MILLWHEAT",
@@ -3526,9 +2886,7 @@
     "description": "Milling Wheat Futures",
     "asset_class": "Ags",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": 218.0,
-    "nominal_value": 10900.0
+    "pointsize": 50.0
   },
   {
     "instrument": "MSCIASIA",
@@ -3537,9 +2895,7 @@
     "description": "MSCI Emerging Markets Asia",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 639.5,
-    "nominal_value": 63950.0
+    "pointsize": 100.0
   },
   {
     "instrument": "MSCIASIAEXJP",
@@ -3548,9 +2904,7 @@
     "description": "The MSCI All Countries Asia ex Japan Net Total Return",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "MSCIBRAZIL",
@@ -3559,9 +2913,7 @@
     "description": "The MSCI Brazil Net Total Return",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "MSCICHINA",
@@ -3570,9 +2922,7 @@
     "description": "MSCI China Free Net Total Return (USD) Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "MSCICHINANET",
@@ -3581,9 +2931,7 @@
     "description": "MSCI China Free Net Total Return (USD) Index (HKFE)",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "MSCIEAFA",
@@ -3592,9 +2940,7 @@
     "description": "MSCI EAFA Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": 2357.1,
-    "nominal_value": 117855.0
+    "pointsize": 50.0
   },
   {
     "instrument": "MSCIEAFA-TOT",
@@ -3603,9 +2949,7 @@
     "description": "MSCI EAFE Net Total Return Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 20.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 20.0
   },
   {
     "instrument": "MSCIEM",
@@ -3614,9 +2958,7 @@
     "description": "MSCI EM Net Total Return Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "MSCIEM-LIFFE",
@@ -3625,9 +2967,7 @@
     "description": "MSCI EMERGING MARKETS INDEX (CBOE)",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "MSCIEMASIA",
@@ -3636,9 +2976,7 @@
     "description": "MSCI Emerging Markets Asia Net Total Return",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 638.95,
-    "nominal_value": 63895.0
+    "pointsize": 100.0
   },
   {
     "instrument": "MSCIEURONET",
@@ -3647,9 +2985,7 @@
     "description": "MSCI Europe Net Return EUR Index",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "MSCIEURONET-ICE",
@@ -3658,9 +2994,7 @@
     "description": "The MSCI Europe Financials Net Total Return",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "MSCIEUROPE",
@@ -3669,9 +3003,7 @@
     "description": "MSCI Europe NTR",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "MSCIEUROPE-ICE",
@@ -3680,9 +3012,7 @@
     "description": "The MSCI Europe Net Total Return",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "MSCIEUROPE-LIFFE",
@@ -3691,9 +3021,7 @@
     "description": "MSCI Europe NTR",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "MSCIINDO",
@@ -3702,9 +3030,7 @@
     "description": "MSCI Indonesia Index (USD) - HKFE",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 2.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 2.0
   },
   {
     "instrument": "MSCIJAPAN",
@@ -3713,9 +3039,7 @@
     "description": "MSCI JAPAN INDEX - USD",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "MSCIJAPAN-LIFFE",
@@ -3724,9 +3048,7 @@
     "description": "The MSCI Japan NTR",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "MSCILATIN",
@@ -3735,9 +3057,7 @@
     "description": "MSCI Emerging Latin America Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 20.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 20.0
   },
   {
     "instrument": "MSCIPACIFIC",
@@ -3746,9 +3066,7 @@
     "description": "The MSCI Pacific ex Japan Net Total Return",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "MSCIPANEURO-LIFFE",
@@ -3757,9 +3075,7 @@
     "description": "MSCI Pan-Euro Index",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 20.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 20.0
   },
   {
     "instrument": "MSCIRUSSIA",
@@ -3768,9 +3084,7 @@
     "description": "MSCI Russia Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "MSCISING",
@@ -3779,9 +3093,7 @@
     "description": "MSCI Singapore Free Index",
     "asset_class": "Equity",
     "currency": "SGD",
-    "pointsize": 100.0,
-    "latest_price": 291.7,
-    "nominal_value": 29170.0
+    "pointsize": 100.0
   },
   {
     "instrument": "MSCITAIWAN",
@@ -3790,9 +3102,7 @@
     "description": "MSCI Taiwan (USD) Index - HKFE",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 802.4,
-    "nominal_value": 80240.0
+    "pointsize": 100.0
   },
   {
     "instrument": "MSCIUSA",
@@ -3801,9 +3111,7 @@
     "description": "MSCI USA index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "MSCIWORLD",
@@ -3812,9 +3120,7 @@
     "description": "MSCI World Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": 3468.5,
-    "nominal_value": 34685.0
+    "pointsize": 10.0
   },
   {
     "instrument": "MSCIWORLD-MINVOL",
@@ -3823,9 +3129,7 @@
     "description": "The MSCI World Minimum Volatility Net Total Return",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "MSCIWORLDNET-EUR",
@@ -3834,9 +3138,7 @@
     "description": "MSCI World Net EUR Index 1",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "MSCIWORLDNET-ICE",
@@ -3845,9 +3147,7 @@
     "description": "The MSCI World Net Total Return",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "MSCIWORLDNET-USD",
@@ -3856,9 +3156,7 @@
     "description": "MSCI World NETR USD Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "MUMMY",
@@ -3867,9 +3165,7 @@
     "description": "TSE Mothers Index",
     "asset_class": "Equity",
     "currency": "JPY",
-    "pointsize": 1000.0,
-    "latest_price": 736.0,
-    "nominal_value": 736000.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "MXP",
@@ -3878,9 +3174,7 @@
     "description": "MEXUSD currency",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 500000.0,
-    "latest_price": 0.06,
-    "nominal_value": 29725.0
+    "pointsize": 500000.0
   },
   {
     "instrument": "NASBIO-mini",
@@ -3889,9 +3183,7 @@
     "description": "CME E-Mini NASDAQ Biotechnology",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "NASDAQ",
@@ -3900,9 +3192,7 @@
     "description": "US equity index Nasdaq",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 20.0,
-    "latest_price": 18465.0,
-    "nominal_value": 369300.0
+    "pointsize": 20.0
   },
   {
     "instrument": "NASDAQ_micro",
@@ -3911,9 +3201,7 @@
     "description": "NASDAQ micro",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 2.0,
-    "latest_price": 18465.25,
-    "nominal_value": 36930.0
+    "pointsize": 2.0
   },
   {
     "instrument": "NASDAQ_mini",
@@ -3922,9 +3210,7 @@
     "description": "E-mini NASDAQ Composite",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 20.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 20.0
   },
   {
     "instrument": "NICKEL_LME",
@@ -3933,9 +3219,7 @@
     "description": "Nickel - LME",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 6.0,
-    "latest_price": 16600.0,
-    "nominal_value": 99600.0
+    "pointsize": 6.0
   },
   {
     "instrument": "NIFTY",
@@ -3944,9 +3228,7 @@
     "description": "CNX Nifty Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 2.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 2.0
   },
   {
     "instrument": "NIFTY-IN",
@@ -3955,9 +3237,7 @@
     "description": "Nifty 50 india",
     "asset_class": "Equity",
     "currency": "INR",
-    "pointsize": 1.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1.0
   },
   {
     "instrument": "NIKKEI",
@@ -3966,9 +3246,7 @@
     "description": "Nikkei 225 Mini",
     "asset_class": "Equity",
     "currency": "JPY",
-    "pointsize": 100.0,
-    "latest_price": 53240.0,
-    "nominal_value": 5324000.0
+    "pointsize": 100.0
   },
   {
     "instrument": "NIKKEI-CME",
@@ -3977,9 +3255,7 @@
     "description": "Dollar Denominated Nikkei 225 Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 5.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 5.0
   },
   {
     "instrument": "NIKKEI-JPY",
@@ -3988,9 +3264,7 @@
     "description": "Yen Denominated Nikkei 225 Index",
     "asset_class": "Equity",
     "currency": "JPY",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "NIKKEI-JPY_mini",
@@ -3999,9 +3273,7 @@
     "description": "E-mini Yen Denominated Nikkei 225 Index",
     "asset_class": "Equity",
     "currency": "JPY",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "NIKKEI-SGX",
@@ -4010,9 +3282,7 @@
     "description": "SGX: Nikkei 225",
     "asset_class": "Equity",
     "currency": "JPY",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "NIKKEI-SGX-DIV",
@@ -4021,9 +3291,7 @@
     "description": "Nikkei Stock Average Dividend Point Index",
     "asset_class": "Equity",
     "currency": "JPY",
-    "pointsize": 10000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10000.0
   },
   {
     "instrument": "NIKKEI-SGX-USD",
@@ -4032,9 +3300,7 @@
     "description": "SGX: USD Nikkei 225 Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 5.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 5.0
   },
   {
     "instrument": "NIKKEI-SGX_mini",
@@ -4043,9 +3309,7 @@
     "description": "SGX: NIKKEI 225 Mini",
     "asset_class": "Equity",
     "currency": "JPY",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "NIKKEI400",
@@ -4054,9 +3318,7 @@
     "description": "JPX-Nikkei Index 400",
     "asset_class": "Equity",
     "currency": "JPY",
-    "pointsize": 100.0,
-    "latest_price": 25030.0,
-    "nominal_value": 2503000.0
+    "pointsize": 100.0
   },
   {
     "instrument": "NIKKEI_large",
@@ -4065,9 +3327,7 @@
     "description": "Nikkei 225 full size",
     "asset_class": "Equity",
     "currency": "JPY",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "NOK",
@@ -4076,9 +3336,7 @@
     "description": "NOKUSD currency",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 2000000.0,
-    "latest_price": 0.09,
-    "nominal_value": 184680.0
+    "pointsize": 2000000.0
   },
   {
     "instrument": "NZD",
@@ -4087,9 +3345,7 @@
     "description": "NZDUSD currency",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 100000.0,
-    "latest_price": 0.6,
-    "nominal_value": 59750.0
+    "pointsize": 100000.0
   },
   {
     "instrument": "OAT",
@@ -4098,9 +3354,7 @@
     "description": "French 10 year bond OAT",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": 128.17,
-    "nominal_value": 128170.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "OAT5",
@@ -4109,9 +3363,7 @@
     "description": "Mid-Term Euro-OAT",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "OATIES",
@@ -4120,9 +3372,7 @@
     "description": "Oat Futures",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": 357.0,
-    "nominal_value": 17850.0
+    "pointsize": 50.0
   },
   {
     "instrument": "OJ",
@@ -4131,9 +3381,7 @@
     "description": "Orange Juice (FCOJ-A)",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 150.0,
-    "latest_price": 359.35,
-    "nominal_value": 53902.0
+    "pointsize": 150.0
   },
   {
     "instrument": "OMX",
@@ -4142,9 +3390,7 @@
     "description": "OMX Helsinki 25 Index",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 10.0,
-    "latest_price": 4392.0,
-    "nominal_value": 43920.0
+    "pointsize": 10.0
   },
   {
     "instrument": "OMX-SWE",
@@ -4153,9 +3399,7 @@
     "description": "OMX Index [Sweden]",
     "asset_class": "Equity",
     "currency": "SEK",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "OMXESG",
@@ -4164,9 +3408,7 @@
     "description": "OMXS30 ESG Responsible Index",
     "asset_class": "Equity",
     "currency": "SEK",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "OMXSB",
@@ -4175,9 +3417,7 @@
     "description": "OMXSB Share Index",
     "asset_class": "Equity",
     "currency": "SEK",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "PALLAD",
@@ -4186,9 +3426,7 @@
     "description": "Palladium",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 1023.0,
-    "nominal_value": 102300.0
+    "pointsize": 100.0
   },
   {
     "instrument": "PIPELINE",
@@ -4197,9 +3435,7 @@
     "description": "Gulf Coast ULSD (Platts) Up-Down Futures",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 42000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 42000.0
   },
   {
     "instrument": "PLAT",
@@ -4208,9 +3444,7 @@
     "description": "Platinum",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": 923.0,
-    "nominal_value": 46150.0
+    "pointsize": 50.0
   },
   {
     "instrument": "PLAT-JPN",
@@ -4219,9 +3453,7 @@
     "description": "Platinum (Standard) - Japan",
     "asset_class": "Metals",
     "currency": "JPY",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "PLAT-JPN_mini",
@@ -4230,9 +3462,7 @@
     "description": "Platinum (Mini) - Japan",
     "asset_class": "Metals",
     "currency": "JPY",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "PLN",
@@ -4241,9 +3471,7 @@
     "description": "Polish zloty",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 500000.0,
-    "latest_price": 0.25,
-    "nominal_value": 125170.0
+    "pointsize": 500000.0
   },
   {
     "instrument": "PLZEUR",
@@ -4252,9 +3480,7 @@
     "description": "Polish zloty EURO",
     "asset_class": "FX",
     "currency": "EUR",
-    "pointsize": 500000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500000.0
   },
   {
     "instrument": "PRECIOUS_small",
@@ -4263,9 +3489,7 @@
     "description": "Small precious metals",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "R1000",
@@ -4274,9 +3498,7 @@
     "description": "E-Mini Russell 1000 Value Index Futures",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": 1783.0,
-    "nominal_value": 89150.0
+    "pointsize": 50.0
   },
   {
     "instrument": "R1000GROWTH-mini",
@@ -4285,9 +3507,7 @@
     "description": "E-mini Russell 1000 Growth Index Futures",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "R1000_mini",
@@ -4296,9 +3516,7 @@
     "description": "E-mini Russell 1000 Index Futures",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "RAPESEED",
@@ -4307,9 +3525,7 @@
     "description": "European Rapeseed Future",
     "asset_class": "Ags",
     "currency": "EUR",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "REDWHEAT",
@@ -4318,9 +3534,7 @@
     "description": "Hard Red Winter Wheat -KCBOT-",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": 590.75,
-    "nominal_value": 29538.0
+    "pointsize": 50.0
   },
   {
     "instrument": "RICE",
@@ -4329,9 +3543,7 @@
     "description": "Rough Rice",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 2000.0,
-    "latest_price": 16.36,
-    "nominal_value": 32720.0
+    "pointsize": 2000.0
   },
   {
     "instrument": "ROBUSTA",
@@ -4340,9 +3552,7 @@
     "description": "Robusta Coffee",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": 3396.0,
-    "nominal_value": 33960.0
+    "pointsize": 10.0
   },
   {
     "instrument": "RUBBER",
@@ -4351,9 +3561,7 @@
     "description": "TSR 20 Rubber",
     "asset_class": "Other",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": 164.3,
-    "nominal_value": 8215.0
+    "pointsize": 50.0
   },
   {
     "instrument": "RUBBER-RSS",
@@ -4362,9 +3570,7 @@
     "description": "Ribbed Smoked Sheet (RSS) No.3 Rubber",
     "asset_class": "Other",
     "currency": "JPY",
-    "pointsize": 5000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 5000.0
   },
   {
     "instrument": "RUR",
@@ -4373,9 +3579,7 @@
     "description": "RURUSD currency",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 2500000.0,
-    "latest_price": 0.01,
-    "nominal_value": 26300.0
+    "pointsize": 2500000.0
   },
   {
     "instrument": "RUSSELL",
@@ -4384,9 +3588,7 @@
     "description": "Micro E-Mini Russell 2000 Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 5.0,
-    "latest_price": 2145.1,
-    "nominal_value": 10726.0
+    "pointsize": 5.0
   },
   {
     "instrument": "RUSSELL-GROWTH",
@@ -4395,9 +3597,7 @@
     "description": "Russell 2000 Growth Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "RUSSELL-VALUE",
@@ -4406,9 +3606,7 @@
     "description": "Russell 2000 Value Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "RUSSELL_mini",
@@ -4417,9 +3615,7 @@
     "description": "E-Mini Russell 2000 Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": 2145.2,
-    "nominal_value": 107260.0
+    "pointsize": 50.0
   },
   {
     "instrument": "SARONA",
@@ -4428,9 +3624,7 @@
     "description": "Three Month SaronA",
     "asset_class": "Bond",
     "currency": "CHF",
-    "pointsize": 2500.0,
-    "latest_price": 98.92,
-    "nominal_value": 247288.0
+    "pointsize": 2500.0
   },
   {
     "instrument": "SEK",
@@ -4439,9 +3633,7 @@
     "description": "SEKUSD currency",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 2000000.0,
-    "latest_price": 0.09,
-    "nominal_value": 187480.0
+    "pointsize": 2000000.0
   },
   {
     "instrument": "SGD",
@@ -4450,9 +3642,7 @@
     "description": "SGX US Dollar in Singapore Dollar Futures (Full-Sized)",
     "asset_class": "FX",
     "currency": "SGD",
-    "pointsize": 100000.0,
-    "latest_price": 1.35,
-    "nominal_value": 134730.0
+    "pointsize": 100000.0
   },
   {
     "instrument": "SGD_mini",
@@ -4461,9 +3651,7 @@
     "description": "SGX US Dollar in Singapore Dollar (Mini) Futures",
     "asset_class": "FX",
     "currency": "SGD",
-    "pointsize": 25000.0,
-    "latest_price": 1.35,
-    "nominal_value": 33705.0
+    "pointsize": 25000.0
   },
   {
     "instrument": "SGX",
@@ -4472,9 +3660,7 @@
     "description": "SGX Straits Times Index",
     "asset_class": "Equity",
     "currency": "SGD",
-    "pointsize": 10.0,
-    "latest_price": 3178.0,
-    "nominal_value": 31780.0
+    "pointsize": 10.0
   },
   {
     "instrument": "SHATZ",
@@ -4483,9 +3669,7 @@
     "description": "German 2 year bond Schatz",
     "asset_class": "Bond",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": 105.7,
-    "nominal_value": 105700.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "SILVER",
@@ -4494,9 +3678,7 @@
     "description": "NYMEX Silver Index",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 25.1,
-    "nominal_value": 25100.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "SILVER-mini",
@@ -4505,9 +3687,7 @@
     "description": "COMEX MINY Silver",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 2500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 2500.0
   },
   {
     "instrument": "SING-REALESTATE",
@@ -4516,9 +3696,7 @@
     "description": "SGX iEdge S-REIT Leaders Index",
     "asset_class": "Equity",
     "currency": "SGD",
-    "pointsize": 25.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 25.0
   },
   {
     "instrument": "SMALL75",
@@ -4527,9 +3705,7 @@
     "description": "Small stocks 75",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "SMI",
@@ -4538,9 +3714,7 @@
     "description": "Swiss equity index SMI",
     "asset_class": "Equity",
     "currency": "CHF",
-    "pointsize": 10.0,
-    "latest_price": 11635.0,
-    "nominal_value": 116350.0
+    "pointsize": 10.0
   },
   {
     "instrument": "SMI-DIV",
@@ -4549,9 +3723,7 @@
     "description": "SMI Dividend Points Index",
     "asset_class": "Equity",
     "currency": "CHF",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "SMI-MID",
@@ -4560,9 +3732,7 @@
     "description": "Swiss Mid-cap Index",
     "asset_class": "Equity",
     "currency": "CHF",
-    "pointsize": 10.0,
-    "latest_price": 2608.0,
-    "nominal_value": 26080.0
+    "pointsize": 10.0
   },
   {
     "instrument": "SMIETF",
@@ -4571,9 +3741,7 @@
     "description": "ISHARES SMI ETF CH",
     "asset_class": "Equity",
     "currency": "CHF",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "SOFR",
@@ -4582,9 +3750,7 @@
     "description": "Secured Overnight Financing Rate 3-month average of rates",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 2500.0,
-    "latest_price": 96.4,
-    "nominal_value": 241012.0
+    "pointsize": 2500.0
   },
   {
     "instrument": "SOFR1",
@@ -4593,9 +3759,7 @@
     "description": "Secured Overnight Financing Rate 1-month average of rates",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 4167.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 4167.0
   },
   {
     "instrument": "SONIA",
@@ -4604,9 +3768,7 @@
     "description": "Sterling Overnight Index Average",
     "asset_class": "STIR",
     "currency": "GBP",
-    "pointsize": 2500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 2500.0
   },
   {
     "instrument": "SONIA1",
@@ -4615,9 +3777,7 @@
     "description": "One Month SONIA",
     "asset_class": "Bond",
     "currency": "GBP",
-    "pointsize": 2500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 2500.0
   },
   {
     "instrument": "SONIA3",
@@ -4626,9 +3786,7 @@
     "description": "Three Month SONIA",
     "asset_class": "Bond",
     "currency": "GBP",
-    "pointsize": 2500.0,
-    "latest_price": 96.54,
-    "nominal_value": 241362.0
+    "pointsize": 2500.0
   },
   {
     "instrument": "SOYBEAN",
@@ -4637,9 +3795,7 @@
     "description": "Soybean",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": 1186.25,
-    "nominal_value": 59312.0
+    "pointsize": 50.0
   },
   {
     "instrument": "SOYBEAN_mini",
@@ -4648,9 +3804,7 @@
     "description": "Soybean mini",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": 1205.25,
-    "nominal_value": 12052.0
+    "pointsize": 10.0
   },
   {
     "instrument": "SOYMEAL",
@@ -4659,9 +3813,7 @@
     "description": "Soybean Meal",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 341.8,
-    "nominal_value": 34180.0
+    "pointsize": 100.0
   },
   {
     "instrument": "SOYOIL",
@@ -4670,9 +3822,7 @@
     "description": "Soybean oil",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 600.0,
-    "latest_price": 48.54,
-    "nominal_value": 29124.0
+    "pointsize": 600.0
   },
   {
     "instrument": "SP400",
@@ -4681,9 +3831,7 @@
     "description": "E-mini S&P Midcap 400 Futures",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 3076.9,
-    "nominal_value": 307690.0
+    "pointsize": 100.0
   },
   {
     "instrument": "SP500",
@@ -4692,9 +3840,7 @@
     "description": "US equity index S&P500",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": 6600.25,
-    "nominal_value": 330012.0
+    "pointsize": 50.0
   },
   {
     "instrument": "SP500-GROWTH",
@@ -4703,9 +3849,7 @@
     "description": "S&P 500 / Citigroup Growth Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 250.0
   },
   {
     "instrument": "SP500-VALUE",
@@ -4714,9 +3858,7 @@
     "description": "S&P 500 / Citigroup Value Index",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 250.0
   },
   {
     "instrument": "SP500_micro",
@@ -4725,9 +3867,7 @@
     "description": "S&P 500 micro",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 5.0,
-    "latest_price": 5303.75,
-    "nominal_value": 26519.0
+    "pointsize": 5.0
   },
   {
     "instrument": "SP500_mini",
@@ -4736,9 +3876,7 @@
     "description": "E-mini S&P 500 ESG",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "SP600-SMALL",
@@ -4747,9 +3885,7 @@
     "description": "E-Mini S&P SmallCap 600 Futures",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "SPI200",
@@ -4758,9 +3894,7 @@
     "description": "ASX SPI200 Index",
     "asset_class": "Equity",
     "currency": "AUD",
-    "pointsize": 25.0,
-    "latest_price": 7952.0,
-    "nominal_value": 198800.0
+    "pointsize": 25.0
   },
   {
     "instrument": "SS-AIA-GROUP",
@@ -4769,9 +3903,7 @@
     "description": "AIA GROUP LTD (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "SS-ALIBABA-HLDS",
@@ -4780,9 +3912,7 @@
     "description": "ALIBABA GROUP HOLDING LTD (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "SS-ASML",
@@ -4791,9 +3921,7 @@
     "description": "ASML HOLDING NV (AEB)",
     "asset_class": "SingleStock",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "SS-ASS-GEN",
@@ -4802,9 +3930,7 @@
     "description": "ASSICURAZIONI GENERALI",
     "asset_class": "SingleStock",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "SS-BAIDU",
@@ -4813,9 +3939,7 @@
     "description": "BAIDU INC-CLASS A (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 150.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 150.0
   },
   {
     "instrument": "SS-BANK-CHINA",
@@ -4824,9 +3948,7 @@
     "description": "BANK OF CHINA LTD - H (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "SS-BOC-HONG-KONG",
@@ -4835,9 +3957,7 @@
     "description": "BOC HONG KONG HOLDINGS LTD (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "SS-BUDWEISER-BREWING",
@@ -4846,9 +3966,7 @@
     "description": "BUDWEISER BREWING CO APAC LTD (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "SS-BYD-CO",
@@ -4857,9 +3975,7 @@
     "description": "BYD CO LTD-H (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "SS-CHINA-CONSTR-BK",
@@ -4868,9 +3984,7 @@
     "description": "CHINA CONSTRUCTION BANK-H (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "SS-CHINA-MERCH-BANK",
@@ -4879,9 +3993,7 @@
     "description": "CHINA MERCHANTS BANK - H (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "SS-CHINA-MOBILE",
@@ -4890,9 +4002,7 @@
     "description": "CHINA MOBILE LTD (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "SS-CHINA-UNICOM-HK",
@@ -4901,9 +4011,7 @@
     "description": "CHINA UNICOM HONG KONG LTD (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 2000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 2000.0
   },
   {
     "instrument": "SS-CITIC-LTD",
@@ -4912,9 +4020,7 @@
     "description": "CITIC LTD (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "SS-CK-HUTCHISON",
@@ -4923,9 +4029,7 @@
     "description": "CK HUTCHISON HOLDINGS LTD (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "SS-CLP-HOLDINGS",
@@ -4934,9 +4038,7 @@
     "description": "CLP HOLDINGS LTD (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "SS-CNOOC",
@@ -4945,9 +4047,7 @@
     "description": "CNOOC LTD (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "SS-DTE",
@@ -4956,9 +4056,7 @@
     "description": "DEUTSCHE TELEKOM AG-REG (IBIS)",
     "asset_class": "SingleStock",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "SS-ENEL-SPA",
@@ -4967,9 +4065,7 @@
     "description": "ENEL SPA",
     "asset_class": "SingleStock",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "SS-HDFC",
@@ -4978,9 +4074,7 @@
     "description": "HDFC BANK LIMITED",
     "asset_class": "SingleStock",
     "currency": "USD",
-    "pointsize": 20.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 20.0
   },
   {
     "instrument": "SS-HEINK",
@@ -4989,9 +4083,7 @@
     "description": "HEINEKEN NV",
     "asset_class": "SingleStock",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "SS-HIND-UNILV",
@@ -5000,9 +4092,7 @@
     "description": "HINDUSTAN UNILEVER LTD",
     "asset_class": "SingleStock",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "SS-HK-CHINA-GAS",
@@ -5011,9 +4101,7 @@
     "description": "HONG KONG & CHINA GAS (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "SS-HK-EXCH-CLEAR",
@@ -5022,9 +4110,7 @@
     "description": "HONG KONG EXCHANGES & CLEAR (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "SS-HOUS-DEV-FIN",
@@ -5033,9 +4119,7 @@
     "description": "HOUSING DEVELOPMENT FINANCE",
     "asset_class": "SingleStock",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "SS-HSBC-HLDS",
@@ -5044,9 +4128,7 @@
     "description": "HSBC HOLDINGS PLC (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 400.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 400.0
   },
   {
     "instrument": "SS-IBERDROLA",
@@ -5055,9 +4137,7 @@
     "description": "IBERDROLA SA.",
     "asset_class": "SingleStock",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "SS-IND-COMM-BK-OF-CHINA",
@@ -5066,9 +4146,7 @@
     "description": "IND & COMM BK OF CHINA - H (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "SS-IND-DIS-TEXT",
@@ -5077,9 +4155,7 @@
     "description": "INDUSTRIA DE DISENO TEXTIL",
     "asset_class": "SingleStock",
     "currency": "EUR",
-    "pointsize": 103.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 103.0
   },
   {
     "instrument": "SS-INFOSYS",
@@ -5088,9 +4164,7 @@
     "description": "INFOSYS LTD",
     "asset_class": "SingleStock",
     "currency": "USD",
-    "pointsize": 20.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 20.0
   },
   {
     "instrument": "SS-JD-COM",
@@ -5099,9 +4173,7 @@
     "description": "JD.COM INC -CL A (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "SS-KOTAK-BANK",
@@ -5110,9 +4182,7 @@
     "description": "KOTAK MAHINDRA BANK LTD",
     "asset_class": "SingleStock",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "SS-LOREAL",
@@ -5121,9 +4191,7 @@
     "description": "L'OREAL",
     "asset_class": "SingleStock",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "SS-MEITUAN-B",
@@ -5132,9 +4200,7 @@
     "description": "MEITUAN-CLASS B (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "SS-NETEASE",
@@ -5143,9 +4209,7 @@
     "description": "NETEASE-INC (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "SS-NONGFU",
@@ -5154,9 +4218,7 @@
     "description": "NONGFU SPRING CO LTD-H (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "SS-OVERSEA-CH-BK",
@@ -5165,9 +4227,7 @@
     "description": "OVERSEA-CHINESE BANKING CORP",
     "asset_class": "SingleStock",
     "currency": "SGD",
-    "pointsize": 2000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 2000.0
   },
   {
     "instrument": "SS-PING-AN-INSURANCE",
@@ -5176,9 +4236,7 @@
     "description": "PING AN INSURANCE GROUP CO-H (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "SS-POWER-ASSETS-HLDS",
@@ -5187,9 +4245,7 @@
     "description": "POWER ASSETS HOLDINGS LTD (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "SS-RELIANCE",
@@ -5198,9 +4254,7 @@
     "description": "RELIANCE INDUSTRIES LIMITED",
     "asset_class": "SingleStock",
     "currency": "USD",
-    "pointsize": 20.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 20.0
   },
   {
     "instrument": "SS-ROCHE",
@@ -5209,9 +4263,7 @@
     "description": "ROCHE HOLDING AG-GENUSSCHEIN",
     "asset_class": "SingleStock",
     "currency": "CHF",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "SS-SING-TEL",
@@ -5220,9 +4272,7 @@
     "description": "SINGAPORE TELECOMMUNICATIONS",
     "asset_class": "SingleStock",
     "currency": "SGD",
-    "pointsize": 5000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 5000.0
   },
   {
     "instrument": "SS-SUN-HUNG-KAI",
@@ -5231,9 +4281,7 @@
     "description": "SUN HUNG KAI PROPERTIES (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "SS-TATA",
@@ -5242,9 +4290,7 @@
     "description": "TATA CONSULTANCY SVCS LTD",
     "asset_class": "SingleStock",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "SS-TENCENT-HLDS",
@@ -5253,9 +4299,7 @@
     "description": "TENCENT HOLDINGS LTD (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "SS-THAI-BEV",
@@ -5264,9 +4308,7 @@
     "description": "THAI BEVERAGE PCL",
     "asset_class": "SingleStock",
     "currency": "SGD",
-    "pointsize": 10000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10000.0
   },
   {
     "instrument": "SS-TOTAL-ENERGIES",
@@ -5275,9 +4317,7 @@
     "description": "TOTALENERGIES SE",
     "asset_class": "SingleStock",
     "currency": "EUR",
-    "pointsize": 101.7313,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 101.7313
   },
   {
     "instrument": "SS-UNICREDIT-SPA",
@@ -5286,9 +4326,7 @@
     "description": "UNICREDIT SPA",
     "asset_class": "SingleStock",
     "currency": "EUR",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "SS-VW",
@@ -5297,9 +4335,7 @@
     "description": "VOLKSWAGEN AG",
     "asset_class": "SingleStock",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "SS-WHARF-HLDS",
@@ -5308,9 +4344,7 @@
     "description": "WHARF HOLDINGS LTD (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "SS-WUXI-BIOLOGICS",
@@ -5319,9 +4353,7 @@
     "description": "WUXI BIOLOGICS CAYMAN INC (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 500.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 500.0
   },
   {
     "instrument": "SS-XIAOMI",
@@ -5330,9 +4362,7 @@
     "description": "XIAOMI CORP-CLASS B (SEHK)",
     "asset_class": "SingleStock",
     "currency": "HKD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "SS-YES-BANK",
@@ -5341,9 +4371,7 @@
     "description": "YES BANK LTD",
     "asset_class": "SingleStock",
     "currency": "USD",
-    "pointsize": 25.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 25.0
   },
   {
     "instrument": "SS-ZUR-INSR",
@@ -5352,9 +4380,7 @@
     "description": "ZURICH INSURANCE GROUP AG",
     "asset_class": "SingleStock",
     "currency": "CHF",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "STEEL",
@@ -5363,9 +4389,7 @@
     "description": "Hot-Rolled Coil Steel Index",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 20.0,
-    "latest_price": 905.0,
-    "nominal_value": 18100.0
+    "pointsize": 20.0
   },
   {
     "instrument": "SUGAR11",
@@ -5374,9 +4398,7 @@
     "description": "Sugar #11",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 1120.0,
-    "latest_price": 22.14,
-    "nominal_value": 24797.0
+    "pointsize": 1120.0
   },
   {
     "instrument": "SUGAR16",
@@ -5385,9 +4407,7 @@
     "description": "Sugar #16",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 1120.0,
-    "latest_price": 40.05,
-    "nominal_value": 44856.0
+    "pointsize": 1120.0
   },
   {
     "instrument": "SUGAR_WHITE",
@@ -5396,9 +4416,7 @@
     "description": "White sugar",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": 615.6,
-    "nominal_value": 30780.0
+    "pointsize": 50.0
   },
   {
     "instrument": "SWISSLEAD",
@@ -5407,9 +4425,7 @@
     "description": "Swiss Leader Index (PREIS_INDEX)",
     "asset_class": "Equity",
     "currency": "CHF",
-    "pointsize": 10.0,
-    "latest_price": 1906.1,
-    "nominal_value": 19061.0
+    "pointsize": 10.0
   },
   {
     "instrument": "TECDAX",
@@ -5418,9 +4434,7 @@
     "description": "TECDAX",
     "asset_class": "Equity",
     "currency": "EUR",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "TECH60_small",
@@ -5429,9 +4443,7 @@
     "description": "Small Technology 60",
     "asset_class": "Equity",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "THB",
@@ -5440,9 +4452,7 @@
     "description": "SGX Thai baht in US Dollar Futures",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "TIN_LME",
@@ -5451,9 +4461,7 @@
     "description": "Tin - LME",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 5.0,
-    "latest_price": 27495.0,
-    "nominal_value": 137475.0
+    "pointsize": 5.0
   },
   {
     "instrument": "TOPIX",
@@ -5462,9 +4470,7 @@
     "description": "Japan Mini Topix",
     "asset_class": "Equity",
     "currency": "JPY",
-    "pointsize": 1000.0,
-    "latest_price": 2767.75,
-    "nominal_value": 2767750.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "TOPIX30",
@@ -5473,9 +4479,7 @@
     "description": "Topix Core30",
     "asset_class": "Equity",
     "currency": "JPY",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "TOPIX_Large",
@@ -5484,9 +4488,7 @@
     "description": "TOPIX full size",
     "asset_class": "Equity",
     "currency": "JPY",
-    "pointsize": 10000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10000.0
   },
   {
     "instrument": "TSE60",
@@ -5495,9 +4497,7 @@
     "description": "S&P Canada 60 Index Futures (Old TSE60)",
     "asset_class": "Equity",
     "currency": "CAD",
-    "pointsize": 200.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 200.0
   },
   {
     "instrument": "TSX",
@@ -5506,9 +4506,7 @@
     "description": "Canadian equity index TSX composite",
     "asset_class": "Equity",
     "currency": "CAD",
-    "pointsize": 5.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 5.0
   },
   {
     "instrument": "TWD",
@@ -5517,9 +4515,7 @@
     "description": "SGX Taiwan Dollar in US Dollar Futures (Full-Sized)",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 3000.0,
-    "latest_price": 31.38,
-    "nominal_value": 94155.0
+    "pointsize": 3000.0
   },
   {
     "instrument": "TWD-mini",
@@ -5528,9 +4524,7 @@
     "description": "SGX Taiwan Dollar in US Dollar Futures (Mini)",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 100000.0,
-    "latest_price": 0.31,
-    "nominal_value": 31210.0
+    "pointsize": 100000.0
   },
   {
     "instrument": "UMBS-20",
@@ -5539,9 +4533,7 @@
     "description": "30 Year UMBS 2% Coupon",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "UMBS-25",
@@ -5550,9 +4542,7 @@
     "description": "30 Year UMBS 2.5% Coupon",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "UMBS-30",
@@ -5561,9 +4551,7 @@
     "description": "30 Year UMBS 3% Coupon",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "UMBS-35",
@@ -5572,9 +4560,7 @@
     "description": "30 Year UMBS 3.5% Coupon",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "UMBS-40",
@@ -5583,9 +4569,7 @@
     "description": "30 Year UMBS 4% Coupon",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "UMBS-45",
@@ -5594,9 +4578,7 @@
     "description": "30 Year UMBS 4.5% Coupon",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "UMBS-50",
@@ -5605,9 +4587,7 @@
     "description": "30 Year UMBS 5% Coupon",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "URANIUM",
@@ -5616,9 +4596,7 @@
     "description": "NYMEX Uranium Index",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 250.0
   },
   {
     "instrument": "US-BIOTECH",
@@ -5627,9 +4605,7 @@
     "description": "S&P Biotechnology Select Industry Index",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "US-DISCRETE",
@@ -5638,9 +4614,7 @@
     "description": "Consumer Discretionary Select Sector Index",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 1880.8,
-    "nominal_value": 188080.0
+    "pointsize": 100.0
   },
   {
     "instrument": "US-ENERGY",
@@ -5649,9 +4623,7 @@
     "description": "Energy Select Sector Index",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 1000.4,
-    "nominal_value": 100040.0
+    "pointsize": 100.0
   },
   {
     "instrument": "US-FINANCE",
@@ -5660,9 +4632,7 @@
     "description": "Financial Select Sector Index",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": 525.65,
-    "nominal_value": 131412.0
+    "pointsize": 250.0
   },
   {
     "instrument": "US-HEALTH",
@@ -5671,9 +4641,7 @@
     "description": "Health Care Select Sector Index",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 1511.3,
-    "nominal_value": 151130.0
+    "pointsize": 100.0
   },
   {
     "instrument": "US-INDUSTRY",
@@ -5682,9 +4650,7 @@
     "description": "Industrial Select Sector Index",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 1284.9,
-    "nominal_value": 128490.0
+    "pointsize": 100.0
   },
   {
     "instrument": "US-INSURE",
@@ -5693,9 +4659,7 @@
     "description": "S&P Insurance Select Industry Index",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 25.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 25.0
   },
   {
     "instrument": "US-MATERIAL",
@@ -5704,9 +4668,7 @@
     "description": "Materials Select Sector Index",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 996.3,
-    "nominal_value": 99630.0
+    "pointsize": 100.0
   },
   {
     "instrument": "US-OILGAS",
@@ -5715,9 +4677,7 @@
     "description": "S&P Oil & Gas Exploration & Production Select Industry Index",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 25.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 25.0
   },
   {
     "instrument": "US-PROPERTY",
@@ -5726,9 +4686,7 @@
     "description": "Real Estate Select Sector Index",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 250.0,
-    "latest_price": 195.3,
-    "nominal_value": 48825.0
+    "pointsize": 250.0
   },
   {
     "instrument": "US-REALESTATE",
@@ -5737,9 +4695,7 @@
     "description": "US Real estate",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 348.2,
-    "nominal_value": 34820.0
+    "pointsize": 100.0
   },
   {
     "instrument": "US-REGBANK",
@@ -5748,9 +4704,7 @@
     "description": "S&P Regional Banks",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 50.0
   },
   {
     "instrument": "US-RETAIL",
@@ -5759,9 +4713,7 @@
     "description": "S&P Retail Select Industry Index",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "US-SEMICONDUCTOR",
@@ -5770,9 +4722,7 @@
     "description": "E-mini PHLX Semiconductor Sector",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 25.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 25.0
   },
   {
     "instrument": "US-STAPLES",
@@ -5781,9 +4731,7 @@
     "description": "Consumer Staples Select Sector Index",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 778.3,
-    "nominal_value": 77830.0
+    "pointsize": 100.0
   },
   {
     "instrument": "US-TECH",
@@ -5792,9 +4740,7 @@
     "description": "Technology Select Sector Index -",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 2126.8,
-    "nominal_value": 212680.0
+    "pointsize": 100.0
   },
   {
     "instrument": "US-UTILS",
@@ -5803,9 +4749,7 @@
     "description": "Utilities Select Sector Index",
     "asset_class": "Sector",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 668.7,
-    "nominal_value": 66870.0
+    "pointsize": 100.0
   },
   {
     "instrument": "US10",
@@ -5814,9 +4758,7 @@
     "description": "US 10 year bond note",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 111.02,
-    "nominal_value": 111016.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "US10U",
@@ -5825,9 +4767,7 @@
     "description": "Ultra 10-Year US Treasury Note",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 114.48,
-    "nominal_value": 114484.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "US10Y_micro",
@@ -5836,9 +4776,7 @@
     "description": "10 Year Micro Treasury Yield",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "US10Y_small",
@@ -5847,9 +4785,7 @@
     "description": "Small 10YR US Treasury Yield",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "US2",
@@ -5858,9 +4794,7 @@
     "description": "US 2 year bond note",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 2000.0,
-    "latest_price": 102.22,
-    "nominal_value": 204445.0
+    "pointsize": 2000.0
   },
   {
     "instrument": "US20",
@@ -5869,9 +4803,7 @@
     "description": "US 20 year bond",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 120.22,
-    "nominal_value": 120219.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "US20-new",
@@ -5880,9 +4812,7 @@
     "description": "Ultra 20-Year U.S. Treasury Bond",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "US2Y_micro",
@@ -5891,9 +4821,7 @@
     "description": "2 Year Micro Treasury Yield",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "US2Y_small",
@@ -5902,9 +4830,7 @@
     "description": "Small 2YR US Treasury Yield",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "US3",
@@ -5913,9 +4839,7 @@
     "description": "US 3 year bond note",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 2000.0,
-    "latest_price": 104.28,
-    "nominal_value": 208562.0
+    "pointsize": 2000.0
   },
   {
     "instrument": "US30",
@@ -5924,9 +4848,7 @@
     "description": "Ultra Treasury Bond",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 128.59,
-    "nominal_value": 128594.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "US30Y_micro",
@@ -5935,9 +4857,7 @@
     "description": "30 Year Micro Treasury Yield",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "US30Y_small",
@@ -5946,9 +4866,7 @@
     "description": "Small 30YR US Treasury Yield",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "US5",
@@ -5957,9 +4875,7 @@
     "description": "US 5 year bond note",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 106.95,
-    "nominal_value": 106945.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "US5Y_micro",
@@ -5968,9 +4884,7 @@
     "description": "5 Year Micro Treasury Yield",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USDCAD_micro",
@@ -5979,9 +4893,7 @@
     "description": "USDCAD_micro",
     "asset_class": "FX",
     "currency": "CAD",
-    "pointsize": 10000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10000.0
   },
   {
     "instrument": "USDCHF_micro",
@@ -5990,9 +4902,7 @@
     "description": "USDCHF_micro",
     "asset_class": "FX",
     "currency": "CHF",
-    "pointsize": 10000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10000.0
   },
   {
     "instrument": "USDCNH-CME",
@@ -6001,9 +4911,7 @@
     "description": "USDCNME on CME",
     "asset_class": "FX",
     "currency": "CNH",
-    "pointsize": 100000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100000.0
   },
   {
     "instrument": "USDCNH-HK",
@@ -6012,9 +4920,7 @@
     "description": "USDCNH HK",
     "asset_class": "FX",
     "currency": "CNH",
-    "pointsize": 20000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 20000.0
   },
   {
     "instrument": "USDCNH-SGX_mini",
@@ -6023,9 +4929,7 @@
     "description": "SGX USD-CNH Futures (Mini)",
     "asset_class": "FX",
     "currency": "CNH",
-    "pointsize": 25000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 25000.0
   },
   {
     "instrument": "USDINR",
@@ -6034,9 +4938,7 @@
     "description": "USDINR",
     "asset_class": "FX",
     "currency": "INR",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USDKRW",
@@ -6045,9 +4947,7 @@
     "description": "USDKRW",
     "asset_class": "FX",
     "currency": "KRW",
-    "pointsize": 10000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10000.0
   },
   {
     "instrument": "USDMXP",
@@ -6056,9 +4956,7 @@
     "description": "USDMXP",
     "asset_class": "FX",
     "currency": "MXP",
-    "pointsize": 10000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10000.0
   },
   {
     "instrument": "USD_small",
@@ -6067,9 +4965,7 @@
     "description": "Small US dollar",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "USIRS10",
@@ -6078,9 +4974,7 @@
     "description": "US 10 year swap",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS10ERIS",
@@ -6089,9 +4983,7 @@
     "description": "10-Year Eris Swap Futures",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS10_ICE",
@@ -6100,9 +4992,7 @@
     "description": "Ten year dollar swapnote, ICE",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS12ERIS",
@@ -6111,9 +5001,7 @@
     "description": "12-Year Eris Swap Futures",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS15ERIS",
@@ -6122,9 +5010,7 @@
     "description": "15-Year Eris Swap Futures",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS2",
@@ -6133,9 +5019,7 @@
     "description": "2-Year Deliverable Interest Rate Swap Futures",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS20ERIS",
@@ -6144,9 +5028,7 @@
     "description": "20-Year Eris Swap Futures",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS2ERIS",
@@ -6155,9 +5037,7 @@
     "description": "2-Year Eris Swap Futures",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS2_ICE",
@@ -6166,9 +5046,7 @@
     "description": "Two year dollar swapnote, ICE",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS30",
@@ -6177,9 +5055,7 @@
     "description": "30-Year Deliverable Interest Rate Swap Futures",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS3ERIS",
@@ -6188,9 +5064,7 @@
     "description": "3-Year Eris Swap Futures",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS4ERIS",
@@ -6199,9 +5073,7 @@
     "description": "4-Year Eris Swap Futures",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS5",
@@ -6210,9 +5082,7 @@
     "description": "US 5 year swap",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS5ERIS",
@@ -6221,9 +5091,7 @@
     "description": "5-Year Eris Swap Futures",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS5ERIS_SOFR",
@@ -6232,9 +5100,7 @@
     "description": "5-Year Eris SOFR Swap Futures",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS5_ICE",
@@ -6243,9 +5109,7 @@
     "description": "Five year dollar swapnote, ICE",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "USIRS7ERIS",
@@ -6254,9 +5118,7 @@
     "description": "7-Year Eris Swap Futures",
     "asset_class": "Bond",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 1000.0
   },
   {
     "instrument": "V2X",
@@ -6265,9 +5127,7 @@
     "description": "Vol European equity V2X",
     "asset_class": "Vol",
     "currency": "EUR",
-    "pointsize": 100.0,
-    "latest_price": 16.3,
-    "nominal_value": 1630.0
+    "pointsize": 100.0
   },
   {
     "instrument": "VHANG",
@@ -6276,9 +5136,7 @@
     "description": "Hang Seng Volatility Index",
     "asset_class": "Vol",
     "currency": "HKD",
-    "pointsize": 5000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 5000.0
   },
   {
     "instrument": "VIX",
@@ -6287,9 +5145,7 @@
     "description": "Vol US equity VIX",
     "asset_class": "Vol",
     "currency": "USD",
-    "pointsize": 1000.0,
-    "latest_price": 16.0,
-    "nominal_value": 16000.0
+    "pointsize": 1000.0
   },
   {
     "instrument": "VIX_mini",
@@ -6298,9 +5154,7 @@
     "description": "Vol US equity VIX mini",
     "asset_class": "Vol",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": 15.19,
-    "nominal_value": 1519.0
+    "pointsize": 100.0
   },
   {
     "instrument": "VNKI",
@@ -6309,9 +5163,7 @@
     "description": "Nikkei 225 Volatility Index",
     "asset_class": "Vol",
     "currency": "JPY",
-    "pointsize": 10000.0,
-    "latest_price": 19.9,
-    "nominal_value": 199000.0
+    "pointsize": 10000.0
   },
   {
     "instrument": "VOLQ",
@@ -6320,9 +5172,7 @@
     "description": "NASDAQ-100 Volatility Index",
     "asset_class": "Vol",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "WATER-CALI",
@@ -6331,9 +5181,7 @@
     "description": "The Nasdaq Veles California Water Index",
     "asset_class": "Weather",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 10.0
   },
   {
     "instrument": "WHEAT",
@@ -6342,9 +5190,7 @@
     "description": "Wheat",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 50.0,
-    "latest_price": 612.0,
-    "nominal_value": 30600.0
+    "pointsize": 50.0
   },
   {
     "instrument": "WHEAT-ASX",
@@ -6353,9 +5199,7 @@
     "description": "WHEAT FUTURES",
     "asset_class": "Ags",
     "currency": "AUD",
-    "pointsize": 20.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 20.0
   },
   {
     "instrument": "WHEAT_ICE",
@@ -6364,9 +5208,7 @@
     "description": "Wheat ICE",
     "asset_class": "Ags",
     "currency": "GBP",
-    "pointsize": 100.0,
-    "latest_price": 194.9,
-    "nominal_value": 19490.0
+    "pointsize": 100.0
   },
   {
     "instrument": "WHEAT_mini",
@@ -6375,9 +5217,7 @@
     "description": "Wheat mini",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 10.0,
-    "latest_price": 560.25,
-    "nominal_value": 5602.0
+    "pointsize": 10.0
   },
   {
     "instrument": "WHEY",
@@ -6386,9 +5226,7 @@
     "description": "CME DRY WHEY INDEX",
     "asset_class": "Ags",
     "currency": "USD",
-    "pointsize": 440.0,
-    "latest_price": 44.5,
-    "nominal_value": 19580.0
+    "pointsize": 440.0
   },
   {
     "instrument": "WTI_small",
@@ -6397,9 +5235,7 @@
     "description": "Small US Crude Oil",
     "asset_class": "OilGas",
     "currency": "USD",
-    "pointsize": 100.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 100.0
   },
   {
     "instrument": "YENEUR",
@@ -6408,9 +5244,7 @@
     "description": "YENEUR currency",
     "asset_class": "FX",
     "currency": "JPY",
-    "pointsize": 125000.0,
-    "latest_price": 161.87,
-    "nominal_value": 20233750.0
+    "pointsize": 125000.0
   },
   {
     "instrument": "YENEUR-ICE",
@@ -6419,9 +5253,7 @@
     "description": "EUR.JPY",
     "asset_class": "FX",
     "currency": "JPY",
-    "pointsize": 125000.0,
-    "latest_price": null,
-    "nominal_value": null
+    "pointsize": 125000.0
   },
   {
     "instrument": "ZAR",
@@ -6430,9 +5262,7 @@
     "description": "South African Rand",
     "asset_class": "FX",
     "currency": "USD",
-    "pointsize": 500000.0,
-    "latest_price": 0.05,
-    "nominal_value": 26250.0
+    "pointsize": 500000.0
   },
   {
     "instrument": "ZINC_LME",
@@ -6441,8 +5271,6 @@
     "description": "Zinc - LME",
     "asset_class": "Metals",
     "currency": "USD",
-    "pointsize": 25.0,
-    "latest_price": 2435.5,
-    "nominal_value": 60888.0
+    "pointsize": 25.0
   }
 ]

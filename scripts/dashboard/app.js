@@ -3469,6 +3469,42 @@ async function loadUniverseData() {
 
 function renderUniverseTab() {
   if (!universeData || universeData.length === 0) return;
+
+  // Filter dictionary to only include instruments active in the current run
+  const activeInstruments = state.meta?.instruments || [];
+  if (activeInstruments.length === 0) {
+    document.getElementById('universe-table').innerHTML =
+      '<p style="padding:16px;color:var(--text-muted)">No instruments found in current run metadata.</p>';
+    return;
+  }
+
+  const activeSet = new Set(activeInstruments);
+  const dictMap = new Map(universeData.map(r => [r.instrument, r]));
+
+  // Warn about instruments in run but missing from dictionary
+  const missing = activeInstruments.filter(i => !dictMap.has(i));
+  if (missing.length > 0) {
+    console.warn(`Universe dictionary missing ${missing.length} instrument(s) from current run:`, missing,
+      '\nRun: python scripts/generate_universe_dict.py to update.');
+  }
+
+  // Build enriched rows: static dict specs + run-time contract value from position_snapshot
+  const posMap = new Map();
+  if (state.positionSnapshot && state.positionSnapshot.length > 0) {
+    state.positionSnapshot.forEach(p => posMap.set(p.Instrument || p.instrument, p));
+  }
+
+  const activeData = activeInstruments
+    .filter(i => dictMap.has(i))
+    .map(i => {
+      const spec = dictMap.get(i);
+      const pos = posMap.get(i);
+      return {
+        ...spec,
+        contract_value: pos ? parseFloat(pos['Contract Value ($)']) || null : null,
+      };
+    });
+
   const fmt = v => v !== null && v !== undefined ? v.toLocaleString() : '—';
   const ccySymbol = { USD: '$', EUR: '€', GBP: '£', JPY: '¥', AUD: 'A$', CAD: 'C$', CHF: 'CHF ', CNY: '¥', HKD: 'HK$', SGD: 'S$', MXP: 'MX$', BRL: 'R$', KRW: '₩' };
   const fmtNominal = (v, ccy) => {
@@ -3477,28 +3513,23 @@ function renderUniverseTab() {
     return sym + Math.round(v).toLocaleString();
   };
 
-  // Filter dictionary to only include instruments active in the current run
-  const activeInstruments = state.meta?.instruments || [];
-  const activeSet = new Set(activeInstruments);
-  const activeData = universeData.filter(r => activeSet.has(r.instrument));
-
   // Sort by asset class then instrument
   const sorted = [...activeData].sort((a,b) => (a.asset_class+a.instrument).localeCompare(b.asset_class+b.instrument));
 
   let html = `<table>
     <thead><tr>
       <th>Instrument</th><th>Description</th><th>Asset Class</th><th>CCY</th>
-      <th style="text-align:right">Point Size</th><th style="text-align:right">Latest Price</th>
-      <th style="text-align:right">Nominal Value (1 contract)</th>
+      <th style="text-align:right">Point Size</th>
+      <th style="text-align:right">Contract Value ($)</th>
     </tr></thead><tbody>`;
 
   let prevClass = '';
   sorted.forEach(r => {
     if (r.asset_class !== prevClass) {
-      html += `<tr><td colspan="7" style="background:var(--forest,#265844);color:#fff;font-weight:700;padding:6px 12px;font-size:12px">${r.asset_class || 'Unknown'}</td></tr>`;
+      html += `<tr><td colspan="6" style="background:var(--forest,#265844);color:#fff;font-weight:700;padding:6px 12px;font-size:12px">${r.asset_class || 'Unknown'}</td></tr>`;
       prevClass = r.asset_class;
     }
-    const nomColor = r.nominal_value && r.nominal_value > 100000 ? 'color:#B85C4A;font-weight:600' : '';
+    const nomColor = r.contract_value && r.contract_value > 100000 ? 'color:#B85C4A;font-weight:600' : '';
 
     html += `<tr>
       <td style="font-weight:600;font-family:var(--font-mono,monospace);font-size:12px">${r.instrument}</td>
@@ -3506,10 +3537,14 @@ function renderUniverseTab() {
       <td style="font-size:12px">${r.asset_class}</td>
       <td style="font-size:12px;text-align:center">${r.currency}</td>
       <td style="text-align:right;font-family:var(--font-mono);font-size:12px">${fmt(r.pointsize)}</td>
-      <td style="text-align:right;font-family:var(--font-mono);font-size:12px">${fmt(r.latest_price)}</td>
-      <td style="text-align:right;font-family:var(--font-mono);font-size:12px;${nomColor}">${fmtNominal(r.nominal_value, r.currency)}</td>
+      <td style="text-align:right;font-family:var(--font-mono);font-size:12px;${nomColor}">${fmtNominal(r.contract_value, 'USD')}</td>
     </tr>`;
   });
+
+  if (missing.length > 0) {
+    html += `<tr><td colspan="6" style="padding:8px;font-size:11px;color:var(--text-muted)">⚠️ ${missing.length} instrument(s) not in reference dictionary: ${missing.join(', ')}. Run <code>python scripts/generate_universe_dict.py</code> to update.</td></tr>`;
+  }
+
   html += '</tbody></table>';
   document.getElementById('universe-table').innerHTML = html;
 }
