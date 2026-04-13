@@ -227,6 +227,7 @@ function renderHeader() {
   document.getElementById('hm-capital').textContent = `$${(m.capital/1000).toFixed(0)}K`;
   document.getElementById('hm-period').textContent = m.period;
   document.getElementById('hm-instruments').textContent = m.instrument_count;
+  document.getElementById('hm-vol').textContent = m.vol_target_pct ? `${m.vol_target_pct}%` : '—';
   document.getElementById('hm-mode').textContent = m.mode.toUpperCase();
 
   // Executability-aware banner

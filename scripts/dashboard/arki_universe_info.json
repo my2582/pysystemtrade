@@ -156,19 +156,6 @@
     "in_13": false
   },
   {
-    "instrument": "FTSECHINAA",
-    "ib_symbol": "XINA50",
-    "ib_exchange": "SGX",
-    "description": "FTSE/Xinhua China A50",
-    "asset_class": "Equity",
-    "currency": "USD",
-    "pointsize": 1.0,
-    "latest_price": 12138.0,
-    "nominal_value": 12138.0,
-    "in_25": true,
-    "in_13": false
-  },
-  {
     "instrument": "GASOIL",
     "ib_symbol": "GOIL",
     "ib_exchange": "IPE",

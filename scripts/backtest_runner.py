@@ -317,9 +317,18 @@ def export_enhanced_data(system, instruments, run_dir):
             stats = yaml.safe_load(f)
 
         # Build dashboard-ready JSON
+        # Read vol_target from stats.yaml (set during run) or config.yaml
+        run_vol_target = stats.get("vol_target", None)
+        if run_vol_target is None:
+            cfg_path = run_dir / "config.yaml"
+            if cfg_path.exists():
+                with open(cfg_path) as cf:
+                    cfg_snap = yaml.safe_load(cf)
+                run_vol_target = cfg_snap.get("vol_target", 25.0)
         dashboard_data = {
             "meta": {
                 "capital": stats.get("capital", 200000),
+                "vol_target_pct": float(run_vol_target) if run_vol_target else 25.0,
                 "mode": stats.get("mode", "dynamic"),
                 "period": stats.get("period", ""),
                 "years": stats.get("years", 0),
