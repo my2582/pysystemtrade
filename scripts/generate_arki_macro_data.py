@@ -270,52 +270,6 @@ def build_scenario(mini_ret, mf_file, mini_capital, mf_capital, label):
     }, mini_aligned, mf_aligned, combined_ret
 
 
-def build_universe_info(instruments_list):
-    """Build universe info table with contract specs, IB symbols, and universe membership."""
-    cfg = pd.read_csv(INST_CONFIG)
-    IB_CONFIG = PROJECT_ROOT / "sysbrokers" / "IB" / "config" / "ib_config_futures.csv"
-    ibcfg = pd.read_csv(IB_CONFIG) if IB_CONFIG.exists() else pd.DataFrame()
-
-    # Derive membership lists directly from the actual run files — no hardcoding.
-    INSTS_MF  = set(pd.read_csv(MF_FILE,    index_col=0, nrows=0).columns.tolist())
-    INSTS_13  = set(pd.read_csv(MF100_FILE, index_col=0, nrows=0).columns.tolist())
-
-    universe = []
-    for inst in sorted(instruments_list):
-        row = cfg[cfg["Instrument"] == inst]
-        if len(row) == 0:
-            continue
-        r = row.iloc[0]
-        # IB config
-        ib = ibcfg[ibcfg["Instrument"] == inst] if len(ibcfg) > 0 else pd.DataFrame()
-        ib_symbol = ib["IBSymbol"].values[0] if len(ib) > 0 else ""
-        ib_exchange = ib["IBExchange"].values[0] if len(ib) > 0 else ""
-        # Latest price
-        price_file = PROJECT_ROOT / "data" / "futures" / "multiple_prices_csv" / f"{inst}.csv"
-        latest_price = None
-        if price_file.exists():
-            try:
-                pdf = pd.read_csv(price_file)
-                if "PRICE" in pdf.columns:
-                    latest_price = pdf["PRICE"].dropna().iloc[-1]
-            except Exception:
-                pass
-        pointsize = float(r["Pointsize"])
-        nominal = round(latest_price * pointsize, 0) if latest_price else None
-        universe.append({
-            "instrument": inst,
-            "ib_symbol": ib_symbol,
-            "ib_exchange": ib_exchange,
-            "description": r.get("Description", ""),
-            "asset_class": r.get("AssetClass", ""),
-            "currency": r.get("Currency", ""),
-            "pointsize": pointsize,
-            "latest_price": round(latest_price, 2) if latest_price else None,
-            "nominal_value": nominal,
-            "in_mf":  inst in INSTS_MF,
-            "in_13": inst in INSTS_13,
-        })
-    return universe
 
 
 def main():
@@ -385,16 +339,7 @@ def main():
         json.dump(comparison, f, separators=(",", ":"))
     print(f"✅ Comparison → {path3} ({path3.stat().st_size/1024:.0f} KB)")
 
-    # Universe info
-    all_instruments = set()
-    for key, cfg in SCENARIOS.items():
-        df = pd.read_csv(cfg["mf_file"], index_col=0, nrows=0)
-        all_instruments.update(df.columns.tolist())
-    universe = build_universe_info(all_instruments)
-    path4 = DASHBOARD_DIR / "arki_universe_info.json"
-    with open(path4, "w") as f:
-        json.dump(universe, f, indent=2)
-    print(f"✅ Universe → {path4} ({path4.stat().st_size/1024:.0f} KB)")
+
 
     # Print summary table
     print(f"\n{'='*70}")
