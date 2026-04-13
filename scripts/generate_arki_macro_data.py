@@ -276,12 +276,9 @@ def build_universe_info(instruments_list):
     IB_CONFIG = PROJECT_ROOT / "sysbrokers" / "IB" / "config" / "ib_config_futures.csv"
     ibcfg = pd.read_csv(IB_CONFIG) if IB_CONFIG.exists() else pd.DataFrame()
 
-    INSTS_25 = ['SP500_micro','NASDAQ_micro','DAX','NIKKEI','FTSE100','IBEX_mini',
-                'US10','US5','BUND','GILT','JGB','GOLD_micro','SILVER','COPPER-micro',
-                'CRUDE_W','BRENT-LAST','GASOIL','AUD_micro','MXP','YENEUR',
-                'SUGAR11','COTTON','LEANHOG','COCOA_LDN']
-    INSTS_13 = ['GOLD_micro','DAX','EU-DJ-OIL','SILVER','CRUDE_W','BRENT-LAST',
-                'COPPER-micro','GILT','SP500_micro','EU-BANKS','TOPIX','EU-DJ-TELECOM','US10']
+    # Derive membership lists directly from the actual run files — no hardcoding.
+    INSTS_MF  = set(pd.read_csv(MF_FILE,    index_col=0, nrows=0).columns.tolist())
+    INSTS_13  = set(pd.read_csv(MF100_FILE, index_col=0, nrows=0).columns.tolist())
 
     universe = []
     for inst in sorted(instruments_list):
@@ -315,7 +312,7 @@ def build_universe_info(instruments_list):
             "pointsize": pointsize,
             "latest_price": round(latest_price, 2) if latest_price else None,
             "nominal_value": nominal,
-            "in_25": inst in INSTS_25,
+            "in_mf":  inst in INSTS_MF,
             "in_13": inst in INSTS_13,
         })
     return universe

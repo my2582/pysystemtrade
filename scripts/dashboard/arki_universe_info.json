@@ -9,7 +9,7 @@
     "pointsize": 10000.0,
     "latest_price": 0.65,
     "nominal_value": 6533.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": false
   },
   {
@@ -22,7 +22,7 @@
     "pointsize": 1000.0,
     "latest_price": 86.05,
     "nominal_value": 86050.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": true
   },
   {
@@ -35,7 +35,7 @@
     "pointsize": 1000.0,
     "latest_price": 125.55,
     "nominal_value": 125550.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": false
   },
   {
@@ -48,7 +48,7 @@
     "pointsize": 10.0,
     "latest_price": 7725.0,
     "nominal_value": 77250.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": false
   },
   {
@@ -61,7 +61,7 @@
     "pointsize": 2500.0,
     "latest_price": 4.01,
     "nominal_value": 10028.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": true
   },
   {
@@ -74,7 +74,7 @@
     "pointsize": 50000.0,
     "latest_price": 0.91,
     "nominal_value": 45690.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": false
   },
   {
@@ -87,7 +87,7 @@
     "pointsize": 1000.0,
     "latest_price": 77.68,
     "nominal_value": 77680.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": true
   },
   {
@@ -100,7 +100,7 @@
     "pointsize": 1.0,
     "latest_price": 23313.0,
     "nominal_value": 23313.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": true
   },
   {
@@ -113,7 +113,7 @@
     "pointsize": 50.0,
     "latest_price": 135.4,
     "nominal_value": 6770.0,
-    "in_25": false,
+    "in_mf": false,
     "in_13": true
   },
   {
@@ -126,7 +126,7 @@
     "pointsize": 50.0,
     "latest_price": 361.4,
     "nominal_value": 18070.0,
-    "in_25": false,
+    "in_mf": false,
     "in_13": true
   },
   {
@@ -139,7 +139,7 @@
     "pointsize": 50.0,
     "latest_price": 283.6,
     "nominal_value": 14180.0,
-    "in_25": false,
+    "in_mf": false,
     "in_13": true
   },
   {
@@ -152,7 +152,7 @@
     "pointsize": 10.0,
     "latest_price": 10438.0,
     "nominal_value": 104380.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": false
   },
   {
@@ -165,7 +165,7 @@
     "pointsize": 100.0,
     "latest_price": 797.75,
     "nominal_value": 79775.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": false
   },
   {
@@ -178,7 +178,7 @@
     "pointsize": 1000.0,
     "latest_price": 88.58,
     "nominal_value": 88580.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": true
   },
   {
@@ -191,7 +191,7 @@
     "pointsize": 10.0,
     "latest_price": 2255.0,
     "nominal_value": 22550.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": true
   },
   {
@@ -204,7 +204,7 @@
     "pointsize": 1.0,
     "latest_price": 11068.0,
     "nominal_value": 11068.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": false
   },
   {
@@ -217,7 +217,7 @@
     "pointsize": 1000000.0,
     "latest_price": 130.13,
     "nominal_value": 130130000.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": false
   },
   {
@@ -230,7 +230,7 @@
     "pointsize": 400.0,
     "latest_price": 104.0,
     "nominal_value": 41600.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": false
   },
   {
@@ -243,7 +243,7 @@
     "pointsize": 500000.0,
     "latest_price": 0.06,
     "nominal_value": 29725.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": false
   },
   {
@@ -256,7 +256,7 @@
     "pointsize": 2.0,
     "latest_price": 18465.25,
     "nominal_value": 36930.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": false
   },
   {
@@ -269,7 +269,7 @@
     "pointsize": 100.0,
     "latest_price": 53240.0,
     "nominal_value": 5324000.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": false
   },
   {
@@ -282,7 +282,7 @@
     "pointsize": 1000.0,
     "latest_price": 25.1,
     "nominal_value": 25100.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": true
   },
   {
@@ -295,7 +295,7 @@
     "pointsize": 5.0,
     "latest_price": 5303.75,
     "nominal_value": 26519.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": true
   },
   {
@@ -308,7 +308,7 @@
     "pointsize": 1120.0,
     "latest_price": 22.14,
     "nominal_value": 24797.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": false
   },
   {
@@ -321,7 +321,7 @@
     "pointsize": 1000.0,
     "latest_price": 2767.75,
     "nominal_value": 2767750.0,
-    "in_25": false,
+    "in_mf": false,
     "in_13": true
   },
   {
@@ -334,7 +334,7 @@
     "pointsize": 1000.0,
     "latest_price": 111.02,
     "nominal_value": 111016.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": true
   },
   {
@@ -347,7 +347,7 @@
     "pointsize": 1000.0,
     "latest_price": 106.95,
     "nominal_value": 106945.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": false
   },
   {
@@ -360,7 +360,7 @@
     "pointsize": 125000.0,
     "latest_price": 161.87,
     "nominal_value": 20233750.0,
-    "in_25": true,
+    "in_mf": true,
     "in_13": false
   }
 ]
