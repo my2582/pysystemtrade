@@ -3,7 +3,6 @@ instruments:
 - BUND
 - DAX
 - FTSE100
-- FTSECHINAA
 - GILT
 - IBEX_mini
 - JGB
@@ -118,7 +117,6 @@ instrument_weights:
   BUND: 0.066667
   DAX: 0.066667
   FTSE100: 0.066667
-  FTSECHINAA: 0.066667
   GILT: 0.066667
   IBEX_mini: 0.066667
   JGB: 0.066667

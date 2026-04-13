@@ -5,7 +5,6 @@ instruments:
 - NIKKEI
 - FTSE100
 - IBEX_mini
-- FTSECHINAA
 - US10
 - US5
 - BUND
@@ -130,7 +129,6 @@ instrument_weights:
   NIKKEI: 0.04
   FTSE100: 0.04
   IBEX_mini: 0.04
-  FTSECHINAA: 0.04
   US10: 0.04
   US5: 0.04
   BUND: 0.04

@@ -5,7 +5,6 @@ instruments:
 - COTTON
 - DAX
 - FTSE100
-- FTSECHINAA
 - GILT
 - IBEX_mini
 - JGB
@@ -124,7 +123,6 @@ instrument_weights:
   COTTON: 0.052632
   DAX: 0.052632
   FTSE100: 0.052632
-  FTSECHINAA: 0.052632
   GILT: 0.052632
   IBEX_mini: 0.052632
   JGB: 0.052632

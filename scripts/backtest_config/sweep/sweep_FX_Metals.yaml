@@ -4,7 +4,6 @@ instruments:
 - COPPER-micro
 - DAX
 - FTSE100
-- FTSECHINAA
 - GILT
 - GOLD_micro
 - IBEX_mini
@@ -122,7 +121,6 @@ instrument_weights:
   COPPER-micro: 0.055556
   DAX: 0.055556
   FTSE100: 0.055556
-  FTSECHINAA: 0.055556
   GILT: 0.055556
   GOLD_micro: 0.055556
   IBEX_mini: 0.055556
