@@ -1842,8 +1842,11 @@ async function renderSweep() {
       const text = await loadFile('data/sweep_summary.json');
       state.sweepData = JSON.parse(text);
     } catch {
-      const el = document.getElementById('sweep-loading');
-      if (el) el.textContent = 'No sweep data available. Run: python scripts/generate_sweep_dashboard.py';
+      // Hide all sweep containers except the first table, and turn that into an error message
+      const sweepSection = document.getElementById('tab-sweep');
+      if (sweepSection) {
+        sweepSection.innerHTML = '<div class="card"><div class="card__header"><span class="card__title">Universe Sweep Data Not Found</span></div><p style="padding:var(--space-lg);color:var(--text-muted);">Universe sweep data is not available for this run. To view this analysis, you must first run the sweep generation pipeline:<br><br><code>python scripts/generate_sweep_dashboard.py</code></p></div>';
+      }
       return;
     }
   }
