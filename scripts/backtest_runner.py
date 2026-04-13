@@ -523,9 +523,8 @@ def cmd_run(args):
     else:
         system = build_estimated_system(config_path, capital, instruments)
 
-    # Override vol target if specified
-    if vol_target != 25.0:
-        system.config.percentage_vol_target = vol_target
+    # Always apply vol_target from CLI (overrides YAML default)
+    system.config.percentage_vol_target = vol_target
 
     actual_instruments = system.get_instrument_list()
 
