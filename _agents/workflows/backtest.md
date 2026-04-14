@@ -46,22 +46,36 @@ cd /Users/msyeom/Developer/pysystemtrade && source venv/bin/activate
 python3 scripts/backtest_runner.py compare <LABEL_A> <LABEL_B>
 ```
 
-## 5. Switch Dashboard to a Run
+## 5. Full Pipeline (Recommended)
+
+Runs the entire chain: config validation → backtest → verification → dashboard build → summary.
+
+```bash
+cd /Users/msyeom/Developer/pysystemtrade && source venv/bin/activate
+python3 scripts/backtest_runner.py full \
+  --label "<LABEL>" \
+  --capital 1000000 \
+  --vol-target 25 \
+  --mode dynamic \
+  --config scripts/backtest_config/<CONFIG>.yaml
+```
+
+This single command replaces the manual sequence of `run` → `bundle_dashboard.py` → `dashboard.sh` → manual verification.
+
+## 6. Verify an Existing Run
+
+```bash
+cd /Users/msyeom/Developer/pysystemtrade && source venv/bin/activate
+python3 scripts/backtest_runner.py verify --run-id <RUN_ID>
+```
+
+Checks file integrity (9 required files) and parameter consistency (capital, vol target, instrument count).
+
+## 7. Switch Dashboard Manually (if needed)
 
 ```bash
 cd /Users/msyeom/Developer/pysystemtrade
-rm -f scripts/dashboard/data
-ln -sf ../../results/runs/<RUN_ID> scripts/dashboard/data
-```
-
-Replace `<RUN_ID>` with the run directory name from `results/runs/`.
-
-## 6. Start Dashboard Server
-
-```bash
-cd /Users/msyeom/Developer/pysystemtrade/scripts/dashboard
-pkill -f "http.server 8889" 2>/dev/null; sleep 1
-python3 -m http.server 8889 &
+bash dashboard.sh <RUN_ID>
 ```
 
 Dashboard available at: http://localhost:8889

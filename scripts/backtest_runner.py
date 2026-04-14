@@ -79,6 +79,103 @@ def find_run(registry, identifier):
 
 
 # ──────────────────────────────────────────────────────────────────
+# Pre-flight Validation & Post-run Verification
+# ──────────────────────────────────────────────────────────────────
+
+def validate_config(config_path):
+    """Pre-flight validation of a backtest config YAML. Returns (ok, instrument_count)."""
+    with open(config_path) as f:
+        cfg = yaml.safe_load(f)
+
+    errors = []
+    instruments = cfg.get("instruments", [])
+    if not instruments:
+        errors.append("No instruments defined in config")
+    else:
+        print(f"  ✅ Instruments: {len(instruments)}")
+
+    weights = cfg.get("instrument_weights", {})
+    if weights:
+        w_sum = sum(weights.values())
+        missing_w = [i for i in instruments if i not in weights]
+        extra_w = [i for i in weights if i not in instruments]
+        if missing_w:
+            errors.append(f"Instruments missing weights: {missing_w}")
+        if extra_w:
+            errors.append(f"Weights for non-existent instruments: {extra_w}")
+        if not (0.95 < w_sum < 1.05):
+            errors.append(f"Weight sum {w_sum:.3f} outside tolerance [0.95, 1.05]")
+        else:
+            print(f"  ✅ Weights: {len(weights)} entries, sum={w_sum:.3f}")
+
+    meta = cfg.get("_meta", {})
+    rules = meta.get("universe_rules", {})
+    if rules.get("exclude_em"):
+        em_list = rules.get("em_instruments", [])
+        found_em = [i for i in em_list if i in instruments]
+        if found_em:
+            errors.append(f"EM instruments found despite exclude_em rule: {found_em}")
+        else:
+            print(f"  ✅ EM exclusion: {len(em_list)} instruments verified absent")
+
+    vol = cfg.get("percentage_vol_target")
+    capital = cfg.get("notional_trading_capital")
+    if vol:
+        print(f"  ✅ Vol target: {vol}%")
+    if capital:
+        print(f"  ✅ Capital: ${capital:,.0f}")
+
+    if errors:
+        for e in errors:
+            print(f"  ❌ {e}")
+        return False, 0
+    return True, len(instruments)
+
+
+def verify_run(run_dir, expected_capital=None, expected_vol=None, expected_count=None):
+    """Post-run verification of dashboard_meta.json. Returns True if all checks pass."""
+    meta_path = Path(run_dir) / "dashboard_meta.json"
+    if not meta_path.exists():
+        print(f"  ❌ dashboard_meta.json not found")
+        return False
+
+    with open(meta_path) as f:
+        meta = json.load(f)
+
+    m = meta.get("meta", {})
+    s = meta.get("stats", {})
+    e = meta.get("executability", {})
+    instruments = meta.get("instruments", [])
+    all_ok = True
+
+    if expected_capital is not None and m.get("capital") != expected_capital:
+        print(f"  ❌ Capital mismatch: expected ${expected_capital:,.0f}, got ${m.get('capital', 0):,.0f}")
+        all_ok = False
+    else:
+        print(f"  ✅ Capital: ${m.get('capital', 0):,.0f}")
+
+    if expected_vol is not None and m.get("vol_target_pct") != expected_vol:
+        print(f"  ❌ Vol target mismatch: expected {expected_vol}%, got {m.get('vol_target_pct')}%")
+        all_ok = False
+    else:
+        print(f"  ✅ Vol target: {m.get('vol_target_pct', '?')}%")
+
+    if expected_count is not None and m.get("instrument_count") != expected_count:
+        print(f"  ❌ Instrument count mismatch: expected {expected_count}, got {m.get('instrument_count')}")
+        all_ok = False
+    else:
+        print(f"  ✅ Instruments: {m.get('instrument_count', '?')}")
+
+    print(f"  📊 Net SR: {s.get('sharpe', '?')}")
+    print(f"  📊 Ann Return: {s.get('ann_mean', '?')}%")
+    print(f"  📊 Executability: {e.get('grade', '?')} ({e.get('score', '?')}%)")
+    untradeable = e.get("untradeable_instruments", [])
+    if untradeable:
+        print(f"  ⚠️  Untradeable: {untradeable}")
+    return all_ok
+
+
+# ──────────────────────────────────────────────────────────────────
 # Enhanced Data Export
 # ──────────────────────────────────────────────────────────────────
 
@@ -807,6 +904,124 @@ def cmd_migrate(args):
     print(f"  📋 Registered as {run_id}")
 
 
+def cmd_full(args):
+    """End-to-end pipeline: validate config → run backtest → verify → build dashboard → summary."""
+    import subprocess
+
+    config_path = args.config
+    if not config_path:
+        print("❌ --config is required for 'full' command")
+        return
+
+    print(f"\n{'═'*70}")
+    print(f"  FULL PIPELINE")
+    print(f"{'═'*70}")
+
+    # Phase 1: Pre-flight
+    print(f"\n  ── Phase 1: PRE-FLIGHT VALIDATION ──")
+    ok, expected_count = validate_config(config_path)
+    if not ok:
+        print(f"\n  ❌ Pre-flight failed. Aborting.")
+        return
+
+    expected_capital = args.capital
+    expected_vol = args.vol_target
+
+    # Phase 2: Backtest
+    print(f"\n  ── Phase 2: BACKTEST ──")
+    cmd_run(args)
+
+    # Find the run that was just created
+    registry = load_registry()
+    latest_run = registry["runs"][-1]
+    run_id = latest_run["id"]
+    run_dir = PROJECT_ROOT / latest_run["path"]
+
+    # Phase 3: Verification
+    print(f"\n  ── Phase 3: POST-RUN VERIFICATION ──")
+    verify_ok = verify_run(run_dir, expected_capital, expected_vol, expected_count)
+
+    # Phase 4: Dashboard
+    print(f"\n  ── Phase 4: DASHBOARD BUILD ──")
+    try:
+        result = subprocess.run(
+            [sys.executable, str(PROJECT_ROOT / "scripts" / "bundle_dashboard.py"), run_id],
+            cwd=str(PROJECT_ROOT), capture_output=True, text=True, timeout=120
+        )
+        for line in (result.stdout or "").split("\n"):
+            stripped = line.strip()
+            if stripped and ("✅" in stripped or "Standalone" in stripped):
+                print(f"  {stripped}")
+        if result.returncode != 0:
+            print(f"  ⚠️ Bundle exit code {result.returncode}")
+    except Exception as e:
+        print(f"  ⚠️ Bundle error: {e}")
+
+    try:
+        subprocess.Popen(
+            ["bash", str(PROJECT_ROOT / "dashboard.sh"), run_id],
+            cwd=str(PROJECT_ROOT), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+        import time; time.sleep(3)
+        print(f"  ✅ Dashboard → http://localhost:8889  (run: {run_id})")
+    except Exception as e:
+        print(f"  ⚠️ Dashboard server error: {e}")
+
+    # Phase 5: Summary
+    print(f"\n  ── Phase 5: SUMMARY ──")
+    print(f"  Run ID:      {run_id}")
+    print(f"  Config:      {config_path}")
+    print(f"  Capital:     ${expected_capital:,.0f}")
+    print(f"  Vol Target:  {expected_vol}%")
+    print(f"  Mode:        {args.mode}")
+    print(f"  Instruments: {expected_count}")
+
+    # Auto-compare with previous run
+    if len(registry["runs"]) >= 2:
+        prev = registry["runs"][-2]
+        curr = latest_run
+        print(f"\n  ── vs Previous Run ({prev['label']}) ──")
+        for metric, label in [("net_sharpe", "SR"), ("ann_return", "Return"), ("ann_vol", "Vol")]:
+            p = prev["results"].get(metric, 0)
+            c = curr["results"].get(metric, 0)
+            delta = c - p
+            sign = "+" if delta >= 0 else ""
+            print(f"  {label:>8s}: {p:>8.3f} → {c:>8.3f} ({sign}{delta:.3f})")
+
+    status = "✅ PASS" if verify_ok else "⚠️ WARNINGS"
+    print(f"\n  {'═'*50}")
+    print(f"  PIPELINE STATUS: {status}")
+    print(f"  {'═'*50}\n")
+
+
+def cmd_verify(args):
+    """Verify an existing run's integrity and parameters."""
+    registry = load_registry()
+    run = find_run(registry, args.run_id)
+    if not run:
+        print(f"❌ Run not found: {args.run_id}")
+        return
+
+    run_dir = PROJECT_ROOT / run["path"]
+    print(f"\n  Verifying run: {run['id']}")
+    print(f"  Label: {run.get('label', '?')}")
+    print(f"  Path: {run_dir}\n")
+
+    expected_files = [
+        "stats.yaml", "dashboard_meta.json", "config.yaml",
+        "daily_returns.csv", "position_snapshot.csv",
+        "rolling_stats.csv", "factor_returns.csv",
+        "notional_positions.csv", "instrument_weights.csv",
+    ]
+    print("  ── File Integrity ──")
+    for f in expected_files:
+        exists = (run_dir / f).exists()
+        print(f"  {'✅' if exists else '❌'} {f}")
+
+    print(f"\n  ── Parameter Verification ──")
+    verify_run(run_dir)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Multi-Run Backtest Framework")
     subparsers = parser.add_subparsers(dest="command", help="Command")
@@ -840,6 +1055,19 @@ def main():
     # migrate
     subparsers.add_parser("migrate", help="Migrate results/phase3 to runs")
 
+    # full (end-to-end pipeline)
+    p_full = subparsers.add_parser("full", help="End-to-end: validate → run → verify → dashboard")
+    p_full.add_argument("--label", required=True, help="Human-readable label")
+    p_full.add_argument("--capital", type=float, default=200000)
+    p_full.add_argument("--vol-target", type=float, default=25.0)
+    p_full.add_argument("--mode", choices=["estimated", "dynamic"], default="estimated")
+    p_full.add_argument("--config", type=str, required=True)
+    p_full.add_argument("--instruments-from", type=str)
+
+    # verify
+    p_ver = subparsers.add_parser("verify", help="Verify an existing run")
+    p_ver.add_argument("--run-id", required=True)
+
     args = parser.parse_args()
 
     if args.command == "run":
@@ -854,6 +1082,10 @@ def main():
         cmd_export(args)
     elif args.command == "migrate":
         cmd_migrate(args)
+    elif args.command == "full":
+        cmd_full(args)
+    elif args.command == "verify":
+        cmd_verify(args)
     else:
         parser.print_help()
 

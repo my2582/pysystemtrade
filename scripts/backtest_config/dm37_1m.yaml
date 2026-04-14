@@ -2,6 +2,12 @@
 # DM-Only Universe — 37 Instruments, $1M Capital, Vol Target 25%
 # EM exclusions: FTSECHINAA, MXP, INR, CLP, TWD-mini, PLN
 # ═══════════════════════════════════════════════════════════════
+_meta:
+  description: "DM-only 37 instruments, $1M capital, vol 25%"
+  universe_rules:
+    exclude_em: true
+    em_instruments: [FTSECHINAA, MXP, INR, CLP, TWD-mini, PLN]
+
 instruments:
 # — Equity (8) —
 - SP500_micro
