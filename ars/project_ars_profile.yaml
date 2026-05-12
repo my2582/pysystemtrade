@@ -1,0 +1,15 @@
+project:
+  name: "pysystemtrade"
+  ars_profile_version: "0.1.0"
+  engine_type: "mature_external_trading_system"
+  ars_role: "adapter_and_evidence_pack_standard"
+  do_not_reimplement_engine: true
+  live_trading: false
+  client_specific_recommendation: "not_allowed"
+  max_ai_decision_level: 2
+  required_ars_modules:
+    - reproducibility
+    - statistical_reporting
+    - cost_and_turnover
+    - evidence_pack
+    - ai_agent_operating_standard

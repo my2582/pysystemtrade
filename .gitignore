@@ -31,3 +31,15 @@ venv/
 
 # Backtest results
 results/
+
+# ARS local artifact rules
+.env
+.venv/
+ars/runs/**/raw_data/
+ars/runs/**/large_artifacts/
+ars/runs/**/*.parquet
+ars/runs/**/*.feather
+ars/runs/**/*.pkl
+ars/runs/**/*.pickle
+ars/runs/**/*.h5
+ars/runs/**/*.zip
