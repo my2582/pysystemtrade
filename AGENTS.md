@@ -26,3 +26,11 @@ Agents MUST NOT:
 - call external market-data APIs from downstream projects;
 - use non-deterministic AI reasoning as the sole basis for portfolio-impacting decisions.
 <!-- ARS_AGENTS_BLOCK_END -->
+
+## Antigravity ARS Review Skill
+
+This repository includes an Antigravity-compatible ARS review skill at:
+
+`./.agents/skills/arki-ars-review/SKILL.md`
+
+Use it for read-only independent ARS reviews. Do not let Antigravity modify files unless explicitly approved.
