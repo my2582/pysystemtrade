@@ -12,7 +12,7 @@ DASH_DIR="$ROOT/scripts/dashboard"
 if [ -n "$1" ]; then
   RUN_ID="$1"
 else
-  RUN_ID=$(ls -1 "$RUNS_DIR" | sort | tail -1)
+  RUN_ID=$(find "$RUNS_DIR" -mindepth 1 -maxdepth 1 -type d | sort | tail -1 | xargs basename)
 fi
 
 if [ -z "$RUN_ID" ] || [ ! -d "$RUNS_DIR/$RUN_ID" ]; then
