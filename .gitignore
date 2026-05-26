@@ -14,10 +14,16 @@ restats
 .coverage
 .coverage.*
 
-# editor 
+# editor
 .idea
 .project
 .pydevproject
+
+# macOS
+.DS_Store
+
+# Serena tool metadata
+.serena/
 
 # pyenv
 .python-version
