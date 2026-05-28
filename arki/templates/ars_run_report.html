@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>{{TITLE}}</title>
+  <style>
+    @page { size: A4; }
+    :root {
+      --primary: #265844;   /* Arki Main Green */
+      --secondary: #1e4537; /* Darker Green */
+      --accent: #3a7d5c;    /* Mid Green */
+      --highlight: #4a9570; /* Lighter Green */
+      --cream: #F5EBC1;     /* Arki Cream */
+      --bg-light: #f8f9fa;
+      --border-color: #e9ecef;
+      --pass: #2e7d32;
+      --fail: #c62828;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      max-width: 210mm; margin: 0 auto;
+      background-color: #f0f0f0; color: #2d3748;
+      line-height: 1.5; font-size: 10pt; padding: 0;
+    }
+    .page {
+      width: 210mm; min-height: 297mm; padding: 13mm 15mm;
+      margin: 20px auto; background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      page-break-after: always; position: relative;
+    }
+    h1, h2, h3 {
+      font-family: 'Roboto', sans-serif; color: var(--primary);
+      margin-bottom: 0.5rem; line-height: 1.2;
+    }
+    .page-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 12px; margin-bottom: 20px;
+      border-bottom: 3px solid var(--primary);
+    }
+    .page-header h1 {
+      font-size: 18pt; font-weight: 700; margin: 0;
+      color: var(--primary);
+    }
+    .page-header h1::before {
+      content: ''; display: inline-block; width: 4px; height: 18px;
+      background: var(--primary); margin-right: 10px; vertical-align: middle;
+    }
+    .page-header .subtitle {
+      font-size: 9pt; color: var(--secondary); margin: 4px 0 0 14px;
+    }
+    .date-badge {
+      background: var(--primary); color: white;
+      padding: 6px 12px; font-size: 9pt; font-weight: 600;
+      border-radius: 3px;
+    }
+    h2 {
+      font-size: 12pt; font-weight: 700; margin-top: 16px; margin-bottom: 6px;
+      border-left: 4px solid var(--primary); padding-left: 10px;
+    }
+    h3 { font-size: 10pt; font-weight: 600; color: var(--secondary); margin-bottom: 4px; }
+    p { margin-bottom: 6px; }
+    table {
+      width: 100%; border-collapse: collapse; margin-bottom: 12px;
+      font-size: 9pt;
+    }
+    th, td {
+      border: 1px solid var(--border-color);
+      padding: 5px 8px; text-align: right;
+    }
+    th {
+      background: var(--primary); color: white; font-weight: 600;
+      text-align: center;
+    }
+    th.lbl, td.lbl { text-align: left; }
+    tr:nth-child(even) td { background: var(--bg-light); }
+    .verdict {
+      padding: 10px 14px; margin: 10px 0; border-radius: 4px;
+      border-left: 5px solid var(--primary);
+      background: rgba(38,88,68,0.05);
+    }
+    .verdict .v-row {
+      display: flex; align-items: center; gap: 10px; margin: 4px 0;
+      font-size: 9.5pt;
+    }
+    .pass { color: var(--pass); font-weight: 700; }
+    .fail { color: var(--fail); font-weight: 700; }
+    .v-claim { flex: 1; }
+    .v-evidence { color: #555; font-size: 8.5pt; font-style: italic; }
+    .fig {
+      margin: 8px 0; padding: 6px; border: 1px solid var(--border-color);
+      background: white; text-align: center;
+    }
+    .fig img { max-width: 100%; height: auto; }
+    .fig .caption {
+      font-size: 8.5pt; color: var(--secondary); margin-top: 4px;
+      text-align: left;
+    }
+    .footer {
+      position: absolute; bottom: 10mm; left: 15mm; right: 15mm;
+      font-size: 7.5pt; color: #888; border-top: 1px solid var(--border-color);
+      padding-top: 4px; display: flex; justify-content: space-between;
+    }
+    .kv { font-size: 8.5pt; }
+    .kv td.lbl { color: var(--secondary); font-weight: 600; width: 35%; }
+    .literature {
+      font-size: 8pt; color: #555; padding: 6px 10px;
+      background: var(--cream); border-radius: 3px; margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- PAGE 1 — Executive Summary -->
+<section class="page">
+  <div class="page-header">
+    <div>
+      <h1>{{TITLE}}</h1>
+      <div class="subtitle">{{SUBTITLE}}</div>
+    </div>
+    <div class="date-badge">As of {{RUN_DATE}}</div>
+  </div>
+
+  <h2>Headline Verification</h2>
+  <div class="verdict">
+    {{VERDICT_ROWS}}
+  </div>
+
+  <h2>Summary Metrics</h2>
+  {{SUMMARY_TABLE}}
+
+  <h2>Equity Curves</h2>
+  <div class="fig">
+    <img src="{{EQUITY_PNG}}" alt="Equity curves">
+    <div class="caption">{{EQUITY_CAPTION}}</div>
+  </div>
+
+  <div class="literature"><b>Literature:</b> {{LITERATURE}}</div>
+
+  <div class="footer">
+    <span>Arki Finance Pte. Ltd. — ARS Run Report</span>
+    <span>Run {{RUN_UTC}} · git {{GIT_SHA_SHORT}}</span>
+  </div>
+</section>
+
+<!-- PAGE 2 — Trade-Level Analysis & Manifest -->
+<section class="page">
+  <div class="page-header">
+    <div>
+      <h1>Per-Trade Analysis</h1>
+      <div class="subtitle">Sign-episode trade ledger · {{INSTRUMENT_LIST}}</div>
+    </div>
+    <div class="date-badge">{{RUN_DATE}}</div>
+  </div>
+
+  <h2>Per-Trade Distribution</h2>
+  <div class="fig">
+    <img src="{{TRADE_PNG}}" alt="Per-trade distribution">
+    <div class="caption">{{TRADE_CAPTION}}</div>
+  </div>
+
+  <h2>Trade Statistics</h2>
+  {{TRADE_TABLE}}
+
+  <h2>Run Manifest</h2>
+  {{MANIFEST_TABLE}}
+
+  <div class="footer">
+    <span>Arki Robust Standard · do_not_reimplement_engine=true</span>
+    <span>Run {{RUN_UTC}} · git {{GIT_SHA_SHORT}}</span>
+  </div>
+</section>
+
+</body>
+</html>
