@@ -1,9 +1,9 @@
 {
-  "run_utc": "20260528T151806Z",
+  "run_utc": "20260528T161350Z",
   "purpose": "Martin (2023) single-instrument futures momentum: per-trade skew at $50k",
   "literature": "references/research/Design and analysis of momentum trading strategies.pdf",
   "engine": "native pysystemtrade futures_chapter15 (do_not_reimplement_engine=true)",
-  "git_sha": "c3494ee2ce49ad73380bbd088bcecf678e6a935b",
+  "git_sha": "bb53383921bafd7d8769fc42d55195829a5e7e7f",
   "python": "3.10.15",
   "instruments": [
     "US10",

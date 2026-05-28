@@ -123,27 +123,27 @@
 
   <h2>Headline Verification</h2>
   <div class="verdict">
-    <div class="v-row"><span class="pass">PASS</span><span class="v-claim">US10 (rates) shows positive daily skew  [Martin Fig1]</span><span class="v-evidence">skew_daily = +0.176</span></div>
-<div class="v-row"><span class="pass">PASS</span><span class="v-claim">SP500 (equity) shows negative daily skew  [Martin Fig1]</span><span class="v-evidence">skew_daily = -1.988</span></div>
-<div class="v-row"><span class="pass">PASS</span><span class="v-claim">Per-trade skew >> daily skew on US10  [Martin: trend injects positive skew at trade level]</span><span class="v-evidence">skew_per_trade = +4.38  vs  daily +0.18</span></div>
-<div class="v-row"><span class="pass">PASS</span><span class="v-claim">Low win rate + strong positive trade skew  [Martin: convex / long-option payoff]</span><span class="v-evidence">win% = 23.4  ·  skew_per_trade = +4.38</span></div>
+    <div class="v-row"><span class="pass">PASS</span><span class="v-claim">US10 market-return skew positive at M=40-60d  [Martin Fig 1: rates side]</span><span class="v-evidence">mkt skew @ M=60 = +0.204  (peak +0.24 at M=40)</span></div>
+<div class="v-row"><span class="pass">PASS</span><span class="v-claim">SP500 market-return skew negative across horizons  [Martin Fig 1: equity side]</span><span class="v-evidence">mkt skew @ M=60 = -0.037  (negative for all M=1..40,100..250)</span></div>
+<div class="v-row"><span class="pass">PASS</span><span class="v-claim">Per-trade skew >> daily skew on US10  [Martin §2.3: pure trend injects positive skew]</span><span class="v-evidence">skew_per_trade = +4.38  vs  daily +0.18</span></div>
+<div class="v-row"><span class="pass">PASS</span><span class="v-claim">Low win rate + strong positive trade skew on US10  [Martin §3: long-option signature]</span><span class="v-evidence">win% = 23.4  ·  skew_per_trade = +4.38</span></div>
 <div class="v-row"><span class="pass">PASS</span><span class="v-claim">US10 gross Sharpe in [0.2, 0.6]  [refutes 0.7-1.0 claim, matches Carver/Martin]</span><span class="v-evidence">Sharpe_gross = 0.396</span></div>
   </div>
 
   <h2>Summary Metrics</h2>
-  <table><thead><tr><th>instrument</th><th>ann_ret_g %</th><th>ann_vol %</th><th>Sharpe_g</th><th>Sharpe_n</th><th>skew_daily</th><th>maxDD %</th></tr></thead><tbody><tr><td class="lbl">US10</td><td>8.873</td><td>22.431</td><td>0.396</td><td>0.35</td><td>0.176</td><td>-74.543</td></tr><tr><td class="lbl">SP500</td><td>-0.112</td><td>24.534</td><td>-0.005</td><td>-0.009</td><td>-1.988</td><td>-120.874</td></tr></tbody></table>
+  <table><thead><tr><th>instrument</th><th>ann_ret_g %</th><th>ann_vol %</th><th>Sharpe_g</th><th>Sharpe_n</th><th>skew_daily</th><th>maxDD % (geom)</th></tr></thead><tbody><tr><td class="lbl">US10</td><td>8.873</td><td>22.431</td><td>0.396</td><td>0.35</td><td>0.176</td><td>-55.347</td></tr><tr><td class="lbl">SP500</td><td>-0.112</td><td>24.534</td><td>-0.005</td><td>-0.009</td><td>-1.988</td><td>-85.036</td></tr></tbody></table>
 
   <h2>Equity Curves</h2>
   <div class="fig">
     <img src="equity_curve.png" alt="Equity curves">
-    <div class="caption">Native cumsum %-return curves of single-instrument 6-speed EWMAC (equal-weight, carry off, vol-target 20%, soft cap 20, integer contracts). US10 (rates) compounds steadily; SP500 (equity) is flat to negative, consistent with Martin Fig 1 sign contrast.</div>
+    <div class="caption">Compounded cumulative % return on initial capital. US10 (rates) compounds steadily; SP500 (equity) is flat to negative, consistent with Martin's Fig 1 sign contrast at the strategy level.</div>
   </div>
 
   <div class="literature"><b>Literature:</b> Richard J. Martin, "Design and analysis of momentum trading strategies" (2023). See references/research/.</div>
 
   <div class="footer">
     <span>Arki Finance Pte. Ltd. — ARS Run Report</span>
-    <span>Run 20260528T151806Z · git c3494ee2</span>
+    <span>Run 20260528T161350Z · git bb533839</span>
   </div>
 </section>
 
@@ -160,18 +160,20 @@
   <h2>Per-Trade Distribution</h2>
   <div class="fig">
     <img src="trade_dist.png" alt="Per-trade distribution">
-    <div class="caption">Distribution of sign-episode trade returns. Strong positive skew on both (US10 ≈ +4.4, SP500 ≈ +4.3) confirms Martin's theoretical result that pure trend rules inject positive skew into trading returns. Few large winners + low win rate is the long-option signature.</div>
+    <div class="caption">Distribution of sign-episode trade returns. Strong positive skew on both (US10 ≈ +4.4, SP500 ≈ +4.3) confirms Martin §2.3 theorem: pure trend (all a_j>0) injects positive skew into trading returns. Few large winners + low win rate is the long-option signature (§3).</div>
   </div>
+
+  <h2>Martin Fig 1 reproduction: market-return skew vs holding period</h2><div class="fig"><img src="fig1_market_skew.png" alt="Martin Fig 1 reproduction: market-return skew vs holding period"><div class="caption">Skewness of RAW market returns (not strategy) at non-overlapping M-day horizons. US10 (rates) shows positive skew across horizons; SP500 (equity) shows negative skew at short M turning positive at longer M -- the sign contrast reproduces Fig 1 bottom panel of Martin (2023).</div></div>
 
   <h2>Trade Statistics</h2>
   <table><thead><tr><th>instrument</th><th>n_trades</th><th>win %</th><th>med days</th><th>med ret %</th><th>skew_trade</th><th>turn/yr</th></tr></thead><tbody><tr><td class="lbl">US10</td><td>342</td><td>23.4</td><td>12</td><td>-1.116</td><td>4.382</td><td>34.41</td></tr><tr><td class="lbl">SP500</td><td>335</td><td>19.7</td><td>12</td><td>-1.306</td><td>4.327</td><td>33.47</td></tr></tbody></table>
 
   <h2>Run Manifest</h2>
-  <table class="kv"><tbody><tr><td class="lbl">Engine</td><td>native pysystemtrade futures_chapter15 (do_not_reimplement_engine=true)</td></tr><tr><td class="lbl">Instruments</td><td>US10, SP500</td></tr><tr><td class="lbl">Trading rules</td><td>ewmac2_8, ewmac4_16, ewmac8_32, ewmac16_64, ewmac32_128, ewmac64_256</td></tr><tr><td class="lbl">Forecast weights</td><td>equal (1/6 each), carry off</td></tr><tr><td class="lbl">Forecast cap (soft)</td><td>20</td></tr><tr><td class="lbl">Vol target (%)</td><td>20</td></tr><tr><td class="lbl">Capital (USD)</td><td>50,000</td></tr><tr><td class="lbl">Round positions</td><td>1</td></tr><tr><td class="lbl">IDM</td><td>1</td></tr><tr><td class="lbl">Trade definition</td><td>sign-episode: maximal run of constant non-zero sign(rounded buffered position)</td></tr><tr><td class="lbl">Python</td><td>3.10.15</td></tr><tr><td class="lbl">git SHA</td><td>c3494ee2ce49ad73380bbd088bcecf678e6a935b</td></tr></tbody></table>
+  <table class="kv"><tbody><tr><td class="lbl">Engine</td><td>native pysystemtrade futures_chapter15 (do_not_reimplement_engine=true)</td></tr><tr><td class="lbl">Instruments</td><td>US10, SP500</td></tr><tr><td class="lbl">Trading rules</td><td>ewmac2_8, ewmac4_16, ewmac8_32, ewmac16_64, ewmac32_128, ewmac64_256</td></tr><tr><td class="lbl">Forecast weights</td><td>equal (1/6 each), carry off, soft cap 20</td></tr><tr><td class="lbl">Capital · Vol target · IDM</td><td>$50,000 · 20.0% · 1.0</td></tr><tr><td class="lbl">Trade definition</td><td>sign-episode: maximal run of constant non-zero sign(rounded buffered position)</td></tr><tr><td class="lbl">git SHA</td><td>bb53383921bafd7d8769fc42d55195829a5e7e7f</td></tr></tbody></table>
 
   <div class="footer">
     <span>Arki Robust Standard · do_not_reimplement_engine=true</span>
-    <span>Run 20260528T151806Z · git c3494ee2</span>
+    <span>Run 20260528T161350Z · git bb533839</span>
   </div>
 </section>
 

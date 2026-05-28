@@ -77,10 +77,19 @@ def render_run_report(
     trade_png: str,
     trade_caption: str,
     instrument_list: str,
+    extra_section_title: str = "",
+    extra_png: str = "",
+    extra_caption: str = "",
     make_pdf: bool = True,
 ) -> dict[str, Path]:
     """Render the standard ARS run report HTML (and optionally PDF)."""
     tpl = TEMPLATE.read_text()
+    extra_section = ""
+    if extra_png:
+        extra_section = (
+            f'<h2>{extra_section_title}</h2>'
+            f'<div class="fig"><img src="{extra_png}" alt="{extra_section_title}">'
+            f'<div class="caption">{extra_caption}</div></div>')
     repl = {
         "TITLE": title,
         "SUBTITLE": subtitle,
@@ -97,6 +106,7 @@ def render_run_report(
         "TRADE_TABLE": _df_to_html_table(trade_stats_df, "instrument"),
         "MANIFEST_TABLE": _kv_table(manifest_pairs),
         "VERDICT_ROWS": "\n".join(_verdict_row(*v) for v in verdicts),
+        "EXTRA_SECTION": extra_section,
     }
     html = tpl
     for k, v in repl.items():
