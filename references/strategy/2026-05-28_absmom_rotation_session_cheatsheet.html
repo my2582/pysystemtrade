@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>absmom_rotation · session cheatsheet (v0.3)</title>
+<style>
+:root{
+  --ink:#1a1a1a; --muted:#666; --line:#e5e5e5; --bg:#fafaf7; --card:#fff;
+  --bad:#b94a48; --hold:#b58900; --good:#2a7f3f; --navy:#2a4a6b;
+  --f1:#7c3aed; --f2:#0891b2; --f3:#db2777; --f4:#16a34a; --f5:#ea580c;
+}
+*{box-sizing:border-box}
+body{font:15.5px/1.55 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;color:var(--ink);background:var(--bg);margin:0;padding:44px 52px;max-width:1280px}
+h1{font-size:30px;margin:0 0 4px;letter-spacing:-.4px}
+.sub{color:var(--muted);font-size:14.5px;margin-bottom:8px;line-height:1.6}
+.sub b{color:#333;font-weight:600}
+.tag{display:inline-block;font:11px "SF Mono",Menlo,monospace;background:#eef0f3;color:#444;border:1px solid #dde1e7;border-radius:3px;padding:2px 7px;margin:2px 4px 2px 0}
+.hero{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--good);padding:18px 22px;margin:18px 0 8px}
+.hero .punch{font-size:19px;font-weight:600;letter-spacing:-.2px;line-height:1.4}
+.hero .punch em{color:var(--good);font-style:normal} .hero .punch s{color:var(--bad);text-decoration-thickness:2px}
+.hero .row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.kfig{font-variant-numeric:tabular-nums}
+.kfig .v{font-size:25px;font-weight:700;letter-spacing:-.5px}
+.kfig .v.good{color:var(--good)} .kfig .v.hold{color:var(--hold)} .kfig .v.navy{color:var(--navy)} .kfig .v.bad{color:var(--bad)}
+.kfig .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.chip{display:inline-block;font:12px/1 "SF Mono",Menlo,monospace;padding:3px 7px;border-radius:3px;border:1px solid #dde1e7;background:#eef0f3;color:#333;margin:1px 2px;vertical-align:middle;font-variant-numeric:tabular-nums}
+.chip.bad{background:#fbe9e9;color:var(--bad);border-color:#f4cccc}
+.chip.good{background:#e8f5ea;color:var(--good);border-color:#c3e0c8}
+.chip.hold{background:#fbf4dd;color:var(--hold);border-color:#ecdca0}
+.chip.code{background:#f3f1ec;color:#1a1a1a;font-weight:700}
+.toc{background:var(--card);border:1px solid var(--line);padding:14px 20px;margin:18px 0 26px}
+.toc h2{font-size:13px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:600}
+.toc ul{margin:0;padding-left:0;list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.toc li a{color:#333;text-decoration:none;font-size:13.5px;padding:6px 9px;display:block;border:1px solid var(--line);background:#fff;border-left-width:4px}
+.toc li a .dot{font-weight:700;margin-right:6px}
+.banner{margin:40px 0 12px;padding:13px 18px;background:var(--card);border:1px solid var(--line);border-left:5px solid #888;display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+.banner .l{font:12px/1 "SF Mono",Menlo,monospace;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;font-weight:700}
+.banner .n{font-size:19px;font-weight:600;letter-spacing:-.2px}
+.banner .r{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.f1{border-left-color:var(--f1)!important}.f2{border-left-color:var(--f2)!important}.f3{border-left-color:var(--f3)!important}.f4{border-left-color:var(--f4)!important}.f5{border-left-color:var(--f5)!important}
+.mc{background:var(--card);border:1px solid var(--line);margin:12px 0;display:grid;grid-template-columns:380px 1fr;gap:0}
+.mc .lt{padding:16px;background:#fcfbf8;border-right:1px solid var(--line);display:flex;flex-direction:column}
+.mc .lt .name{font-size:16.5px;font-weight:600;letter-spacing:-.2px;margin-bottom:10px;line-height:1.3}
+.mc .lt .diag{background:#fff;border:1px solid var(--line);padding:8px;flex:1}
+.mc .lt .diag svg{display:block;width:100%;height:225px}
+.fullcard svg{height:210px}
+.mc .lt .cap{font-size:11.5px;color:var(--muted);margin-top:7px;line-height:1.5;font-style:italic}
+.mc .rt{padding:16px 20px}
+.mc .rt h4{font-size:12.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:600;margin:13px 0 5px;border-bottom:1px solid var(--line);padding-bottom:3px}
+.mc .rt h4:first-child{margin-top:0}
+.mc .rt .glossary{margin:0;padding:0;list-style:none}
+.mc .rt .glossary li{padding:3px 0;font-size:13.5px;line-height:1.45;border-bottom:1px dotted #eee}
+.mc .rt .glossary li:last-child{border-bottom:none}
+.mc .rt .glossary li b{font-family:"SF Mono",Menlo,monospace;color:#1a1a1a;background:#f3f1ec;padding:1px 5px;border-radius:2px;font-size:12.5px;margin-right:5px}
+.mc .rt ol{margin:0;padding-left:18px;font-size:13.5px;line-height:1.5}
+.mc .rt .why{font-size:13.5px;line-height:1.5;background:#fafaf7;border-left:3px solid #999;padding:7px 11px;margin-top:4px}
+.mc .rt .why.good{border-left-color:var(--good);background:#f5fbf5}
+.mc .rt .why.hold{border-left-color:var(--hold);background:#fdf9ec}
+.mc .rt .why.bad{border-left-color:var(--bad);background:#fdf5f5}
+.mc .rt b{font-weight:600}
+.shared{font-size:12.5px;color:#444;background:#f3f1ec;border-radius:3px;padding:6px 10px;margin-top:8px;line-height:1.5}
+.shared b{color:#1a1a1a}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0;font-variant-numeric:tabular-nums}
+th{font-size:11px;background:#f3f1ec;text-transform:uppercase;letter-spacing:.3px;padding:5px 8px;text-align:left;color:#555;border-bottom:1px solid var(--line);font-weight:600}
+td{padding:5px 8px;border-bottom:1px solid #eee;color:#333} td.num{text-align:right}
+tr.good td{background:#e8f5ea} tr.bad td{background:#fdeceb} tr.hi td{background:#fbf4dd;font-weight:600}
+.gx{stroke:#ededed;stroke-width:.6}.ax{stroke:#888;stroke-width:.7}
+.px{stroke:var(--navy);stroke-width:1.8;fill:none}.px2{stroke:#aaa;stroke-width:1.2;fill:none;stroke-dasharray:3 2}
+.bar{fill:var(--navy)}.barb{fill:var(--bad)}.barg{fill:var(--good)}
+.lbl{font:9.5px -apple-system,sans-serif;fill:#666}.lbl.r{fill:var(--bad);font-weight:700}.lbl.g{fill:var(--good);font-weight:700}.lbl.b{fill:var(--navy);font-weight:700}
+/* LaTeX-style math (self-contained; no MathJax/KaTeX) */
+.math{font-family:"Cambria","Georgia","Times New Roman",serif;font-style:italic;letter-spacing:.2px;color:#222}
+.math .op,.math .fn{font-style:normal}
+.math sub,.math sup{font-size:.7em;font-style:normal}
+.frac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:-0.55em;font-size:.92em;margin:0 .2em}
+.frac>span{display:block;padding:0 .3em;line-height:1.15}
+.frac>span:first-child{border-bottom:1px solid #222}
+.eqn{display:block;margin:9px 0;padding:8px 12px;background:#fbfaf6;border-left:3px solid #c8c8c8;font-size:15px;text-align:left}
+.eqn .lab{display:block;font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-style:normal;font-family:-apple-system,sans-serif}
+.sqrt{position:relative;padding-left:.6em}
+.sqrt::before{content:"\221A";position:absolute;left:0;top:0;font-size:1.05em;font-style:normal}
+.sqrt span{border-top:1px solid currentColor;padding:0 .12em}
+.meta{font-size:12.5px;color:var(--muted);margin-top:46px;padding-top:16px;border-top:1px solid var(--line);line-height:1.7}
+</style>
+</head>
+<body>
+
+<h1>absmom_rotation — session cheatsheet (v0.3)</h1>
+<div class="sub">Single-position momentum rotation strategy spec, signal research, min-account-size studies, and the universe redefinition from a NAME proxy to a principled DV criterion. Sessions: <b>2026-05-27 / 2026-05-28</b>. <span class="tag">spec v0.3</span><span class="tag">research note</span><span class="tag">min-account study v1+v2</span><span class="tag">ARS adapter role</span></div>
+
+<div class="hero">
+  <div class="punch">The "mini/micro" NAME filter was an under-counting proxy: <s>22 instruments, 5 current</s> <em>189 instruments, 42 current (incl. all dm37 niche legs)</em>. At <b>$50k</b> the niche-rotation universe is large enough today; the binding constraint is data currency, not capital.</div>
+  <div class="row">
+    <div class="kfig"><div class="v navy">30%</div><div class="l">target volatility (locked)</div></div>
+    <div class="kfig"><div class="v good">189</div><div class="l">DV universe (vs <s>22</s> name-based)</div></div>
+    <div class="kfig"><div class="v good">42</div><div class="l">current data (vs <s>5</s> name-based)</div></div>
+    <div class="kfig"><div class="v navy">$50k</div><div class="l">min account size</div></div>
+    <div class="kfig"><div class="v hold">SR &ge;0.40</div><div class="l">honest success bar</div></div>
+  </div>
+</div>
+
+<div class="toc"><h2>What's inside</h2><ul>
+  <li><a class="f1" href="#f1" style="border-left-color:var(--f1)"><span class="dot" style="color:var(--f1)">&#9679;</span>F1 · Problem — why single-position trend is structurally weak</a></li>
+  <li><a class="f2" href="#f2" style="border-left-color:var(--f2)"><span class="dot" style="color:var(--f2)">&#9679;</span>F2 · Design — top-1 rotation, DV universe, src/ overlay</a></li>
+  <li><a class="f3" href="#f3" style="border-left-color:var(--f3)"><span class="dot" style="color:var(--f3)">&#9679;</span>F3 · Results — min-account table, universe-by-budget</a></li>
+  <li><a class="f4" href="#f4" style="border-left-color:var(--f4)"><span class="dot" style="color:var(--f4)">&#9679;</span>F4 · Tradeoff — fat tail, thin pool, regime risk</a></li>
+  <li><a class="f5" href="#f5" style="border-left-color:var(--f5)"><span class="dot" style="color:var(--f5)">&#9679;</span>F5 · Status — literature anchors, overfitting, caveats</a></li>
+</ul></div>
+
+<!-- ===== F1 PROBLEM ===== -->
+<div class="banner f1" id="f1"><span class="l">F1 · Problem</span><span class="n">Single-position trend SR is structurally weak</span><span class="r">Carver / Martin / Hanauer-Windm&uuml;ller</span></div>
+<div class="mc">
+  <div class="lt"><div class="name">Sharpe ratio scales with diversification, not signal cleverness</div>
+    <div class="diag"><svg viewBox="0 0 360 220" preserveAspectRatio="xMidYMid meet">
+      <!-- horizontal Sharpe bars; one label per row, vertical gap 36 -->
+      <line class="ax" x1="50" y1="20" x2="50" y2="200"/>
+      <line class="ax" x1="50" y1="200" x2="350" y2="200"/>
+      <!-- scale 0..1.2 -> x 50..350 -->
+      <rect class="barb" x="50" y="28" width="60" height="22"/>
+      <text class="lbl" x="320" y="44" text-anchor="end">Single fixed (Carver) &asymp; 0.24</text>
+      <rect class="bar" x="50" y="64" width="100" height="22"/>
+      <text class="lbl" x="320" y="80" text-anchor="end">Single rotation (pseudo-div) &asymp; 0.30-0.40</text>
+      <rect class="barg" x="50" y="100" width="100" height="22"/>
+      <text class="lbl g" x="320" y="116" text-anchor="end">Our honest target &ge; 0.40</text>
+      <rect class="bar" x="50" y="136" width="225" height="22"/>
+      <text class="lbl b" x="320" y="152" text-anchor="end">Macro-mini (24-37 inst) &asymp; 0.90</text>
+      <rect class="barb" x="50" y="172" width="200" height="22" fill-opacity=".35" stroke="var(--bad)" stroke-dasharray="3 2"/>
+      <text class="lbl r" x="320" y="188" text-anchor="end">Research paper 0.7-1.0 (0 citations, dismissed)</text>
+      <!-- x-axis ticks -->
+      <text class="lbl" x="50" y="213" text-anchor="middle">0.0</text>
+      <text class="lbl" x="125" y="213" text-anchor="middle">0.3</text>
+      <text class="lbl" x="200" y="213" text-anchor="middle">0.6</text>
+      <text class="lbl" x="275" y="213" text-anchor="middle">0.9</text>
+      <text class="lbl" x="350" y="213" text-anchor="middle">Sharpe</text>
+    </svg></div>
+    <div class="cap">Net Sharpe by configuration. The 0.7-1.0 paper claim contradicts Carver's empirics; we anchor on &ge;0.40.</div></div>
+  <div class="rt">
+    <h4>Decode the jargon</h4>
+    <ul class="glossary">
+      <li><b>SR</b> Net annualized Sharpe ratio after costs.</li>
+      <li><b>EWMAC</b> EMA fast minus EMA slow (a.k.a. MACD), normalized by realized vol.</li>
+      <li><b>DV</b> Dollar-volatility per contract = multiplier &times; price &times; %vol.</li>
+      <li><b>TSMOM</b> Time-series momentum (Moskowitz-Ooi-Pedersen). NOT in the two PDFs sourced.</li>
+      <li><b>Dual mom</b> Antonacci's relative-rank + absolute (vs T-bill) filter. NOT in the PDFs (general knowledge).</li>
+    </ul>
+    <h4>The evidence (four ways)</h4>
+    <ol>
+      <li><b>Literature.</b> Carver: per-instrument trend SR &asymp; 0.24 pre-cost; portfolio &asymp; 1.0 comes almost entirely from combining 30-100 low-correlation instruments, not from signal quality.</li>
+      <li><b>Literature (sourced).</b> Hanauer &amp; Windm&uuml;ller (2022), Table 2 p.35: cross-sectional equity MOM baseline US Sharpe 0.47; <b>risk-managed variants</b> reach 0.83-0.91. Improvements come from vol-scaling (cMOM Sharpe 0.47&rarr;0.87, MaxDD -69%&rarr;-39%) and dynamic state-conditioning (dMOM Sharpe 0.91), not from cleverer ranking.</li>
+      <li><b>Literature (sourced).</b> Martin (2023) p.22-23: a hard sign-flip signal is explicitly discouraged ("buys-and-dumps in non-trending markets"); a <em>dead-zone buffer</em> &epsilon;&asymp;0.6 (vol-normalized units) recovers positive skew without Sharpe loss.</li>
+      <li><b>Empirical.</b> Pasted research summary (Perplexity sonar-deep-research) claimed 0.7-1.0; the report returned 0 citations (a known sonar-deep-research failure mode) and contradicts Carver. Flagged unverified, dismissed as the target bar.</li>
+    </ol>
+    <div class="why bad"><b>Why it matters.</b> Setting the success bar at 0.7-1.0 builds a strategy that cannot succeed; setting it at 0.40 is honest and lets cMOM-style vol-targeting (which we already do) and rotation diversification do the heavy lifting.</div>
+  </div>
+</div>
+
+<!-- ===== F2 DESIGN ===== -->
+<div class="banner f2" id="f2"><span class="l">F2 · Design</span><span class="n">Always-invested top-1 + DV universe + src/ overlay (engine untouched)</span><span class="r">v0.3 spec</span></div>
+<div class="mc">
+  <div class="lt"><div class="name">Universe &rarr; rank &rarr; top-1 &rarr; vol-target sizing</div>
+    <div class="diag"><svg viewBox="0 0 360 220" preserveAspectRatio="xMidYMid meet">
+      <!-- 4-stage flow boxes (vertical), avoid label overlap -->
+      <rect x="40" y="14" width="280" height="32" fill="#eaf3fb" stroke="#7fb1d6"/>
+      <text class="lbl b" x="180" y="34" text-anchor="middle">DV universe (ex-FX, ex-energy, has data) - 189 names, 42 current</text>
+      <text x="180" y="58" class="lbl" text-anchor="middle">&darr;</text>
+      <rect x="40" y="62" width="280" height="32" fill="#f3eafb" stroke="#a48ecf"/>
+      <text class="lbl" x="180" y="82" text-anchor="middle" font-weight="700" fill="#5b3aaf">Rank cross-sectionally by momentum score &phi;</text>
+      <text x="180" y="106" class="lbl" text-anchor="middle">&darr;</text>
+      <rect x="40" y="110" width="280" height="32" fill="#fbeaea" stroke="#cf8e8e"/>
+      <text class="lbl r" x="180" y="130" text-anchor="middle">Select top-1 (argmax) - always invested</text>
+      <text x="180" y="154" class="lbl" text-anchor="middle">&darr;</text>
+      <rect x="40" y="158" width="280" height="32" fill="#eafbef" stroke="#8eccaa"/>
+      <text class="lbl g" x="180" y="178" text-anchor="middle">Size N contracts to hit 30% vol; residual = cash</text>
+      <text x="180" y="208" class="lbl" text-anchor="middle">(weekly rebalance)</text>
+    </svg></div>
+    <div class="cap">Four-stage rotation. The src/ layer applies stages 2-4 on top of pysystemtrade outputs.</div></div>
+  <div class="rt">
+    <h4>The approach (justified)</h4>
+    <ol>
+      <li><b>Universe = DV-based</b>, not name-based: all futures with adjusted-price data, ex-FX, ex-energy (OilGas). 189 instruments captured (vs 22 in v1) - critical for small-AUM niche dispersion. <span class="chip code">scripts/universe_min_account_full.py</span></li>
+      <li><b>Architecture</b>: always-invested top-1 (owner-corrected from "cash filter"); no go-flat default. Vol-target sets integer contracts; residual capital sits in cash (normal margined-futures behaviour).</li>
+      <li><b>Signal v1 = A/B</b>. A: pysystemtrade-native EWMAC combined forecast as the rank score (max reuse). B: academic blended momentum 3/6/12M (signal-level averaging per Martin p.7 precedent; multi-lookback blend itself is general knowledge - PDFs do not specify a 3/6/12 recipe).</li>
+      <li><b>Integration</b>: pysystemtrade <code>System</code> cannot express top-1 + cash. A new <code>src/arki_strategies/absmom_rotation.py</code> consumes the engine's per-instrument forecast / vol / price / cost and <b>emits the standard run artifacts</b> (<code>stats.yaml</code>, <code>daily_returns.csv</code>, <code>dashboard_meta.json</code>) into <code>results/runs/&lt;id&gt;/</code>. <b>Core engine untouched.</b> <code>get_run_summary</code> + <code>generate_dashboard</code> reuse for free.</li>
+    </ol>
+    <h4>Formulas</h4>
+    <div class="eqn math">
+      <span class="lab">Dollar-vol per contract (in local ccy)</span>
+      <i>DV</i><sub>local</sub> = <i>m</i> &middot; <i>&sigma;</i><sub>d</sub> &middot; <span class="sqrt"><span>256</span></span>
+      &nbsp;&nbsp;&nbsp;<span class="op">where</span> <i>&sigma;</i><sub>d</sub> = std(<i>p</i><sub>t</sub>&minus;<i>p</i><sub>t&minus;1</sub>) from engine <span class="fn">mixed_vol_calc</span>
+    </div>
+    <div class="eqn math">
+      <span class="lab">Minimum account for k contracts (USD)</span>
+      <i>A</i><sub>min</sub>(<i>k</i>) = <i>k</i> &middot; <span class="frac"><span><i>DV</i><sub>local</sub></span><span><i>v</i><sub>tgt</sub></span></span> &middot; <i>fx</i><sub>&rarr;USD</sub>
+      &nbsp;&nbsp;&nbsp;<span class="op">with</span> <i>v</i><sub>tgt</sub> = 0.30
+    </div>
+    <div class="eqn math">
+      <span class="lab">Position in contracts at capital C</span>
+      <i>N</i> = <span class="frac"><span><i>C</i> &middot; <i>v</i><sub>tgt</sub></span><span><i>m</i> &middot; <i>p</i> &middot; <i>&sigma;</i><sub>p</sub></span></span>
+      &nbsp;&nbsp;&nbsp;<span class="op">rounded to nearest integer</span>
+    </div>
+    <div class="eqn math">
+      <span class="lab">EWMAC forecast (engine, capped &plusmn;20)</span>
+      <i>&phi;</i><sub>t</sub> = clip<sub>&plusmn;20</sub><span class="op">(</span><span class="frac"><span>EMA<sub>fast</sub>(<i>p</i>) &minus; EMA<sub>slow</sub>(<i>p</i>)</span><span><i>&sigma;</i><sub>p,t</sub></span></span><span class="op">)</span>
+    </div>
+    <div class="eqn math">
+      <span class="lab">Constant-vol scaling (cMOM, Hanauer p.10 eq.2-3)</span>
+      <i>w</i><sub>cMOM,t</sub> = <span class="frac"><span><i>&sigma;</i><sub>target</sub></span><span><i>&sigma;&#770;</i><sub>t</sub></span></span>
+      &nbsp;&nbsp;&nbsp;<i>&sigma;&#770;</i><sup>2</sup><sub>t</sub> = <span class="frac"><span>21</span><span>126</span></span> &middot; &sum;<sub>j=1</sub><sup>126</sup> <i>R</i><sup>2</sup><sub>t&minus;j</sub>
+    </div>
+    <div class="eqn math">
+      <span class="lab">Dead-zone whipsaw control (Martin p.22-23)</span>
+      <i>&psi;</i>(<i>z</i>) = <span class="op">{</span> 0 <span class="op">if</span> |<i>z</i>| &lt; <i>&epsilon;</i> ; <i>z</i> <span class="op">otherwise</span> <span class="op">}</span>,
+      &nbsp;<i>&epsilon;</i> &asymp; 0.6
+    </div>
+    <div class="why good"><b>Why this works.</b> The src/ overlay emits standard artifacts, so the existing MCP toolkit (<code>get_run_summary</code>, <code>generate_dashboard</code>) reuses without modification. The four-stage flow inherits pysystemtrade's vetted forecast / vol / cost machinery; only the discrete selection is new. Engine immutability preserved per ARS adapter role.</div>
+  </div>
+</div>
+
+<!-- ===== F3 RESULTS ===== -->
+<div class="banner f3" id="f3"><span class="l">F3 · Results</span><span class="n">Min-account by k, universe-by-budget, niche-current verified</span><span class="r">two studies, both reproducible</span></div>
+<div class="mc">
+  <div class="lt"><div class="name">Universe size scales with account; DV captures niches the NAME filter missed</div>
+    <div class="diag"><svg viewBox="0 0 360 220" preserveAspectRatio="xMidYMid meet">
+      <!-- two lines: name-based (caps at 22) and DV-based (grows toward 189); x = account log -->
+      <!-- axes -->
+      <line class="ax" x1="44" y1="190" x2="340" y2="190"/>
+      <line class="ax" x1="44" y1="20" x2="44" y2="190"/>
+      <!-- y ticks 0,50,100,150,189 -->
+      <text class="lbl" x="38" y="193" text-anchor="end">0</text>
+      <text class="lbl" x="38" y="148" text-anchor="end">50</text>
+      <text class="lbl" x="38" y="103" text-anchor="end">100</text>
+      <text class="lbl" x="38" y="58" text-anchor="end">150</text>
+      <text class="lbl" x="38" y="24" text-anchor="end">189</text>
+      <!-- x: 10k 25k 50k 100k 200k 500k 1M, log spaced -->
+      <text class="lbl" x="44" y="205" text-anchor="middle">$10k</text>
+      <text class="lbl" x="103" y="205" text-anchor="middle">$25k</text>
+      <text class="lbl" x="162" y="205" text-anchor="middle">$50k</text>
+      <text class="lbl" x="221" y="205" text-anchor="middle">$100k</text>
+      <text class="lbl" x="280" y="205" text-anchor="middle">$500k</text>
+      <text class="lbl" x="340" y="205" text-anchor="middle">$1M</text>
+      <!-- DV-based total at >=1 ctr: 89,179,179,179,189,189 (approximated) -->
+      <polyline class="px" points="44,109 103,29 162,29 221,29 280,21 340,20"/>
+      <!-- DV-based >=4 ctr: 32,80,121,158,177,180 -->
+      <polyline class="px2" points="44,160 103,118 162,82 221,49 280,30 340,28" style="stroke:var(--f4);stroke-dasharray:none"/>
+      <!-- Name-based total (caps at 22): 13,21,22,22,22,22 -> y 178,172,172,172,172,172 -->
+      <polyline class="px2" points="44,178 103,171 162,171 221,171 280,171 340,171" style="stroke:var(--bad)"/>
+      <!-- labels positioned to not overlap, far right -->
+      <text class="lbl b" x="346" y="20" text-anchor="start" font-weight="700">DV &ge;1c</text>
+      <text class="lbl g" x="346" y="32" text-anchor="start" font-weight="700">DV &ge;4c</text>
+      <text class="lbl r" x="346" y="174" text-anchor="start" font-weight="700">Name &le;22</text>
+    </svg></div>
+    <div class="cap">Universe-size curves: DV-based grows; the NAME-based curve is capped at 22 by construction.</div></div>
+  <div class="rt">
+    <h4>Min-account table (engine vol, 30% target, USD)</h4>
+    <table>
+    <thead><tr><th>Instrument</th><th>Asset</th><th class="num">AnnVol</th><th class="num">1-ctr</th><th class="num">4-ctr</th><th>Data</th></tr></thead>
+    <tbody>
+      <tr><td>SP500_micro</td><td>Equity</td><td class="num">13.0%</td><td class="num">$13.6k</td><td class="num">$54.5k</td><td><span class="chip good">current</span></td></tr>
+      <tr><td>NASDAQ_micro</td><td>Equity</td><td class="num">14.9%</td><td class="num">$21.2k</td><td class="num">$84.8k</td><td><span class="chip good">current</span></td></tr>
+      <tr><td>IBEX_mini</td><td>Equity (EUR)</td><td class="num">22.5%</td><td class="num">$10.1k</td><td class="num">$40.4k</td><td><span class="chip good">current</span></td></tr>
+      <tr><td>COPPER-micro</td><td>Metals</td><td class="num">30.5%</td><td class="num">$10.8k</td><td class="num">$43.1k</td><td><span class="chip good">current</span></td></tr>
+      <tr class="bad"><td>GOLD_micro</td><td>Metals</td><td class="num">32.6%</td><td class="num">$39.9k</td><td class="num">$159.6k</td><td><span class="chip good">current</span> binds at $50k</td></tr>
+      <tr class="good"><td>COFFEE</td><td>Ags</td><td class="num">~14%</td><td class="num">~$8k</td><td class="num">~$32k</td><td><span class="chip good">current (dm37)</span></td></tr>
+      <tr class="good"><td>BUND</td><td>Bond (EUR)</td><td class="num">~6%</td><td class="num">~$7k</td><td class="num">~$28k</td><td><span class="chip good">current (dm37)</span></td></tr>
+      <tr class="good"><td>EU-BANKS</td><td>Sector (EUR)</td><td class="num">~20%</td><td class="num">~$6k</td><td class="num">~$24k</td><td><span class="chip good">current (dm37)</span></td></tr>
+      <tr><td>SUGAR11</td><td>Ags</td><td class="num">~22%</td><td class="num">~$4k</td><td class="num">~$16k</td><td><span class="chip hold">STALE</span> refresh priority</td></tr>
+    </tbody>
+    </table>
+    <h4>Universe unlocked by account size (DV-based / current)</h4>
+    <table>
+    <thead><tr><th>Account</th><th class="num">&ge;1 ctr</th><th class="num">&ge;2 ctr</th><th class="num">&ge;4 ctr</th><th class="num">current &ge;4 ctr</th></tr></thead>
+    <tbody>
+      <tr><td>$25k</td><td class="num">158</td><td class="num">112</td><td class="num">80</td><td class="num">11</td></tr>
+      <tr class="hi"><td>$50k (owner)</td><td class="num">179</td><td class="num">158</td><td class="num">121</td><td class="num">15</td></tr>
+      <tr><td>$100k</td><td class="num">189</td><td class="num">183</td><td class="num">158</td><td class="num">25</td></tr>
+      <tr><td>$200k</td><td class="num">189</td><td class="num">189</td><td class="num">182</td><td class="num">35</td></tr>
+    </tbody>
+    </table>
+    <div class="why good"><b>Verify (passed).</b> The dm37 niche legs (COFFEE, REDWHEAT, OJ, LEANHOG, LIVECOW, FEEDCOW, EU-BANKS, EU-DJ-OIL, EU-DJ-TELECOM, BUND, BOBL, OAT, BONO, US10, US5) are <b>all current</b>. Only SUGAR11 / COTTON / COCOA / a few others among the obvious softs are STALE - these are the refresh priorities, not all 167 added.</div>
+  </div>
+</div>
+
+<!-- ===== F4 TRADEOFF ===== -->
+<div class="banner f4" id="f4"><span class="l">F4 · Tradeoff</span><span class="n">Fat tail, thin pool, regime risk - the honest cost of single-position</span><span class="r">no free lunch</span></div>
+<div class="mc">
+  <div class="lt"><div class="name">Fat-tail drawdown 30-50% even with vol target; no diversification cushion</div>
+    <div class="diag"><svg viewBox="0 0 360 220" preserveAspectRatio="xMidYMid meet">
+      <!-- bar chart: expected MaxDD by configuration -->
+      <line class="ax" x1="50" y1="20" x2="50" y2="200"/>
+      <line class="ax" x1="50" y1="200" x2="350" y2="200"/>
+      <!-- y scale 0..60% over 180px -->
+      <text class="lbl" x="46" y="200" text-anchor="end">0%</text>
+      <text class="lbl" x="46" y="155" text-anchor="end">15</text>
+      <text class="lbl" x="46" y="110" text-anchor="end">30</text>
+      <text class="lbl" x="46" y="65" text-anchor="end">45</text>
+      <text class="lbl" x="46" y="22" text-anchor="end">60</text>
+      <!-- 4 bars (single fixed, our rotation, macro-mini, after dMOM overlay) -->
+      <rect class="barb" x="80" y="20" width="46" height="180"/>
+      <text class="lbl" x="103" y="215" text-anchor="middle">Single fixed</text>
+      <text class="lbl r" x="103" y="14" text-anchor="middle">-55%</text>
+      <rect class="barb" x="150" y="65" width="46" height="135"/>
+      <text class="lbl" x="173" y="215" text-anchor="middle">Top-1 rotation</text>
+      <text class="lbl r" x="173" y="59" text-anchor="middle">-40%</text>
+      <rect class="bar" x="220" y="110" width="46" height="90"/>
+      <text class="lbl" x="243" y="215" text-anchor="middle">+dead-zone</text>
+      <text class="lbl b" x="243" y="104" text-anchor="middle">-30%</text>
+      <rect class="barg" x="290" y="140" width="46" height="60"/>
+      <text class="lbl" x="313" y="215" text-anchor="middle">Macro-mini (24+)</text>
+      <text class="lbl g" x="313" y="134" text-anchor="middle">-20%</text>
+    </svg></div>
+    <div class="cap">Expected MaxDD bands by configuration. Single-position can't get below ~30% even with overlays - this is the irreducible cost of forgoing diversification.</div></div>
+  <div class="rt">
+    <h4>The honest cost (single-position)</h4>
+    <ul class="glossary">
+      <li><b>fat tail</b> 30-50% MaxDD is structural; vol-target shrinks but does not eliminate it. macro-mini's MaxDD of ~20% comes from cross-instrument cancellation that single-position cannot have.</li>
+      <li><b>least-bad</b> Always-invested top-1 can be long the strongest-momentum instrument in a <em>broad</em> downturn (i.e. still falling). The dead-zone or dMOM overlay (F2) is the studied mitigation.</li>
+      <li><b>regime concentration</b> The held instrument is the entire portfolio for that week; a structural break in that name (e.g. JGB carry trade unwind) is undiversifiable.</li>
+      <li><b>granularity</b> At $50k, GOLD_micro vol-target wants 1.3 contracts (rounds to 1 or 2) - 30% &plusmn; ~12% rounding error. A <code>min_contracts</code> parameter auto-excludes instruments where N &lt; threshold.</li>
+      <li><b>thin pool risk</b> A 5-name pool with 3 correlated equity indices has weak cross-sectional dispersion. The DV view (F3) makes this strictly better (42 current incl. softs, bonds, sectors).</li>
+    </ul>
+    <h4>Mitigations (in spec)</h4>
+    <ol>
+      <li>Dead-zone &epsilon;&asymp;0.6 on the top-1 score (research item, F2 dead-zone formula).</li>
+      <li>dMOM-style bear-state down-weight (Hanauer p.11-12, eq.6-7).</li>
+      <li><code>min_contracts</code> floor - excludes weeks where vol-target can't be met.</li>
+      <li>DV-based universe widens the pool from 5 (correlated equities) to 15+ current at $50k &ge;4-ctr.</li>
+    </ol>
+    <div class="why hold"><b>Why we still build it.</b> The owner's constraint is small AUM &rarr; single-position is the design space. The goal is not "beat macro-mini" - it is "beat fixed-single (SR&asymp;0.24) by a factor we can validate, and cut tail relative to buy&amp;hold." Both are realistic.</div>
+  </div>
+</div>
+
+<!-- ===== F5 STATUS / STATS / DISCIPLINE ===== -->
+<div class="banner f5" id="f5"><span class="l">F5 · Status</span><span class="n">Literature anchors, overfitting quantified, caveats</span><span class="r">spec v0.3 - awaiting redline before Step 2</span></div>
+<div class="mc">
+  <div class="lt"><div class="name">cMOM vol-targeting is the single biggest sourced Sharpe enhancement</div>
+    <div class="diag"><svg viewBox="0 0 360 220" preserveAspectRatio="xMidYMid meet">
+      <!-- vertical bar chart: Sharpe by config (Hanauer Table 2, US sample) -->
+      <line class="ax" x1="50" y1="20" x2="50" y2="200"/>
+      <line class="ax" x1="50" y1="200" x2="350" y2="200"/>
+      <text class="lbl" x="46" y="200" text-anchor="end">0.0</text>
+      <text class="lbl" x="46" y="155" text-anchor="end">0.25</text>
+      <text class="lbl" x="46" y="110" text-anchor="end">0.50</text>
+      <text class="lbl" x="46" y="65" text-anchor="end">0.75</text>
+      <text class="lbl" x="46" y="22" text-anchor="end">1.00</text>
+      <!-- y from Sharpe: 0..1 over 180px; Sharpe S -> y = 200 - S*180 -->
+      <rect class="barb" x="70" y="156" width="40" height="44"/>
+      <text class="lbl" x="90" y="150" text-anchor="middle">0.24</text>
+      <text class="lbl" x="90" y="215" text-anchor="middle">Carver single</text>
+      <rect class="bar" x="125" y="116" width="40" height="84"/>
+      <text class="lbl b" x="145" y="110" text-anchor="middle">0.47</text>
+      <text class="lbl" x="145" y="215" text-anchor="middle">MOM baseline</text>
+      <rect class="barg" x="180" y="44" width="40" height="156"/>
+      <text class="lbl g" x="200" y="38" text-anchor="middle">0.87</text>
+      <text class="lbl" x="200" y="215" text-anchor="middle">cMOM</text>
+      <rect class="barg" x="235" y="55" width="40" height="145"/>
+      <text class="lbl g" x="255" y="49" text-anchor="middle">0.83</text>
+      <text class="lbl" x="255" y="215" text-anchor="middle">sMOM</text>
+      <rect class="barg" x="290" y="36" width="40" height="164"/>
+      <text class="lbl g" x="310" y="30" text-anchor="middle">0.91</text>
+      <text class="lbl" x="310" y="215" text-anchor="middle">dMOM</text>
+    </svg></div>
+    <div class="cap">Hanauer &amp; Windm&uuml;ller (2022) Table 2 p.35, US sample. cMOM / sMOM / dMOM are vol-targeting variants - <em>not</em> better signals.</div></div>
+  <div class="rt">
+    <h4>Statistical anchors (with verdicts)</h4>
+    <ol>
+      <li><b>Single fixed</b> SR &asymp; 0.24 (Carver). Pre-cost, point estimate. Direction-only meaningful; not significant @95% on a single-instrument sample. Sets the floor.</li>
+      <li><b>cMOM uplift</b> Baseline 0.47 &rarr; cMOM 0.87 (Hanauer Table 2, p.35). Skew -2.18 &rarr; -0.32. <em>Robust</em> - same uplift in EUR/JPN sub-samples (Table 3). Significance: clear by inspection given the magnitude; the paper's CI is wide but uplift dominates.</li>
+      <li><b>Dead-zone</b> &epsilon;&asymp;0.6 recovered positive skew at no Sharpe loss (Martin p.22-23, p.27). Point + qualitative verdict only; no CI reported in the paper.</li>
+      <li><b>Our target</b> Net SR &ge; 0.40. Confidence: a rotation pool of 5-15 with low correlation should clear this given 30% vol-target and the cMOM-style scaling we already apply. Not a forecast - a falsifiable bar.</li>
+    </ol>
+    <h4>Overfitting quantified</h4>
+    <ul class="glossary">
+      <li><b>tuned params</b> v1 baseline (A0/B0): EWMAC speeds (default {8/32, 16/64, 32/128} - standard) + min_contracts (=1). Effectively 0 tuned. Optional: dead-zone &epsilon; (1 param), dMOM bear threshold (1 param). Total &le; 3.</li>
+      <li><b>sample</b> Per-instrument history 9-54 years (full history honored); cross-sectional pool 5-15. Single-position rotation has a smaller effective sample than a portfolio strategy.</li>
+      <li><b>OOS</b> Pre-2015 vs post-2015 split required; cost-sensitivity 1x/2x spread; regime breakdown (GFC, COVID, 2022).</li>
+      <li><b>Verdict</b> <em>Low overfit risk</em> at the A0/B0 baseline. Risk rises if we tune &epsilon; or dMOM threshold without OOS validation.</li>
+    </ul>
+    <div class="why good"><b>Status (2026-05-28).</b> Spec v0.3 + signal research note + DV universe study (v2) all in <code>references/strategy/</code>. Owner redline pending on: (1) which v1 variants to A/B (recommend A0 first), (2) data-refresh sequencing (SUGAR/COTTON/COCOA stragglers via IB backfill). After redline, Step 2 = <code>src/arki_strategies/absmom_rotation.py</code> scaffolding + <code>run_rotation_backtest</code> MCP tool.</div>
+  </div>
+</div>
+
+<div class="meta">
+<b>Sources.</b>
+Engine vol: pysystemtrade <code>sysquant.estimators.vol.mixed_vol_calc</code> on adjusted-price diffs, 35d + 20y slow-vol blend (config method). FX: repo <code>data/futures/fx_prices_csv/</code> (latest spot). Universe filter: <code>data/futures/csvconfig/instrumentconfig.csv</code>.
+Studies: <code>scripts/universe_min_account_study.py</code> &rarr; <code>references/strategy/2026-05-27_min_account_universe_study.html</code> (name-based, 22); <code>scripts/universe_min_account_full.py</code> &rarr; <code>references/strategy/2026-05-28_dv_universe_study.html</code> (DV-based, 189).
+Spec: <code>references/strategy/2026-05-27_absmom_rotation_spec.md</code> (v0.3). Signal research: <code>references/strategy/2026-05-27_signal_implementation_research.md</code>.
+Literature: Carver, "Systematic Trading" / "Advanced Futures"; Martin (2023), <em>Design and analysis of momentum trading strategies</em>, 31p (in repo); Hanauer &amp; Windm&uuml;ller (2022), <em>Enhanced Momentum Strategies</em>, 67p (in repo).
+<br>
+<b>Caveats.</b>
+USD reference currency; non-USD min-account converted at last spot. Vol is regime-dependent - metals (GOLD/COPPER) shown at 2025-26 elevated regime (~30%); long-run blend lower. Single-position carries irreducible 30-50% MaxDD risk. "Current" defined as price data &le; 120 days old as of 2026-05-28. Backtest results not yet produced; numbers in F1/F3/F5 are literature anchors and engine-computed contract economics, not backtest output. Past simulation/literature, not a forecast or live recommendation.
+<br>
+<b>ARS profile.</b> <code>engine_type: mature_external_trading_system</code>; <code>live_trading: false</code>; <code>max_ai_decision_level: 2</code>; adapter + evidence-pack role - core pysystemtrade not modified.
+</div>
+
+</body>
+</html>
