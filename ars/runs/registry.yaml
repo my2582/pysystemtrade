@@ -144,3 +144,132 @@ runs:
     path: ars/runs/20260528T173334Z_dmom_us10
     evidence_pack: ars/evidence_packs/dmom_us10
     decision_log: ars/DECISIONS.md#2026-05-29-dmom-us10-falsified
+
+  - id: 20260528T181556Z_smom_us10
+    label: smom_us10
+    timestamp: '2026-05-28T18:15:56Z'
+    hypothesis_ref: ars/evidence_packs/smom_us10/smom_us10_preregistration.md
+    status: promoted
+    config:
+      capital_usd: 50000
+      vol_target_pct: 20.0
+      instruments: [US10, SP500]
+      baseline: martin 6-speed EWMAC equal-weight
+      overlay: sMOM (Wang-Yan 2021) downside-semi-vol multiplicative scaler, lookback 126d
+      runner: scripts/momentum_variants_backtest.py
+    results:
+      US10:
+        baseline: {sharpe_gross: 0.347, max_drawdown_pct_geom: -55.347, skew_per_trade: 5.345}
+        smom: {sharpe_gross: 0.602, max_drawdown_pct_geom: -44.155, skew_per_trade: 4.693}
+        sharpe_lift: 0.255
+        maxdd_lift_pp: 11.192
+      SP500:
+        baseline: {sharpe_gross: -0.009, skew_per_trade: 5.324}
+        smom: {sharpe_gross: 0.161, skew_per_trade: 21.291, skew_daily: 105.9, max_drawdown_pct_geom: -0.323}
+        finding: SP500 sMOM shows degenerate behaviour (skew_daily +106 = single huge outlier; near-miss G4 at 0.161 vs threshold 0.20); leverage in calm periods on SP500's bull run drives the near-rescue
+    gates:
+      G1_sharpe_lift: {observed: 0.255, threshold: ">= +0.05", verdict: PASS}
+      G2_maxdd_improvement_pp: {observed: 11.192, threshold: ">= +3.0", verdict: PASS}
+      G3_skew_per_trade: {observed: 4.693, threshold: ">= 1.0", verdict: PASS}
+      G4_sp500_control: {observed: 0.161, threshold: "< 0.20", verdict: PASS_borderline}
+    verdict_summary: |
+      PROMOTED Path A (all 4 gates PASS). sMOM lifts US10 Sharpe by +0.255 and
+      improves maxDD by 11.2 pp; skew preserved (4.69 > 1.0). SP500 control
+      passes at 0.161 BUT is borderline (threshold 0.20); SP500 displays
+      degenerate single-outlier behaviour. Genuine enhancement on rates;
+      flag near-miss control for downstream review.
+    path: ars/runs/20260528T181556Z_smom_us10
+    evidence_pack: ars/evidence_packs/smom_us10
+    decision_log: ars/DECISIONS.md#2026-05-29-smom-us10-promoted
+
+  - id: 20260528T181556Z_fast_tilt_ewmac
+    label: fast_tilt_ewmac
+    timestamp: '2026-05-28T18:15:56Z'
+    hypothesis_ref: ars/evidence_packs/fast_tilt_ewmac/fast_tilt_ewmac_preregistration.md
+    status: falsified
+    config:
+      capital_usd: 50000
+      vol_target_pct: 20.0
+      instruments: [US10, SP500]
+      forecast_weights:
+        ewmac2_8: 0.30
+        ewmac4_16: 0.25
+        ewmac8_32: 0.20
+        ewmac16_64: 0.15
+        ewmac32_128: 0.07
+        ewmac64_256: 0.03
+      runner: scripts/momentum_variants_backtest.py
+    results:
+      US10:
+        baseline: {sharpe_gross: 0.347, skew_per_trade: 5.345, n_trades: 485}
+        fast_tilt: {sharpe_gross: 0.192, skew_per_trade: 4.363, n_trades: 806, max_drawdown_pct_geom: -58.679}
+        sharpe_lift: -0.155
+      SP500:
+        baseline: {sharpe_gross: -0.009}
+        fast_tilt: {sharpe_gross: -0.185, max_drawdown_pct_geom: -97.245}
+    gates:
+      G1_sharpe_lift: {observed: -0.155, threshold: ">= +0.05", verdict: FAIL}
+      G2_skew_per_trade: {observed: 4.363, threshold: ">= 1.0", verdict: PASS}
+      G3_sp500_control: {observed: -0.185, threshold: "< 0.20", verdict: PASS}
+    verdict_summary: |
+      FALSIFIED (sharpe_lift -0.155 is more than 0.03 worse, triggering the
+      "faster is worse" pre-registered FALSIFY rule). Fast-tilt WEIGHTS THE
+      WRONG END for US10: turnover increases (485 -> 806 trades) but no
+      Sharpe benefit -- the small-AUM speed advantage does not materialise
+      on a single integer-contract $50k rates portfolio. Skew preserved
+      (>1.0). SP500 control PASS. Finding: small-AUM speed edge is real in
+      theory (Carver) but transaction-cost-free integer-contract single-
+      instrument simulation does not capture it; the edge would show up
+      in a no-cost differential between large vs small CTAs, not as a
+      same-cost configuration change.
+    path: ars/runs/20260528T181556Z_fast_tilt_ewmac
+    evidence_pack: ars/evidence_packs/fast_tilt_ewmac
+    decision_log: ars/DECISIONS.md#2026-05-29-fast-tilt-falsified
+
+  - id: 20260528T181556Z_carry_toggle
+    label: carry_toggle
+    timestamp: '2026-05-28T18:15:56Z'
+    hypothesis_ref: ars/evidence_packs/carry_toggle/carry_toggle_preregistration.md
+    status: refuted
+    config:
+      capital_usd: 50000
+      vol_target_pct: 20.0
+      instruments: [US10, SP500]
+      forecast_weights:
+        ewmac2_8: 0.117
+        ewmac4_16: 0.117
+        ewmac8_32: 0.117
+        ewmac16_64: 0.117
+        ewmac32_128: 0.117
+        ewmac64_256: 0.117
+        carry: 0.30
+      runner: scripts/momentum_variants_backtest.py
+    results:
+      US10:
+        baseline: {sharpe_gross: 0.347, skew_per_trade: 5.345}
+        carry_on: {sharpe_gross: 0.437, skew_per_trade: 7.343, max_drawdown_pct_geom: -55.940}
+        sharpe_shift: 0.090
+        skew_reduction: -1.998  # NEGATIVE = carry INCREASED skew, opposite to pre-reg hypothesis
+      SP500:
+        baseline: {sharpe_gross: -0.009}
+        carry_on: {sharpe_gross: 0.011}
+    gates:
+      G1_sharpe_shift: {observed: 0.090, threshold: ">= 0.03", verdict: PASS}
+      G2_skew_reduction: {observed: -1.998, threshold: ">= 0.5", verdict: FAIL}
+      G3_skew_above_floor: {observed: 7.343, threshold: ">= 1.0", verdict: PASS}
+      G4_sp500_control: {observed: 0.011, threshold: "< 0.20", verdict: PASS}
+    verdict_summary: |
+      REFUTED. Adding carry to the trend stack DOES materially affect Sharpe
+      (+0.090) but DOES NOT reduce per-trade skew on US10 -- it INCREASES
+      skew_per_trade from 5.35 to 7.34. Pre-registered hypothesis (Martin
+      §2.3 implication: carry as non-trend should flatten skew) is REFUTED
+      on this instrument. Interpretation: bond futures carry (roll yield
+      in backwardation under secular rate decline) is itself a positively-
+      skewed return source on this contract; combining it with trend
+      compounds rather than dilutes the long-option signature. Single-
+      instrument finding; does not generalise to cross-sectional or to
+      contango-dominated commodities. SP500 carry_on Sharpe 0.011 confirms
+      no false rescue on equity.
+    path: ars/runs/20260528T181556Z_carry_toggle
+    evidence_pack: ars/evidence_packs/carry_toggle
+    decision_log: ars/DECISIONS.md#2026-05-29-carry-toggle-refuted

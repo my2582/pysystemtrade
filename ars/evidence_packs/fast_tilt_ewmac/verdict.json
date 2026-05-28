@@ -1,0 +1,21 @@
+{
+  "gates": {
+    "G1_sharpe_lift": {
+      "observed": -0.155,
+      "threshold": ">= +0.05",
+      "verdict": "FAIL"
+    },
+    "G2_skew_per_trade": {
+      "observed": 4.363,
+      "threshold": ">= 1.0",
+      "verdict": "PASS"
+    },
+    "G3_sp500_control": {
+      "observed": -0.185,
+      "threshold": "< 0.20",
+      "verdict": "PASS"
+    }
+  },
+  "status": "falsified",
+  "promotion_path": "FALSIFY"
+}

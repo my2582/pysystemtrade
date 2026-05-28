@@ -1,0 +1,45 @@
+{
+  "run_utc": "20260528T181556Z",
+  "experiment_slug": "smom_us10",
+  "engine": "native pysystemtrade futures_chapter15",
+  "git_sha": "8f1efe151aad96f1b16af6fa29fe89a6f0ae537d",
+  "python": "3.10.15",
+  "instruments": [
+    "US10",
+    "SP500"
+  ],
+  "ewmac_rules": [
+    "ewmac2_8",
+    "ewmac4_16",
+    "ewmac8_32",
+    "ewmac16_64",
+    "ewmac32_128",
+    "ewmac64_256"
+  ],
+  "capital_usd": 50000,
+  "vol_target_pct": 20.0,
+  "verdicts": {
+    "G1_sharpe_lift": {
+      "observed": 0.255,
+      "threshold": ">= +0.05",
+      "verdict": "PASS"
+    },
+    "G2_maxdd_improvement_pp": {
+      "observed": 11.192,
+      "threshold": ">= +3.0",
+      "verdict": "PASS"
+    },
+    "G3_skew_per_trade": {
+      "observed": 4.693,
+      "threshold": ">= 1.0",
+      "verdict": "PASS"
+    },
+    "G4_sp500_control": {
+      "observed": 0.161,
+      "threshold": "< 0.20",
+      "verdict": "PASS"
+    },
+    "status": "promoted",
+    "promotion_path": "A"
+  }
+}

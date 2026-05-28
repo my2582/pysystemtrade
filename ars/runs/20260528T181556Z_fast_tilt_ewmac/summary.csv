@@ -1,0 +1,5 @@
+instrument,variant,label,ann_return_pct,ann_vol_pct,sharpe_gross,skew_daily,skew_per_trade,max_drawdown_pct_geom,n_trades,win_rate_pct
+US10,baseline,US10_baseline,7.72,22.255,0.347,0.176,5.345,-55.347,485,18.1
+US10,fast_tilt_ewmac,US10_fast_tilt_ewmac,4.29,22.332,0.192,0.277,4.363,-58.679,806,18.1
+SP500,baseline,SP500_baseline,-0.227,24.342,-0.009,-1.989,5.324,-85.036,462,19.0
+SP500,fast_tilt_ewmac,SP500_fast_tilt_ewmac,-4.529,24.464,-0.185,-0.178,4.478,-97.245,817,21.9

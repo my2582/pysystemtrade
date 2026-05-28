@@ -1,0 +1,45 @@
+{
+  "run_utc": "20260528T181556Z",
+  "experiment_slug": "carry_toggle",
+  "engine": "native pysystemtrade futures_chapter15",
+  "git_sha": "8f1efe151aad96f1b16af6fa29fe89a6f0ae537d",
+  "python": "3.10.15",
+  "instruments": [
+    "US10",
+    "SP500"
+  ],
+  "ewmac_rules": [
+    "ewmac2_8",
+    "ewmac4_16",
+    "ewmac8_32",
+    "ewmac16_64",
+    "ewmac32_128",
+    "ewmac64_256"
+  ],
+  "capital_usd": 50000,
+  "vol_target_pct": 20.0,
+  "verdicts": {
+    "G1_sharpe_shift": {
+      "observed": 0.09,
+      "threshold": ">= 0.03",
+      "verdict": "PASS"
+    },
+    "G2_skew_reduction": {
+      "observed": -1.998,
+      "threshold": ">= 0.5",
+      "verdict": "FAIL"
+    },
+    "G3_skew_above_floor": {
+      "observed": 7.343,
+      "threshold": ">= 1.0",
+      "verdict": "PASS"
+    },
+    "G4_sp500_control": {
+      "observed": 0.011,
+      "threshold": "< 0.20",
+      "verdict": "PASS"
+    },
+    "status": "refuted",
+    "promotion_path": "REFUTED"
+  }
+}

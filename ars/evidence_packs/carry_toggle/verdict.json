@@ -1,0 +1,26 @@
+{
+  "gates": {
+    "G1_sharpe_shift": {
+      "observed": 0.09,
+      "threshold": ">= 0.03",
+      "verdict": "PASS"
+    },
+    "G2_skew_reduction": {
+      "observed": -1.998,
+      "threshold": ">= 0.5",
+      "verdict": "FAIL"
+    },
+    "G3_skew_above_floor": {
+      "observed": 7.343,
+      "threshold": ">= 1.0",
+      "verdict": "PASS"
+    },
+    "G4_sp500_control": {
+      "observed": 0.011,
+      "threshold": "< 0.20",
+      "verdict": "PASS"
+    }
+  },
+  "status": "refuted",
+  "promotion_path": "REFUTED"
+}

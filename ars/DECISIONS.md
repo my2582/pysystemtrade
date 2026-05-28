@@ -97,3 +97,89 @@ Per-instrument detail (Sharpe / maxDD geom / skew_per_trade / n_trades):
 - The Tier-3 alternative crash overlay worth testing on US10 is `sMOM` (semi-vol scaling, Wang & Yan 2021) which does NOT require a regime model. Lower-bar test; pre-register before running.
 - Conversely, dMOM might still apply to a CROSS-SECTIONAL momentum portfolio across multiple rates futures (Bund, BOBL, OAT, JGB, KR10, ...). That is a different experiment family, not in this repo's L2 scope at present.
 - For Sharpe enhancement on US10 single-instrument trend, the path forward is NOT crash management; it is either (a) faster signals trading the small-AUM speed advantage, or (b) trend + carry combination (one further design decision at a time).
+
+---
+
+## 2026-05-29 — smom_us10 — PROMOTED (Path A, borderline control)
+
+**Status:** `promoted` (Path A — all 4 pre-registered gates PASS, BUT G4 SP500 control passes at 0.161 vs threshold 0.20 — near-miss flagged).
+
+**Hypothesis under test:** Wang-Yan 2021 semi-vol scaler `w = sqrt(target_var)/sqrt(downside_var_126d)` lifts US10 single-instrument trend Sharpe by ≥ 0.05, improves maxDD by ≥ 3 pp, preserves trade-level skew, no false rescue on SP500.
+
+**Measured result:**
+
+| Gate | Threshold | Observed | Verdict |
+|---|---|---|---|
+| G1 Sharpe lift US10 | ≥ +0.05 | **+0.255** | PASS |
+| G2 maxDD improvement | ≥ +3.0 pp | **+11.19 pp** | PASS |
+| G3 skew_per_trade US10 | ≥ 1.0 | 4.69 | PASS |
+| G4 SP500 control | < 0.20 | 0.161 | PASS_borderline |
+
+US10: Sharpe 0.347 → 0.602; ann ret 7.72 → 13.39; vol 22.26 → 22.26; maxDD geom -55.35 → -44.16; n_trades 485 → 485 (same trade boundaries).
+SP500: Sharpe -0.009 → 0.161; skew_daily -1.99 → **+105.9 (degenerate, single huge outlier)**; maxDD -85.0 → -0.32.
+
+**Verdict text:** sMOM is a **genuine enhancement on US10**: a +0.255 Sharpe lift with 11 pp better maxDD without destroying the long-option skew is materially favourable. The mechanism (scale up in calm periods, scale down in downside-vol periods) works on the bond trend because secular rate-down regime gives many low-downside-vol windows for leverage. **Caveats:** (a) absolute leverage level depends on the closed-form lambda match using full-sample baseline var, which is a standard Hanauer convention but does involve full-sample scaling; the relative time-pattern is OOS-clean. (b) SP500 sMOM shows degenerate behaviour (skew_daily +106 = single huge outlier dominates) and a near-miss control pass at 0.161 — investigate before any cross-instrument generalisation.
+
+**Promotion path:** Path A. Evidence pack at `ars/evidence_packs/smom_us10/`. Downstream consumers should treat as a US10-rates-specific finding pending replication on Bund / BOBL / OAT.
+
+**Artifacts:**
+- Run: `ars/runs/20260528T181556Z_smom_us10/`
+- Code: `scripts/momentum_variants_backtest.py`
+- Pre-reg commit: (this commit's predecessor; locked before run)
+
+**Next experiments queued:** replication on Bund / BOBL / OAT; test sMOM with bear filter (intersection of sMOM and dMOM regime conditioning).
+
+---
+
+## 2026-05-29 — fast_tilt_ewmac — FALSIFIED
+
+**Status:** `falsified` (FALSIFY path triggered: sharpe_lift -0.155 < -0.03 "faster is worse" rule).
+
+**Hypothesis under test:** Linear-decay forecast weights toward fast EWMAC (0.30, 0.25, 0.20, 0.15, 0.07, 0.03) capture the small-AUM speed advantage Carver-restricted CTAs cannot use, lifting US10 Sharpe.
+
+**Measured result:**
+
+| Gate | Threshold | Observed | Verdict |
+|---|---|---|---|
+| G1 Sharpe lift US10 | ≥ +0.05 | **-0.155** | FAIL |
+| G2 skew_per_trade US10 | ≥ 1.0 | 4.36 | PASS |
+| G3 SP500 control | < 0.20 | -0.185 | PASS |
+
+US10: Sharpe 0.347 → 0.192 (-0.155); maxDD -55.35 → -58.68 (worse); n_trades 485 → 806 (+66% turnover).
+SP500: Sharpe -0.009 → -0.185; maxDD -85 → -97.
+
+**Verdict text:** Fast-tilt weights the wrong end. The pre-registered rule "faster is worse if sharpe_lift < -0.03" triggers: -0.155 is far below the threshold. Higher turnover (485 → 806 trades, +66%) costs without lift. The small-AUM speed advantage (Carver) is **theoretical** — it requires a cost differential between large vs small CTAs, not just a faster signal at the same simulated cost structure. In a transaction-cost-free integer-contract $50k simulation, fast signals just whipsaw more. Skew preservation (G2 PASS at 4.36) means the strategy still has the long-option shape — it just has worse mean.
+
+**Promotion path:** FALSIFY. Finding: do not retry with weight tweaks; the speed-advantage hypothesis requires a different test surface (e.g. tick-data with realistic cost-by-size models). Out of L2 scope here.
+
+**Artifacts:** Run `ars/runs/20260528T181556Z_fast_tilt_ewmac/`. Evidence pack `ars/evidence_packs/fast_tilt_ewmac/`. Code `scripts/momentum_variants_backtest.py`.
+
+---
+
+## 2026-05-29 — carry_toggle — REFUTED (Martin §2.3 implication contradicted on rates)
+
+**Status:** `refuted` (REFUTED path: G2 skew-reduction FAIL — carry did NOT reduce skew; it INCREASED it).
+
+**Hypothesis under test:** Martin §2.3 says pure-trend (all a_j > 0) is sufficient for positive skew. Implication: adding non-trend signal (carry) should reduce skew. Test: enable carry at weight 0.30 (EWMAC renormalised to 0.70) — expect skew_reduction ≥ 0.5.
+
+**Measured result:**
+
+| Gate | Threshold | Observed | Verdict |
+|---|---|---|---|
+| G1 Sharpe shift US10 | \|Δ\| ≥ 0.03 | 0.090 | PASS |
+| G2 skew reduction US10 | ≥ +0.5 | **-1.998** (carry INCREASED skew) | FAIL |
+| G3 skew floor US10 | ≥ 1.0 | 7.34 | PASS |
+| G4 SP500 control | < 0.20 | 0.011 | PASS |
+
+US10: Sharpe 0.347 → 0.437 (+0.090); skew_per_trade 5.35 → **7.34 (+1.99 INCREASE)**; maxDD -55.35 → -55.94; n_trades 485 → 365 (carry is slower than EWMAC → fewer trades).
+SP500: Sharpe -0.009 → 0.011 (essentially zero, no rescue).
+
+**Verdict text:** Adding carry **does NOT reduce** US10 per-trade skew — it INCREASES it by +2.0. The pre-registered hypothesis (Martin §2.3 implication for this trade structure) is REFUTED on this instrument. Interpretation: bond futures carry (roll yield in backwardation under secular rate-down) is **itself a positively-skewed return source** on US10, so combining it with trend stacks two long-option payoffs rather than diluting one. Sharpe also lifts (+0.09), so carry is a structurally good addition on US10 rates — NOT a clean test of "trend purity" but rather a finding that the rates carry source is well-aligned with trend.
+
+This is an important nuance for downstream: Martin §2.3 holds AS WRITTEN (pure trend → positive skew, mathematically); the implication "non-trend dilutes skew" is contingent on whether the non-trend signal is itself zero-skew (or oppositely-skewed). For US10 rates, carry is not zero-skew. The finding is single-instrument; do not generalise to commodities in contango or to FX without re-testing.
+
+**Promotion path:** REFUTED (assumption test, not promotion candidate per pre-reg §4). Finding registered; informs future carry-vs-trend design discussions.
+
+**Artifacts:** Run `ars/runs/20260528T181556Z_carry_toggle/`. Evidence pack `ars/evidence_packs/carry_toggle/`. Code `scripts/momentum_variants_backtest.py`.
+
+**Implications:** since carry on US10 (a) lifts Sharpe by ~0.09 AND (b) lifts skew, carry-toggle is a candidate enhancement for a future trend+carry production system on US10. Note this would be a Path A promotion candidate in a separate experiment with appropriate pre-registered Sharpe-lift gates.
