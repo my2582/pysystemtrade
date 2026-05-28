@@ -1,0 +1,35 @@
+{
+  "run_utc": "20260528T151806Z",
+  "purpose": "Martin (2023) single-instrument futures momentum: per-trade skew at $50k",
+  "literature": "references/research/Design and analysis of momentum trading strategies.pdf",
+  "engine": "native pysystemtrade futures_chapter15 (do_not_reimplement_engine=true)",
+  "git_sha": "c3494ee2ce49ad73380bbd088bcecf678e6a935b",
+  "python": "3.10.15",
+  "instruments": [
+    "US10",
+    "SP500"
+  ],
+  "ewmac_rules": [
+    "ewmac2_8",
+    "ewmac4_16",
+    "ewmac8_32",
+    "ewmac16_64",
+    "ewmac32_128",
+    "ewmac64_256"
+  ],
+  "forecast_weights": {
+    "ewmac2_8": 0.166667,
+    "ewmac4_16": 0.166667,
+    "ewmac8_32": 0.166667,
+    "ewmac16_64": 0.166667,
+    "ewmac32_128": 0.166667,
+    "ewmac64_256": 0.166667
+  },
+  "carry_included": false,
+  "forecast_cap": 20.0,
+  "percentage_vol_target": 20.0,
+  "capital_usd": 50000,
+  "roundpositions": true,
+  "idm": 1.0,
+  "trade_def": "sign-episode: maximal run of constant non-zero sign(rounded buffered position)"
+}
