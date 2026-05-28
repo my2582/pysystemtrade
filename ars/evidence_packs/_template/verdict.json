@@ -1,0 +1,30 @@
+{
+  "ars_version": "0.1",
+  "project_name": "pysystemtrade",
+  "experiment_slug": "<slug>",
+  "run_id": "<UTC>_<slug>",
+  "run_type": "exploratory",
+  "pre_registration": "ars/evidence_packs/<slug>/<slug>_preregistration.md @ <pre_reg git sha>",
+  "git_commit_at_run": "<git sha at run start>",
+  "data_snapshot_id": "<sha or pointer>",
+  "status": "promoted | falsified | promoted_post_hoc",
+  "reconciliation": {
+    "diff_pct_tolerance": 5.0,
+    "values": {}
+  },
+  "gates": [
+    {
+      "id": "G1",
+      "claim": "<claim>",
+      "metric": "<metric name>",
+      "threshold": "<threshold rule>",
+      "observed": null,
+      "verdict": "PASS | FAIL"
+    }
+  ],
+  "headline": {},
+  "promotion_path": "A | B | Z",
+  "owner_signoff_utc": "<ISO8601>",
+  "decision_log_anchor": "ars/DECISIONS.md#<YYYY-MM-DD-slug>",
+  "finding_if_falsified": null
+}

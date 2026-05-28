@@ -1,0 +1,72 @@
+# ARS run registry for pysystemtrade.
+# Mirrors the b3-saa-etf output/experiments/registry.csv pattern in YAML form.
+# Schema is documented in ars/PROMOTION.md (Registry schema section).
+# Falsified experiments stay registered with status: falsified.
+
+runs:
+
+  - id: 20260528T161350Z_martin_single_instrument
+    label: martin_single_instrument
+    timestamp: '2026-05-28T16:13:50Z'
+    hypothesis_ref: ars/evidence_packs/martin_single_instrument/martin_single_instrument_preregistration.md  # POST-HOC, see note in pre-reg
+    status: promoted_post_hoc
+    config:
+      capital_usd: 50000
+      vol_target_pct: 20.0
+      instruments: [US10, SP500]
+      rules: [ewmac2_8, ewmac4_16, ewmac8_32, ewmac16_64, ewmac32_128, ewmac64_256]
+      forecast_weights: equal_1_6
+      carry_included: false
+      forecast_cap: 20.0
+      idm: 1.0
+      roundpositions: true
+      trade_def: sign-episode (constant non-zero sign on rounded buffered position)
+      runner: scripts/martin_single_instrument_backtest.py
+    results:
+      US10:
+        sharpe_gross: 0.396
+        sharpe_net: 0.350
+        ann_return_gross_pct: 8.873
+        ann_vol_pct: 22.431
+        max_drawdown_pct_geom: -55.347
+        skew_daily: 0.176
+        skew_per_trade: 4.382
+        market_skew_at_m60: 0.204
+        market_skew_peak_at_m40: 0.244
+        n_trades: 342
+        win_rate_pct: 23.4
+        median_trade_return_pct: -1.116
+        median_trade_days: 12
+        ann_subsystem_turnover: 34.41
+        reconciliation_diff_pct: -1.17
+      SP500:
+        sharpe_gross: -0.005
+        sharpe_net: -0.009
+        ann_return_gross_pct: -0.112
+        ann_vol_pct: 24.534
+        max_drawdown_pct_geom: -85.036
+        skew_daily: -1.988
+        skew_per_trade: 4.327
+        market_skew_at_m60: -0.037
+        market_skew_daily: -0.247
+        n_trades: 335
+        win_rate_pct: 19.7
+        median_trade_return_pct: -1.306
+        median_trade_days: 12
+        ann_subsystem_turnover: 33.47
+        reconciliation_diff_pct: 0.853
+    verdict_summary: |
+      5/5 headline gates PASS (Martin Fig 1 market-skew sign contrast on
+      US10 / SP500; §2.3 trading-return skew theorem confirmed; §3 long-
+      option signature on US10; US10 Sharpe in [0.2, 0.6] refutes 0.7-1.0
+      claim). Reconciliation tight (|diff| < 5%).
+    promotion_caveat: |
+      Pre-registration is POST-HOC, written after the run completed.
+      Implicit hypothesis at time of run: "reproduce Martin Fig 1 sign
+      contrast on rates vs equity single instruments + §2.3 trading-skew
+      theorem under 6-speed EWMAC at $50k". Owner-acknowledged limitation;
+      grandfathered as the framework's first registry entry. Future runs
+      MUST be pre-registered before run-start git SHA.
+    path: ars/runs/20260528T161350Z_martin_single_instrument
+    evidence_pack: ars/evidence_packs/martin_single_instrument
+    decision_log: ars/DECISIONS.md#2026-05-29-martin-single-instrument-post-hoc-registration
