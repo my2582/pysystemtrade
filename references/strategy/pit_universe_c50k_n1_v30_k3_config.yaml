@@ -1,0 +1,27 @@
+label: c50k_n1_v30_k3
+generated: '2026-05-28T16:06:52'
+parameters:
+  capital_usd: 50000
+  n_positions: 1
+  vol_target: 0.3
+  min_contracts_held: 3
+  lookback_momentum_days: 252
+  min_history_years: 5
+  min_adv_contracts: 1000
+  max_staleness_days: 15
+  rebalance_freq: W-FRI
+  exclude_asset_classes:
+  - FX
+  - OilGas
+  exclude_china: true
+  min_asset_classes: 0
+  start: '2010-01-01'
+  end: '2026-04-02'
+results_summary:
+  n_candidates_after_static_filters: 181
+  mean_universe_size: 46.902122641509436
+static_approximations_flagged:
+- ADV from exchange-published references (current snapshot, not PIT)
+- 'Spread cost: not applied in this filter (downstream)'
+- 'Multiplier / contract spec: current config (assumed stable over history)'
+- 'Survivorship: only instruments present in current instrumentconfig.csv'
