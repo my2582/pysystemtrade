@@ -70,3 +70,77 @@ runs:
     path: ars/runs/20260528T161350Z_martin_single_instrument
     evidence_pack: ars/evidence_packs/martin_single_instrument
     decision_log: ars/DECISIONS.md#2026-05-29-martin-single-instrument-post-hoc-registration
+
+  - id: 20260528T173334Z_dmom_us10
+    label: dmom_us10
+    timestamp: '2026-05-28T17:33:34Z'
+    hypothesis_ref: ars/evidence_packs/dmom_us10/dmom_us10_preregistration.md  # locked @ 65c423bc (pre-run)
+    status: falsified
+    config:
+      capital_usd: 50000
+      vol_target_pct: 20.0
+      instruments: [US10, SP500]
+      baseline: martin 6-speed EWMAC equal-weight, carry off, soft cap 20
+      overlay: dMOM multiplicative scaler at returns-stream level
+      bear_lookback_days: 504
+      mkt_var_lookback_days: 126
+      strat_var_lookback_days: 126
+      regression_warmup_days: 504
+      runner: scripts/dmom_overlay_backtest.py
+    results:
+      US10:
+        baseline:
+          sharpe_gross: 0.347
+          ann_return_pct: 7.72
+          ann_vol_pct: 22.255
+          max_drawdown_pct_geom: -55.347
+          skew_per_trade: 4.382
+          n_trades: 342
+          win_rate_pct: 23.4
+        dmom:
+          sharpe_gross: 0.364
+          ann_return_pct: 7.965
+          ann_vol_pct: 21.886
+          max_drawdown_pct_geom: -56.39
+          skew_per_trade: 5.461
+          n_trades: 537
+          win_rate_pct: 36.3
+        sharpe_lift: 0.017
+        maxdd_lift_pp: -1.043
+        lambda: 0.4456
+      SP500:
+        baseline:
+          sharpe_gross: -0.009
+          ann_return_pct: -0.227
+          ann_vol_pct: 24.342
+          max_drawdown_pct_geom: -85.036
+          skew_per_trade: 4.327
+          n_trades: 335
+          win_rate_pct: 19.7
+        dmom:
+          sharpe_gross: -0.148
+          ann_return_pct: -3.498
+          ann_vol_pct: 23.617
+          max_drawdown_pct_geom: -100.0   # geom equity clipped at 0; one extreme leveraged day
+          skew_per_trade: 14.247
+          skew_daily: -106.5              # degenerate; single huge outlier dominates
+          n_trades: 521
+          win_rate_pct: 57.4
+        finding: SP500 baseline has no edge to enhance; dMOM amplifies noise into instability
+    gates:
+      G1_sharpe_lift_us10: {observed: 0.017, threshold: ">= +0.10", verdict: FAIL}
+      G2_maxdd_lift_us10: {observed: -1.043, threshold: ">= +5.0 pp", verdict: FAIL}
+      G3_skew_us10_dmom: {observed: 5.461, threshold: ">= 1.0", verdict: PASS}
+      G4_sp500_dmom_sharpe: {observed: -0.148, threshold: "< 0.20", verdict: PASS}
+      G_recon: {verdict: PASS}
+    verdict_summary: |
+      FALSIFIED per pre-registration §4 (G1 AND G2 both FAIL). Pre-registered
+      finding triggered: dMOM on single-instrument US10 EWMAC trend does not
+      enhance Sharpe (lift +0.017, within noise) and does not reduce crashes
+      (maxDD slightly worse by 1pp). Trade-level skew is preserved/amplified
+      (4.38 -> 5.46), so the long-option signature survives, but the
+      cross-sectional equity result (Hanauer 2022) does not transfer to a
+      single rates futures contract. SP500 control passes (no false rescue).
+    path: ars/runs/20260528T173334Z_dmom_us10
+    evidence_pack: ars/evidence_packs/dmom_us10
+    decision_log: ars/DECISIONS.md#2026-05-29-dmom-us10-falsified

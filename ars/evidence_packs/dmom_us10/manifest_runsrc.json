@@ -1,0 +1,74 @@
+{
+  "run_utc": "20260528T173334Z",
+  "experiment_slug": "dmom_us10",
+  "purpose": "dMOM (Daniel-Moskowitz 2016) overlay on Martin single-instrument EWMAC baseline",
+  "pre_registration": "ars/evidence_packs/dmom_us10/dmom_us10_preregistration.md @ 65c423bc",
+  "literature": [
+    "references/research/Enhanced Momentum Strategies.pdf",
+    "references/research/Design and analysis of momentum trading strategies.pdf"
+  ],
+  "engine": "native pysystemtrade futures_chapter15 (do_not_reimplement_engine=true); overlay computed at returns-stream level",
+  "git_sha": "d7c33201428af6862976b94fbb48b0f438f5fc3f",
+  "python": "3.10.15",
+  "instruments": [
+    "US10",
+    "SP500"
+  ],
+  "ewmac_rules": [
+    "ewmac2_8",
+    "ewmac4_16",
+    "ewmac8_32",
+    "ewmac16_64",
+    "ewmac32_128",
+    "ewmac64_256"
+  ],
+  "forecast_weights": {
+    "ewmac2_8": 0.166667,
+    "ewmac4_16": 0.166667,
+    "ewmac8_32": 0.166667,
+    "ewmac16_64": 0.166667,
+    "ewmac32_128": 0.166667,
+    "ewmac64_256": 0.166667
+  },
+  "carry_included": false,
+  "forecast_cap": 20.0,
+  "percentage_vol_target": 20.0,
+  "capital_usd": 50000,
+  "roundpositions": true,
+  "idm": 1.0,
+  "bear_lookback_days": 504,
+  "mkt_var_lookback_days": 126,
+  "strat_var_lookback_days": 126,
+  "regression_warmup_days": 504,
+  "lambda": {
+    "US10": 0.0158,
+    "SP500": 0.6209
+  },
+  "verdicts": {
+    "G1_sharpe_lift_us10": {
+      "observed": 0.017,
+      "threshold": ">= +0.10",
+      "verdict": "FAIL"
+    },
+    "G2_maxdd_lift_us10": {
+      "observed": -1.043,
+      "threshold": ">= +5.0 pp",
+      "verdict": "FAIL"
+    },
+    "G3_skew_us10_dmom": {
+      "observed": 5.461,
+      "threshold": ">= 1.0",
+      "verdict": "PASS"
+    },
+    "G4_sp500_dmom_sharpe": {
+      "observed": -0.148,
+      "threshold": "< 0.20",
+      "verdict": "PASS"
+    },
+    "G_recon": {
+      "verdict": "PASS"
+    },
+    "status": "falsified",
+    "promotion_path": "FALSIFY"
+  }
+}

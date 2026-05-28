@@ -1,0 +1,5 @@
+instrument,variant,label,ann_return_pct,ann_vol_pct,sharpe_gross,skew_daily,skew_per_trade,max_drawdown_pct_geom,n_trades,win_rate_pct
+US10,baseline,US10_baseline,7.72,22.255,0.347,0.176,4.382,-55.347,342,23.4
+US10,dmom,US10_dmom,7.965,21.886,0.364,0.109,5.461,-56.39,537,36.3
+SP500,baseline,SP500_baseline,-0.227,24.342,-0.009,-1.989,4.327,-85.036,335,19.7
+SP500,dmom,SP500_dmom,-3.498,23.617,-0.148,-106.5,14.247,-100.0,521,57.4
