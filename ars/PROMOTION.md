@@ -188,10 +188,45 @@ Chronological. One entry per promotion or notable verdict
 
 ## Naming conventions
 
+### Slug grammar (hard rules)
+
 - Run dir: `ars/runs/<UTC ISO compact>_<slug>` (e.g. `20260528T161350Z_martin_single_instrument`).
 - Evidence pack: `ars/evidence_packs/<slug>` (no timestamp; promoted runs are by slug, not by run UTC).
-- Slug grammar: lowercase, underscores, no dates inside the slug.
+- Slug grammar: **lowercase, underscores (not hyphens), no dates inside the slug**.
 - Falsified runs keep their `ars/runs/<id>/` dir; registry status flips to `falsified`.
+
+### Slug semantics (recommended pattern)
+
+Adopted from `b3-saa-etf` / `arki_gtaa` for cross-repo consistency:
+
+```
+<engine>_<universe>
+```
+
+- **engine**: short identifier of the strategy variant under test (4-10 chars).
+  Examples: `top1rot`, `dualmom`, `top1rot_dz` (with overlay), `fast_tilt`.
+- **universe**: short identifier of the eligibility set / sleeve.
+  Examples: `pit50k` (PIT-derived universe at $50k account), `us10sp500`, `dm37`.
+- **No currency token** (e.g. arki_gtaa's `_sgd` suffix). pysystemtrade is futures-native;
+  USD conversion is handled per-contract by `point_size_base`, and CPC v1 is USD-native.
+
+State the *decision under test* directly in the slug. Avoid sequence numbers (`e1`, `e2`);
+experiment lineage is reconstructed from `DECISIONS.md` chronology + baseline references in
+the pre-registration.
+
+### Report dir convention
+
+`reports/cpc_v1_<engine>_<universe>/` (mirrors `b3-saa-etf` and `arki_gtaa`). The CPC v1
+prefix identifies the report tier; the rest mirrors the run slug.
+
+For Tier-1 ARS run reports the convention is `ars/runs/<id>/report.html` (in the run dir;
+no `reports/` mirror needed).
+
+### Grandfathered slugs
+
+- `martin_single_instrument` predates this convention and is grandfathered as-is
+  (the framework's first registry entry, POST-HOC pre-registration). All experiments
+  registered on or after 2026-05-29 follow the `<engine>_<universe>` pattern.
 
 ## What this standard does NOT do
 
