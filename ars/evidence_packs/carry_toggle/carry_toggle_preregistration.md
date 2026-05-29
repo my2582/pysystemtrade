@@ -12,6 +12,34 @@ Martin (2023) §2.3 shows that pure-trend strategies (all a_j > 0) produce posit
 
 Single-decision change vs baseline: forecast weights now include carry at 0.30 (with EWMAC weights renormalised to sum 0.70 total).
 
+## 1.1 Paper assumption set + empirical checks (Rule 3 compliance)
+
+This experiment tests an IMPLICATION of Martin (2023) §2.3, not the closed-form theorem itself. Assumption tracking is correspondingly subtle.
+
+### Martin (2023) §2.3 — closed-form theorem (NOT under test)
+
+| Assumption (theorem domain) | Status in this experiment |
+|---|---|
+| φ_n = Σ a_j · U_{n-j} (linear class) | Carry rule is also a linear function of past returns + roll yield. Stays in extended linear class. |
+| All a_j > 0 (pure trend) | **VIOLATED.** Adding carry mixes EWMAC weights with a carry-derived signal. This is the experiment's whole point. |
+| κ_3(U_n) = 0 | US10: +0.18 (within tolerance); SP500: −0.25 (violated). |
+| Fixed-M aggregation (Eq. 12) | We use sign-episode aggregation (variable M). Already a methodological mismatch. |
+
+→ The closed-form theorem (Eq. 12 positive-skew guarantee) does NOT apply here because the pure-trend assumption is intentionally violated.
+
+### Martin (2023) §2.3 — IMPLICATION under test
+
+The IMPLICATION being tested: "if a_j include non-trend components (carry as roll-yield mean reversion), then trade-skew should be reduced compared to pure trend."
+
+| Assumption (implication domain) | Empirical check |
+|---|---|
+| Carry signal acts as non-trend signal | Open question on rates. Empirical answer from this run: bond carry on US10 is itself positively-skewed (roll yield in backwardation), making it act MORE like trend than as non-trend dilution. |
+| Implication is generic across assets | NOT generalised by this run — single instrument, single regime (secular rate-down 1985-2026). |
+
+### Note on outcome framing
+
+Refuted implication ≠ refuted theorem. Verdict text says "Martin §2.3 implication for carry-on-rates is refuted; the §2.3 theorem itself stands as written (it only describes pure trend, which we intentionally violated)."
+
 ## 2. Hypotheses
 
 - **H-C1 (Sharpe direction-of-change)**: adding carry SHIFTS US10 Sharpe. Direction unknown ex-ante. Threshold for "shift" = `|delta| >= 0.03`. We are testing **whether** carry matters at single-instrument, not which direction is favourable.

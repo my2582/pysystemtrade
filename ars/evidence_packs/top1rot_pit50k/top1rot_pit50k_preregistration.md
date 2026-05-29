@@ -31,6 +31,21 @@ Theoretical expectation (per signal-implementation research note):
 - E[MDD reduction] is the more plausible mechanism: rotation away from underperforming instruments during regime breaks should cap left-tail relative to a frozen-instrument allocation. Set gate at **+5.0 pp** (less negative).
 - E[Cost burden] from rotation is the principal risk; the turnover gate constrains it.
 
+## 1.1 Paper assumption set + empirical checks (Rule 3 compliance)
+
+Source basis: Carver "Systematic Trading" + Hanauer & Windmüller (2022) §3 + Martin (2023) §2-§3 (for the baseline this experiment is compared against).
+
+| Assumption | What the source claims | Empirical check on this run |
+|---|---|---|
+| Cross-sectional rotation requires breadth (Carver) | Carver per-instrument trend SR ≈ 0.24; ~1.0 portfolio SR achieved with 30-100 instruments and low cross-correlation. Top-1 single-name rotation is NOT what Carver's diversification math addresses. | **Acknowledged limitation by design**: gate at +0.05 lift (sleeve-screening level), not at portfolio-uplift levels. If lift absent, "rotation does not transfer at single-name top-1" finding registers without falsifying Carver. |
+| Hanauer's literature is decile-portfolio based | Hanauer & Windmüller (2022) uses 10-decile cross-sectional portfolios, NOT top-1. | **VIOLATED by design.** Top-1 selection is OUT of paper's setting. Verdict is about top-1 on this universe, not about Hanauer's mechanism. |
+| Baseline (martin US10) is in-class for §2.3 | `forecast_cap=20` is §4 nonlinear (per martin pack post-review correction); sign-episode aggregation ≠ Eq. 12 fixed-M. | Documented in baseline pack. Carry-through here: comparison is "rotation vs fixed-US10 baseline" both in §4-nonlinear regime; cap effect cancels (ratio of two §4 instances). |
+| PIT universe membership is stable enough | Membership must be stable enough that "always-invested top-1" is meaningful, not dominated by inclusion/exclusion noise. | Parquet manifest: 50 instruments, 5+ year history, ADV ≥ 1000, staleness ≤ 15d. Stability recorded in manifest. |
+
+### Note on assumption violations vs gates
+
+The dominant assumption violation is "top-1 selection over a small AUM-restricted universe is not in either Carver's or Hanauer's papers." The experiment is therefore framed as a **discovery probe**, not a paper validation. Verdict reads "top-1 weekly rotation on PIT50k achieves / does not achieve gates G1 and G2 vs the martin US10 baseline," not "Carver / Hanauer validated / refuted."
+
 ## 2. Hypotheses
 
 Material thresholds are pre-registered ex-ante; no grid-search on the result (López de Prado AFML Ch.3).

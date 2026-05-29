@@ -40,6 +40,29 @@ Adaptation to single-instrument US10 (NO cross-section): substitute the underlyi
 
 Implementation choice (declared ex-ante): the overlay is applied as a **multiplicative scaler on baseline daily strategy returns** (`R_dMOM,t = R_MOM,t · w_dMOM,t`). Under fixed capital and continuous positions this is mathematically equivalent to scaling positions by the same factor; pysystemtrade's vol-target sizing is linear in the forecast, so the two are identical in expectation pre-rounding. We accept the small rounding mismatch from integer-contract trading; CPC v1 cross-checks via re-running with the multiplicative weight applied directly to the daily-return stream.
 
+## 1.1 Paper assumption set + empirical checks (Rule 3 compliance)
+
+Source papers and their key assumptions, with the empirical check this pre-reg commits to BEFORE applying gates.
+
+### Hanauer & Windmüller (2022) — dMOM origin context
+
+| Assumption | What the paper assumes | Empirical check on this run |
+|---|---|---|
+| Cross-sectional context | Paper studies dMOM as a SLEEVE-level scaler on a cross-sectional momentum factor (66,905 stocks × 49 markets). | **VIOLATED by construction here.** Single-instrument application of dMOM is OUT of paper's setting. Verdict downgrade: "transfer test," not "validation." |
+| Bear-market indicator semantics | `I_Bear` = past 24-mo cumulative market return < 0. "Market" = the cross-sectional momentum portfolio's market exposure. | On single rates futures, we substitute the instrument's own 24-mo cumulative back-adjusted price. Note: secular rate-down regime dominates this signal; flag as `definition_substitution`. |
+| Crash mitigation, not Sharpe boost | Hanauer §3 explicit: "all three reduce momentum crashes; none consistently beats plain MOM in factor tests." | Pre-reg gates G1 (Sharpe lift) and G2 (maxDD improvement) reflect this — passing G2 alone is sufficient for Path B (crash-mitigator promotion). |
+
+### Daniel & Moskowitz (2016) — formula source
+
+| Assumption | What the paper assumes | Empirical check |
+|---|---|---|
+| Linear-Gaussian regression class | `R_MOM,t = γ_0 + γ_int · I_Bear · σ²_RMRF + ε_t` linear-Gaussian. | Not separately verified; standard OLS assumption noted. |
+| Out-of-sample expanding-window | Paper uses in-sample regression which has look-ahead bias. We use **expanding-window** (min 504-day warmup) for strict OOS. | Implementation deviation FROM paper noted; check: `expanding window confirmed in code at scripts/dmom_overlay_backtest.py:expanding_ols_mu_hat()`. |
+
+### Note on assumption violations vs gates
+
+Hanauer's "cross-sectional context" is the cleanest violation. Pre-reg therefore frames the experiment as a TRANSFER TEST rather than a paper-validation. Verdict text and DECISIONS entry use "transfer of mechanism does/does not appear on single rates" language, not "Hanauer §3 validated/refuted."
+
 ## 2. Hypotheses
 
 - **H-D1 (Sharpe lift, primary)**: dMOM on US10 lifts gross Sharpe materially vs baseline. Material threshold = **+0.10** (sleeve-screening gate borrowed from b3 SRP Profile B convention).
