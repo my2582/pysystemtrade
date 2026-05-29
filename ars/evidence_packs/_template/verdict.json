@@ -26,5 +26,15 @@
   "promotion_path": "A | B | Z",
   "owner_signoff_utc": "<ISO8601>",
   "decision_log_anchor": "ars/DECISIONS.md#<YYYY-MM-DD-slug>",
-  "finding_if_falsified": null
+  "finding_if_falsified": null,
+  "cost_actuals": {
+    "budget_declared": false,
+    "tokens_used": null,
+    "tokens_budget": null,
+    "tokens_over_budget_pct": null,
+    "time_min": null,
+    "time_budget_min": null,
+    "iterations": null,
+    "cost_retrospective": null
+  }
 }

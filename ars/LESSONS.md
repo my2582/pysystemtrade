@@ -129,6 +129,109 @@ Not a failure entry; a process expansion entry, recorded here so future agents s
 
 ---
 
+## 2026-05-29 (queue cleared) — primitives ④⑤ + paper-citation lint landed
+
+Not a failure entry; the queue from the prior framework-expansion entry has been worked off.
+
+**Landed**:
+
+1. **④ Self-reproducibility skill** at `.claude/skills/ars-replicate/`: clean-room re-impl tests whether a Mechanism cheatsheet is a complete spec (not just docs). Tolerance-based PASS/FAIL per metric; `[ASSUMED]` flags surface spec gaps. Path A scope = headline metrics on a primary instrument; pandas/numpy only. Skill registered.
+
+2. **⑤ Cost-aware token budget**: `_template/preregistration.md` gains §8 budgets; `_template/verdict.json` gains `cost_actuals`; `scripts/session_cost_report.py` aggregates across evidence packs. Honest framing: SOFT signal, not real-time enforcement.
+
+3. **Paper-citation lint** at `scripts/validate_preregistration.py`: rules 1-4 (citations, weight bounds, assumption checks, aggregation declaration) checked statically; exit code 1 on Rule 1 violations. Smoke test against existing 7 pre-regs found 2 Rule 1 errors (Martin baseline POST-HOC Fig 1 citations — expected) and 11 warnings (mostly Rule 3 assumption-set sections not yet ported back). Working as designed.
+
+4. **CLAUDE.md** lists the slash commands + lint + cost dashboard + onboarding entry point.
+
+5. **LESSONS.md** also gained a refinement entry above this one: Rules 2, 4, 5 over-reached in original phrasing; corrected with degenerate-denominator scope (Rule 2), verification-vs-reporting mode (Rule 4), and enumerated sign-off exception cases (Rule 5).
+
+**Why this counts as a lesson** (not just a deliverable): the refinement entry IS a lesson — original rule phrasing was over-confident. The fact that the queue items shipped within the same session as the refinement is itself a lesson about how fast framework primitives can be iterated when they are passive (generation + delivery) rather than blocking.
+
+**Cross-references**:
+- Replicate skill: `.claude/skills/ars-replicate/SKILL.md`.
+- Token budget design: `docs/standards/ai_native_research_primitives.md` §7.
+- Validator: `scripts/validate_preregistration.py --help`.
+- Cost dashboard: `scripts/session_cost_report.py --help`.
+
+**Open follow-ups** (truly remaining; not blocking commit):
+- Pre-registration template Rule 3 fields (`assumption_set:` + `assumption_check:`) — adopted by sMOM pre-reg, not yet ported to dMOM/fast_tilt/carry/top1rot. Lint will WARN until ported.
+- Settings.json hook wiring for paper-citation lint — defer to owner.
+- Cumulative token budget data (currently 0 packs declared) — will accumulate naturally with new sessions.
+
+---
+
+## 2026-05-29 (refinement) — three rules over-reached; nuances codified
+
+Owner pushed back on three rules from the earlier seed entries. The pushbacks are valid; this entry refines the rules so future agents apply them with the right scope.
+
+### Refined Rule 2 — Safety-bound declaration scope (was: "every multiplicative weight")
+
+**Original framing** (too broad): "every multiplicative overlay weight series MUST declare `max(|w_t|) ≤ N` at pre-registration."
+
+**Why the original was too broad**: not every multiplicative weight is at risk of unbounded leverage. A weight like `w = constant` or `w = forecast / σ̂` (where σ̂ has a positive lower bound by construction) does not need a hard cap declaration.
+
+**Refined rule** (scope-corrected):
+
+> A safety bound declaration is mandatory **when the weight formula has a denominator that can approach zero on a path the strategy will actually traverse** (degenerate-denominator class). Examples that require declaration:
+> - `1/σ`, `1/var`, `1/semi_var` (variance terms can collapse in low-vol windows).
+> - `1/(F - threshold)` (denominator can cross zero).
+> - any `(numerator) / (rolling estimator)` where the rolling estimator has no positive lower bound.
+>
+> Examples that do NOT require declaration:
+> - Constant or pre-tuned weights.
+> - Forecast-style weights `w = F / σ̂` where `σ̂` is the price vol used by pysystemtrade and has a small positive floor by chapter-15 convention.
+> - Linear combinations with positive bounded coefficients (e.g. EWMAC equal-weight stack).
+>
+> When in doubt: declare the bound. Cost of declaring an unneeded bound = zero. Cost of failing to declare a needed bound = the sMOM 6,439× artifact.
+
+**Rationale for refinement**: the seed lesson was the sMOM unbounded `w` driven by `sqrt(target_var)/sqrt(semi_var)`. The structural culprit is `semi_var → 0` (a degenerate denominator path). The original rule generalised one incident into "all multiplicative weights"; the corrected rule names the structural condition (degenerate denominator).
+
+### Refined Rule 4 — Aggregation match scope (was: "match the paper's aggregation")
+
+**Original framing** (too restrictive): "use the paper's aggregation method when measuring a metric to compare against a paper's prediction."
+
+**Why the original needed qualification**: read literally, this forbids any measurement that doesn't match a paper's exact aggregation. Papers often use idealised aggregations (fixed-M non-overlapping, infinite-history limit, continuous-time) that real backtests cannot mirror exactly.
+
+**Refined rule** (scope-corrected):
+
+> Aggregation discipline applies in **two distinct modes**:
+>
+> 1. **Verification mode** — when you are claiming a paper's prediction is VALIDATED (or refuted) by your measurement. In this mode you MUST use the paper's aggregation, OR explicitly downgrade the verdict to "consistent with" / "compatible with" rather than "validates" / "refutes." Sign-episode-skew vs Eq. 12 fixed-M-skew is a verification-mode mismatch and must be flagged.
+> 2. **Reporting mode** — when you are documenting a metric for owner / downstream consumption without paper-prediction comparison. In this mode you may use any aggregation as long as the aggregation method is declared in the Mechanism cheatsheet.
+>
+> The distinction: verification mode requires a paper-equivalent measurement OR a downgrade of the verdict's claim strength. Reporting mode requires only transparency about the method used.
+>
+> When in doubt about which mode applies: if the pre-registration gate text contains "validates §X" or "refutes Eq. Y" or any verb that asserts the paper's prediction held or failed, you are in verification mode and the strict rule applies.
+
+**Rationale for refinement**: the seed lesson was sign-episode skew labelled as "Martin §2.3 verification" — verification-mode mismatch. The corrected rule preserves the verification-mode discipline while permitting reporting-mode flexibility for owner-facing summaries that don't claim paper validation.
+
+### Refined Rule 5 — Sign-off discipline (was: "never block Agent Loop on owner sign-off")
+
+**Original framing** (too absolute): "every framework primitive must be passive (generation + delivery) or active-on-AI-side ... never block the AI on owner sign-off."
+
+**Why the original was too absolute**: there ARE legitimate cases where sign-off should be requested. Hardcoding "never" forces the framework to skip sign-off in cases where it is the right action.
+
+**Refined rule** (cases enumerated):
+
+> Default primitive design is **passive generation + delivery** — Mechanism cheatsheets, Obsidian inbox drops, LESSONS appends. These do not pause the Agent Loop and form the standard audit surface.
+>
+> Sign-off requests are **appropriate exceptions** in these cases:
+> 1. **Decision-rights escalation** — the action would move beyond ARS L2 (e.g. promoting to a downstream PROD repo; signing off on a client-specific recommendation). Sign-off is appropriate; the framework's L2 cap prevents this happening at all here, so the case is mostly cross-project.
+> 2. **Large resource commitment** — running an experiment that will consume >1× the session's prior cumulative compute, or producing artifacts >100 MB total. Sign-off avoids surprises.
+> 3. **Cross-project handoff** — when an evidence pack is being staged for consumption by `b3-saa-etf` or `arki-future-fund-engine`, sign-off captures the cross-project intent.
+> 4. **Confidence-explicit-low** — when the AI's own self-assessment of confidence in a verdict is `low` (e.g. paper assumption may or may not hold; sample is sparse). Sign-off is appropriate because the AI is honestly flagging uncertainty.
+> 5. **Owner-directed pauses** — owner has explicitly asked for a pause at a checkpoint for that experiment. Per-experiment, not per-framework.
+>
+> In all other cases (default): generate + deliver + continue. Do not invent ritualistic pauses; do not pause for "abundance of caution" when the framework's audit surfaces are sufficient.
+>
+> The discipline: the framework should not silently CHOOSE sign-off as a way of stalling. Sign-off requests are explicit decisions with one of the five reasons above attached. "Sign-off because I want owner to confirm" is not a valid reason; "Sign-off because cross-project handoff" is.
+
+**Rationale for refinement**: the seed lesson was a primitive proposal that added blocking sign-off as a default gate. The original directive was right to reject that as a default but wrong to forbid sign-off in all cases. The corrected rule preserves the default (passive generation) while enumerating exception cases.
+
+---
+
+These refinements supersede the seed framing in entries above. Onboarding `04_lessons_distilled.md` will be updated to match in the same session.
+
 ## How to use this file
 
 - **Before pre-registering a new experiment**: read every entry. The durable rules ARE the gates you must pass at design time.

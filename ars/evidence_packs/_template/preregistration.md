@@ -76,3 +76,34 @@ If this run produces 2+ variants, list the CPC series here:
 |---|---|---|---|
 | baseline | csv/parquet/panel | <path> | true |
 | variant-1 | csv/parquet/panel | <path> | false |
+
+## 8. Cost budget (optional but encouraged)
+
+Declare an expected token and time budget per Agent Loop phase. The framework
+records actuals in verdict.json; over-budget by >50% triggers a retrospective
+"did we lose the plot?" check, not an abort. See
+docs/standards/ai_native_research_primitives.md §7.
+
+```yaml
+budgets:
+  pre_registration_phase:
+    tokens: 30000      # for writing this pre-reg + literature check
+    time_min: 30
+  experiment_phase:
+    tokens: 150000     # implementation + run + initial reading of results
+    time_min: 60
+  register_phase:
+    tokens: 50000      # registry + DECISIONS + evidence pack
+    time_min: 20
+  total_budget:
+    tokens: 230000
+    time_min: 110
+```
+
+Honest framing: this is a SOFT signal, not a hard cap. If you blow past
+the budget, log the actuals and write a brief retrospective in the
+verdict.json `cost_retrospective` field. Aim is cumulative learning
+about which experiment classes are token-efficient, not real-time gating.
+
+If you do not declare a budget, the framework will record actuals only and
+flag it as `budget_undeclared: true` (no penalty).

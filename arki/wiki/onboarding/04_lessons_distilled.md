@@ -18,15 +18,23 @@ The full append-only failure log is at [`ars/LESSONS.md`](../../../ars/LESSONS.m
 
 ---
 
-## Rule 2 — Declare upper bound on every multiplicative weight at pre-registration time
+## Rule 2 — Declare upper bound on every DEGENERATE-DENOMINATOR multiplicative weight
 
-**Source lesson**: 2026-05-29 "sMOM unbounded weight."
+**Source lesson**: 2026-05-29 "sMOM unbounded weight." Refined 2026-05-29 (later) per owner feedback that "every multiplicative weight" was too broad.
 
 **What went wrong**: `w_sMOM,t = sqrt(target_var) / sqrt(semi_var_126d)` had no declared bound. In a 2020-24 window, downside variance collapsed; `w` spiked to **2,927** on 39 days. Effective leverage at peak: **6,439× on $50k capital**. The reported +0.255 Sharpe lift was substantially leverage-artifact.
 
-**Rule**: Every multiplicative overlay weight series declares `max(|w_t|) ≤ N` at pre-registration time. If undeclared, run is registered as `incomplete_safety_spec`. Cannot promote.
+**Refined rule (scope-corrected)**: A safety bound declaration is mandatory **when the weight formula has a denominator that can approach zero on a path the strategy will actually traverse** (degenerate-denominator class).
 
-**Compliance test**: search the pre-registration for the string "max(|w" or "bound" or "cap" applied to the overlay's weight series. Present and a finite number? PASS. Absent? FAIL.
+| Requires declaration | Does NOT require declaration |
+|---|---|
+| `1/σ`, `1/var`, `1/semi_var` (variance can collapse) | Constant or pre-tuned weights |
+| `1/(F - threshold)` (denominator can cross zero) | `w = F / σ̂` where `σ̂` has a positive floor (pysystemtrade chapter-15 convention) |
+| `(numerator)/(rolling estimator)` with no positive lower bound | Linear combinations with positive bounded coefficients (e.g. EWMAC equal-weight stack) |
+
+**When in doubt: declare.** Cost of declaring an unneeded bound = zero. Cost of omitting a needed bound = the sMOM artifact.
+
+**Compliance test**: locate every multiplicative weight in the pre-registration. For each, ask "can the denominator approach zero on a realistic data path?" If yes, the pre-registration MUST have `max(|w|) ≤ N` (finite) for that weight. If no, the bound is optional.
 
 ---
 
@@ -42,27 +50,45 @@ The full append-only failure log is at [`ars/LESSONS.md`](../../../ars/LESSONS.m
 
 ---
 
-## Rule 4 — Sign-episode aggregation ≠ fixed-M aggregation; pick the one the paper uses
+## Rule 4 — Aggregation discipline: verification mode vs reporting mode
 
-**Source lesson**: 2026-05-29 "Martin §2.3 misreading" — point (4) on aggregation methods.
+**Source lesson**: 2026-05-29 "Martin §2.3 misreading" — point (4) on aggregation methods. Refined 2026-05-29 (later) per owner feedback that "always match the paper" was too restrictive.
 
 **What went wrong**: We measured `skew_per_trade` using sign-episode aggregation (variable M). Paper §2.3 Eq. 12 closed-form is for fixed-M non-overlapping aggregation. Same English phrase ("trade-level skew") meant two different mathematical objects.
 
-**Rule**: When measuring a metric to compare against a paper's prediction, use the paper's aggregation method. Sign-episode is NOT the same as fixed-M. If you choose a different aggregation, explicitly note that the paper's prediction does not apply.
+**Refined rule (two modes)**:
 
-**Compliance test**: open the cheatsheet Mechanism card. Section 1 (Core formula) should state the aggregation method. Section 4 (scenario verdict) should compare your aggregation against the paper's. PASS if both explicit.
+| Mode | When you are in it | What to do |
+|---|---|---|
+| **Verification mode** | Your gate text contains "validates §X" / "refutes Eq. Y" / asserts the paper's prediction held or failed | MUST use the paper's aggregation, OR downgrade the verdict from "validates / refutes" to "consistent with / compatible with" |
+| **Reporting mode** | You are documenting a metric for owner / downstream consumption without claiming paper validation | Any aggregation OK provided the method is declared in the Mechanism cheatsheet |
+
+The distinguishing test: read the gate's claim verb. "Validates," "refutes," "confirms" → verification mode. "Reports," "characterises," "shows" → reporting mode.
+
+**Compliance test**: open the cheatsheet Mechanism card. Identify each gate's mode by verb. For verification-mode gates, the aggregation must match the paper OR the verdict text must use the softer verbs. For reporting-mode gates, the aggregation method must be declared but does not need to match a paper.
 
 ---
 
-## Rule 5 — Generate audit surfaces; never block the Agent Loop with sign-off pauses
+## Rule 5 — Default is passive generation; sign-off is appropriate as a deliberate exception
 
-**Source lesson**: Owner directive 2026-05-29.
+**Source lesson**: Owner directive 2026-05-29. Refined 2026-05-29 (later) per owner feedback that "never" was too absolute.
 
-**What went wrong (in a proposal that was REJECTED)**: A proposal was made to add "owner must sign off on Mechanism cheatsheet before run starts" as a gate. Owner rejected: HITL must consume audit surfaces ASYNCHRONOUSLY at owner's pace. Blocking the loop violates the velocity discipline.
+**What went wrong (in a proposal that was REJECTED)**: A proposal was made to add "owner must sign off on Mechanism cheatsheet before run starts" as a *default* gate. Owner rejected as a default because HITL should consume audit surfaces ASYNCHRONOUSLY. BUT sign-off remains appropriate in specific cases.
 
-**Rule**: The framework GENERATES Mechanism cheatsheets and DELIVERS them to Obsidian inbox. The framework does NOT pause for sign-off. Audit happens asynchronously. If a primitive proposal requires explicit owner action to unblock execution, REJECT.
+**Refined rule**:
 
-**Compliance test**: every framework primitive must be (a) passive (generation + delivery, no human gate) or (b) active-on-AI-side (gates the AI applies to itself without owner mediation). If it requires owner action to unblock the AI, REJECT.
+> **Default**: passive generation + delivery (Mechanism cheatsheets, Obsidian inbox, LESSONS appends). Does not pause the Agent Loop.
+>
+> **Sign-off is appropriate when**:
+> 1. **Decision-rights escalation** beyond ARS L2 (e.g. cross-project promotion to downstream PROD, client-specific recommendation).
+> 2. **Large resource commitment** (run that consumes >1× session prior compute; artifact >100 MB).
+> 3. **Cross-project handoff** (evidence pack being staged for `b3-saa-etf` / `arki-future-fund-engine` consumption).
+> 4. **AI confidence-explicit-low** (paper assumption may not hold; sample sparse; the AI itself flags uncertainty).
+> 5. **Owner-directed pauses** (per-experiment, owner asked for a checkpoint).
+>
+> **Not valid reasons** for sign-off: "abundance of caution," "want owner to confirm anyway," "framework wants to look careful."
+
+**Compliance test**: when a primitive proposal includes a sign-off step, the proposal must name which of the five reasons applies. If none of the five applies, the sign-off is a default-blocker and should be removed. If one of the five applies, the sign-off is justified and should be requested explicitly.
 
 ---
 

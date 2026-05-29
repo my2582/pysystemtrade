@@ -1,0 +1,36 @@
+# Tolerance thresholds for ars-replicate.
+# A replication PASSES the metric if |replicated - reference| satisfies the threshold.
+
+defaults:
+  # Absolute tolerance: |replicated - reference| < value
+  sharpe_gross: { type: absolute, threshold: 0.05 }
+  sharpe_net:   { type: absolute, threshold: 0.05 }
+  ann_return_pct: { type: absolute, threshold: 0.5 }      # percentage points
+  ann_vol_pct: { type: absolute, threshold: 0.5 }         # percentage points
+  max_drawdown_pct_geom: { type: absolute, threshold: 2.0 }  # percentage points
+  max_drawdown_pct_additive: { type: absolute, threshold: 3.0 }  # additive cumsum is noisier
+  skew_daily: { type: absolute, threshold: 0.3 }
+  skew_per_trade: { type: absolute, threshold: 1.0 }
+  market_skew_at_m60: { type: absolute, threshold: 0.10 }
+  reconciliation_diff_pct: { type: absolute, threshold: 1.0 }  # already close to 0
+
+  # Relative tolerance: |replicated - reference| / |reference| < value
+  n_trades: { type: relative, threshold: 0.20 }
+  ann_subsystem_turnover: { type: relative, threshold: 0.20 }
+
+# Specific overrides per experiment slug (override defaults when present)
+overrides:
+  # Pattern: <slug>: { metric: { type, threshold } }
+  martin_single_instrument:
+    skew_per_trade: { type: absolute, threshold: 1.5 }  # Martin baseline has high skew; tolerance wider
+
+# Notes
+# - Sharpe absolute tolerance 0.05 chosen because at 44 years of data, Sharpe SE ≈ 0.15;
+#   we're not testing statistical equality, we're testing implementation faithfulness within
+#   a reasonable engineering margin.
+# - maxDD absolute 2.0 pp because compounded equity is path-dependent; small position-rounding
+#   differences can shift the worst-day by a percentage point or two.
+# - n_trades relative 20% because trade-boundary definitions (sign-episode vs roundtrip vs
+#   buffer-band-aware) legitimately vary by 5-15% between implementations.
+# - reconciliation_diff_pct stays tight (1.0 pp) because this metric is itself a faithfulness
+#   check; if it's wide, the implementation has a different attribution scheme.
