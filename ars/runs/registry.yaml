@@ -149,7 +149,7 @@ runs:
     label: smom_us10
     timestamp: '2026-05-28T18:15:56Z'
     hypothesis_ref: ars/evidence_packs/smom_us10/smom_us10_preregistration.md
-    status: promoted
+    status: registered_pending_remediation   # was: promoted (Path A) — downgraded 2026-05-29 post-review (see ars/LESSONS.md)
     config:
       capital_usd: 50000
       vol_target_pct: 20.0
@@ -157,6 +157,8 @@ runs:
       baseline: martin 6-speed EWMAC equal-weight
       overlay: sMOM (Wang-Yan 2021) downside-semi-vol multiplicative scaler, lookback 126d
       runner: scripts/momentum_variants_backtest.py
+      paper_class: "§4 nonlinear (psi(V_n)), NOT §2 linear; Martin §2.3 Eq. 12 does NOT apply"
+      safety_bound_w: "UNDECLARED at pre-reg (defect); observed max(|w|) = 2927; remediation = w_cap pending"
     results:
       US10:
         baseline: {sharpe_gross: 0.347, max_drawdown_pct_geom: -55.347, skew_per_trade: 5.345}

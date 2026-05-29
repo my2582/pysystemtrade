@@ -16,6 +16,8 @@ Core re-framing:
 
 The Human-in-the-Loop (HITL) is not the safety net of last resort; it is the **epistemic verifier** in the loop. The primitives below exist to make verification cheap.
 
+**Owner directive (2026-05-29)**: HITL must NOT block the Agent Loop. Owner consumes audit surfaces (Mechanism cheatsheet HTML in Obsidian inbox; LESSONS append-only log) at owner's pace, asynchronously. The framework's job is to GENERATE and DELIVER these surfaces; the framework does NOT pause for sign-off. Any primitive that requires an explicit owner action to unblock execution is rejected. Adopted primitives must be passive (generation + delivery) or active-on-AI-side (gates the AI applies to itself without owner mediation).
+
 ---
 
 ## 1. Primitive: Mechanism cheatsheet (per experiment)

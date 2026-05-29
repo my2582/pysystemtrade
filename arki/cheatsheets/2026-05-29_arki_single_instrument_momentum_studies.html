@@ -181,14 +181,14 @@ tr.good td{background:#e8f5ea} tr.bad td{background:#fdeceb} tr.hi td{background
     </div>
   </div>
   <div class="rt">
-    <h4>Decoded</h4>
+    <h4>Decoded (post-review corrections in italics)</h4>
     <ul style="margin:6px 0;padding-left:18px;font-size:13.5px;line-height:1.5">
-      <li><b>EWMAC = (fast EMA − slow EMA) / σ̂</b> = Martin's EMA2 kernel. Path-length finite (turnover-optimal); EMA1 (price − EMA) has infinite path-length.</li>
+      <li><b>EWMAC = (fast EMA − slow EMA) / σ̂</b> — <em>inside Martin's linear strategy class</em> (φ_n = Σ a_j U_{n-j}), but with a_j weights derived from an EMA difference of price <em>LEVELS</em>, not price <em>CHANGES</em> as in the paper's EMA2 (Eq. 7-8). The variational optimum te^(−α̇t) ("EMA2=") is a single Laguerre-style kernel; the 6-pair equal-weight stack used here is a coarse approximation. Empirical (Step 3 cap=∞ ablation): peak fixed-M skew ≈ 1.90 vs paper EMA2 prediction ≈ 2.1 — within ~10% but not identical.</li>
       <li>Equal-weight across 6 speeds replaces cross-instrument diversification with within-instrument <em>pseudo-diversification</em>.</li>
       <li>Position = forecast / σ̂ × (capital × vol_target / instrument_value_vol), rounded to integer contracts.</li>
     </ul>
-    <h4>Why this design</h4>
-    <div class="why">Pure-trend (no carry) keeps Martin's §2.3 skew theorem applicable cleanly; soft-cap preserves the positive skew that binary sign rules would destroy; six speeds chosen ex-ante from Carver chapter-15 (no tuning on result).</div>
+    <h4>Why this design (post-review re-framing)</h4>
+    <div class="why hold">Originally framed as "Martin §2.3 pure-trend application." Post-review correction: the <code class="chip code">forecast_cap = 20</code> in chapter-15 places this baseline in <b>§4 nonlinear class</b> (any cap reduces max skew per §4). Ablation (Step 3, cap=20 vs cap=∞) showed the §4 effect is small on this config but the framing was inverted. Six speeds chosen ex-ante from Carver chapter-15 (no tuning on result) is the only Martin-aligned claim that fully holds.</div>
   </div>
 </div>
 

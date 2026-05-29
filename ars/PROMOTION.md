@@ -228,8 +228,55 @@ no `reports/` mirror needed).
   (the framework's first registry entry, POST-HOC pre-registration). All experiments
   registered on or after 2026-05-29 follow the `<engine>_<universe>` pattern.
 
+## Scenario-based gate (added 2026-05-29 from Martin §5(c) compliance review)
+
+Martin (2023) §5.3 warns explicitly: "Calibration is sensitive to data history → scenario-based design preferred over pure historical SR." Pre-registered gates that check ONLY the full-sample point estimate (Sharpe, maxDD, skew at one M) violate this discipline. Going forward, every promotion gate must be evaluated under the **scenario decomposition** below, and the promotion criterion is `full-sample PASS AND ≥ 2/3 regime windows direction-aligned`.
+
+### Regime decomposition
+
+For US10 / SP500 single-instrument trend, the pre-registered regime split is:
+
+| Window | Years | Rationale |
+|---|---|---|
+| Era 1 | 1985-1999 | High-rate / pre-globalisation; Volcker tail end → Greenspan put era |
+| Era 2 | 2000-2014 | Tech bubble + GFC + ZIRP onset |
+| Era 3 | 2015-2026 | ZIRP / NIRP → secular reversal |
+
+These are owner-fixed; not chosen by the AI to fit a result. If a new regime split is proposed for a future experiment, it must be pre-registered and justified with non-AI evidence (macro event, central bank policy change, etc.).
+
+### Scenario gate evaluation
+
+For each pre-registered numerical gate `G_x` (Sharpe lift, maxDD improvement, skew bound):
+
+1. Compute the metric on Full sample → `G_x.full`.
+2. Compute the metric on each Era → `G_x.era1, G_x.era2, G_x.era3`.
+3. Determine **direction-aligned** for each Era: does the variant move in the same direction vs baseline as the Full sample? (PASS direction-only, not strict magnitude.)
+4. **Promotion criterion**:
+   - `G_x.full` PASSES the strict threshold AND
+   - `G_x.eraN` direction-aligned in ≥ 2 of 3 Eras.
+5. If full PASSES but ≤ 1 Era is direction-aligned → status `registered_regime_dependent` (not promoted).
+6. If full FAILS → status `falsified` (unchanged from existing rule).
+
+### Reporting
+
+The Mechanism cheatsheet card for any experiment that has reached the evaluate stage gains a fourth sub-section:
+
+```
+4. Scenario verdict
+   | Gate | Full | Era 1 | Era 2 | Era 3 | aligned |
+   |------|-----:|------:|------:|------:|---------|
+   | G1   | PASS | dir+  | dir+  | dir-  | 2/3 → ok |
+```
+
+This forces visibility of regime dependence. A gate that PASSES Full but is direction-dependent on a single era is flagged with `regime-dependent` chip; this becomes a first-class caveat in cheatsheet + DECISIONS.
+
+### Retroactive note
+
+The five experiments registered on 2026-05-29 (`martin_single_instrument`, `dmom_us10`, `smom_us10`, `fast_tilt_ewmac`, `carry_toggle`) used Full-sample-only gates. They are NOT retroactively re-evaluated; new experiments from 2026-05-30 onward must comply. The Martin baseline scenario decomposition will be back-tested in the next replication experiment (`martin_single_instrument_scenario_check`) as a parallel artifact for owner visibility.
+
 ## What this standard does NOT do
 
 - Does not introduce a PROD zone (deferred to downstream repos).
 - Does not require bootstrap CIs on every metric (downstream SRP does that; here, point estimates + reconciliation + pre-registered gates are sufficient).
 - Does not duplicate the b3-saa-etf wiki. The committed wiki at `arki/wiki/` is this repo's source of truth.
+- Does NOT introduce blocking owner-sign-off pauses. The framework GENERATES audit surfaces (Mechanism cheatsheets, Obsidian inbox delivery); the owner consumes them asynchronously at owner's pace. Adding ritualistic pauses violates the owner directive of 2026-05-29.

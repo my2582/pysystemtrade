@@ -60,3 +60,17 @@ INVESTIGATE: G4 FAIL.
 
 - Runner: `scripts/momentum_variants_backtest.py` (shared with fast_tilt + carry_toggle).
 - Python: 3.10.15. Engine: native `futures_chapter15`.
+
+---
+
+## §1.1 Scope boundary — POST-REVIEW AMENDMENT (2026-05-29)
+
+This pre-registration was reviewed after run completion. Three findings:
+
+**(a) Paper classification clarification**: sMOM is **NOT** within Martin §2 linear-strategy class. The weight `w_sMOM,t = sqrt(target_var)/sqrt(semi_var_126d)` is a function of past R²_negative, i.e. `φ_n = ψ(V_n)` with V_n = downside-variance summary. This puts sMOM in **§4 nonlinear class** (`ψ(V_n)` reverting / amplifying sigmoid family). **Martin §2.3 Eq. 12 closed-form skew theorem DOES NOT apply.** Any claim that sMOM "preserves Martin §2.3 positive skew" is structurally invalid — the prediction simply doesn't extend to this class.
+
+**(b) Safety bound declaration (newly required per `ars/LESSONS.md` 2026-05-29 lesson)**: The original pre-reg did NOT declare a maximum bound on `|w_sMOM,t|`. Discovered post-run: `max(|w|) = 2,927` (39 days in 2020-24 window) → effective leverage **6,439× on $50k capital**. Realistic capped sMOM (e.g. `w ≤ 3`) would likely produce Sharpe lift +0.10 to +0.15 vs the reported +0.255. The reported lift is partially a leverage artifact. **`G_safety_overlay_weight_bound` should have been: `max(|w_t|) ≤ 3` (or 5).**
+
+**(c) Assumption-set check (Paper §2)**: Martin §2 assumes `κ_3(U_n) = 0` (vol-normalised returns symmetric). Measured: US10 baseline `κ_3(U) ≈ +0.18` (acceptable, near assumption); SP500 baseline `κ_3(U) ≈ −0.25` (assumption violated). Hence SP500 sMOM control gate was being applied to data outside the paper's assumption set — verdict text on SP500 should be "informational, not paper-validation."
+
+**Status downgrade**: `promoted (Path A)` → `registered_pending_remediation`. Remediation = a new `smom_us10_capped` experiment with the corrected pre-registration (Mechanism cheatsheet card + G_safety bound + paper-class declared as §4 nonlinear, not §2.3).
