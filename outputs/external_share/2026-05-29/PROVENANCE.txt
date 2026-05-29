@@ -1,0 +1,5 @@
+Sanitised on: 2026-05-29
+Source repo git SHA: d4063d83cdb9400836adf4fa77f24927268b2c90
+Sanitiser script: scripts/sanitize_for_external_review.py
+Cheatsheet source: arki/cheatsheets/2026-05-29_arki_single_instrument_momentum_studies.html
+Evidence packs: martin_single_instrument, dmom_us10, smom_us10, fast_tilt_ewmac, carry_toggle

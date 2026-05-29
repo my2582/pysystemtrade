@@ -1,0 +1,102 @@
+# Output schema for ars-review-paper skill.
+# Strict YAML; semantics documented in SKILL.md.
+
+# === EXAMPLE INSTANCE (replace fields when emitting a real review) ===
+
+review_metadata:
+  reviewer: "claude-opus-4-7 session <id>"
+  reviewed_utc: "2026-05-29T23:00:00Z"
+  experiment_slug: "smom_us10"
+  pre_registration_path: "ars/evidence_packs/smom_us10/smom_us10_preregistration.md"
+  papers_reviewed:
+    - paper: "Martin (2023) Design and analysis of momentum trading strategies"
+      pdf_path: "references/research/Design and analysis of momentum trading strategies.pdf"
+      sections_loaded: ["§1", "§2", "§4"]
+    - paper: "Hanauer & Windmüller (2022) Enhanced Momentum Strategies"
+      pdf_path: "references/research/Enhanced Momentum Strategies.pdf"
+      sections_loaded: ["§3"]
+  total_concerns: 2
+  severity_counts:
+    theoretical: 1
+    implementation: 1
+    methodological: 0
+    framework: 0
+    none: 0
+
+concerns:
+
+  - concern_id: "smom_us10_001"
+    severity: "theoretical"
+    location:
+      file: "ars/evidence_packs/smom_us10/smom_us10_preregistration.md"
+      section: "§2 H-S3"
+      claim_in_artifact: "skew_per_trade >= 1.0 (Martin §2.3 long-option preservation)"
+    paper_says:
+      paper: "Martin (2023)"
+      section: "§4"
+      equation: "Eq. 29"
+      literal_quote: |
+        "An arbitrary nonlinear function of several momentum factors (of different
+        speeds) would be very difficult to analyse, so we opt for nonlinearly
+        transforming each momentum factor first, and then the position is a
+        weighted sum of the transformed factors."
+      page_or_location_hint: "Eq. 29 area, post-review reading"
+    misalignment: |
+      sMOM weight w = sqrt(target_var)/sqrt(semi_var_neg) makes the position a
+      nonlinear function ψ(V_n) where V_n = past R²_neg. This is §4 nonlinear
+      class, NOT §2 linear class. §2.3 closed-form positive-skew theorem
+      does not apply.
+    recommended_action: "re-frame"
+    confidence: "high"
+    confidence_rationale: ""
+
+  - concern_id: "smom_us10_002"
+    severity: "implementation"
+    location:
+      file: "scripts/momentum_variants_backtest.py"
+      section: "smom_weight() function body"
+      claim_in_artifact: "raw_w = (sqrt(target_var)/sqrt(semi_var)).replace([inf,-inf], NaN)"
+    paper_says:
+      paper: "Hanauer & Windmüller (2022)"
+      section: "§3"
+      equation: "Eq. 4"
+      literal_quote: |
+        "<verbatim quote on capping or bounded leverage; check paper section §3
+        text near the cMOM/sMOM definition before emitting this concern;
+        if no verbatim cap statement, downgrade confidence>"
+      page_or_location_hint: "near cMOM definition"
+    misalignment: |
+      Code has NO upper bound on w. Observed max(|w|) = 2,927 over 39 days,
+      implying effective leverage ≈ 6,439× on declared capital. No safety gate
+      was declared at pre-registration time.
+    recommended_action: "re-run-with-fix"
+    confidence: "medium"
+    confidence_rationale: |
+      Concern is structurally unambiguous (observed leverage spike is a fact),
+      BUT the literal-quote field requires verification that Hanauer's paper
+      explicitly cites a cap convention. If absent, the concern recommends
+      adding the cap as a framework-level safety bound (Rule 2 of LESSONS.md)
+      rather than as a paper-fidelity correction.
+
+# === END EXAMPLE ===
+
+# Enums (for documentation; do not include in actual emitted output):
+#   severity:
+#     - theoretical: Strategy or pre-reg claim does not match paper's actual claim.
+#     - implementation: Code/pre-reg lacks safety bound, look-ahead, or computes differently.
+#     - methodological: Aggregation, sample, or measurement convention mismatch with paper.
+#     - framework: Pre-reg or cheatsheet violates an ARS framework rule (e.g. Rule 1 figure-as-slogan).
+#     - none: Note for the record, not a defect.
+#   recommended_action:
+#     - retract: Claim cannot stand; remove from pre-reg + cheatsheet.
+#     - re-frame: Claim can stand with corrected wording / context.
+#     - re-run-with-fix: Code/method fix needed; re-run experiment; current verdict downgraded.
+#     - declare-out-of-scope: Mark explicitly that paper's prediction does not apply; keep as context.
+#   confidence:
+#     - high: Verbatim quote unambiguously supports the concern.
+#     - medium: Verbatim quote partially supports; interpretation step required (explicit).
+#     - low: Structural concern without verbatim support; rationale required.
+
+# Persistence (the receiving agent does this, NOT the reviewer):
+#   Save full output to: ars/evidence_packs/<slug>/paper_review/<paper>_review.md
+#   Append one-line summary to ars/LESSONS.md if max(severity) ≥ implementation.

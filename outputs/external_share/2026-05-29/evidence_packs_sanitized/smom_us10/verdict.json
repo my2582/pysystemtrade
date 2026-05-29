@@ -1,0 +1,26 @@
+{
+  "gates": {
+    "G1_sharpe_lift": {
+      "observed": 0.255,
+      "threshold": ">= +0.05",
+      "verdict": "PASS"
+    },
+    "G2_maxdd_improvement_pp": {
+      "observed": 11.192,
+      "threshold": ">= +3.0",
+      "verdict": "PASS"
+    },
+    "G3_skew_per_trade": {
+      "observed": 4.693,
+      "threshold": ">= 1.0",
+      "verdict": "PASS"
+    },
+    "G4_sp500_control": {
+      "observed": 0.161,
+      "threshold": "< 0.20",
+      "verdict": "PASS"
+    }
+  },
+  "status": "promoted",
+  "promotion_path": "A"
+}

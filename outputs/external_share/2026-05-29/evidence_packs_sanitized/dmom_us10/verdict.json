@@ -1,0 +1,27 @@
+{
+  "G1_sharpe_lift_us10": {
+    "observed": 0.017,
+    "threshold": ">= +0.10",
+    "verdict": "FAIL"
+  },
+  "G2_maxdd_lift_us10": {
+    "observed": -1.043,
+    "threshold": ">= +5.0 pp",
+    "verdict": "FAIL"
+  },
+  "G3_skew_us10_dmom": {
+    "observed": 5.461,
+    "threshold": ">= 1.0",
+    "verdict": "PASS"
+  },
+  "G4_sp500_dmom_sharpe": {
+    "observed": -0.148,
+    "threshold": "< 0.20",
+    "verdict": "PASS"
+  },
+  "G_recon": {
+    "verdict": "PASS"
+  },
+  "status": "falsified",
+  "promotion_path": "FALSIFY"
+}

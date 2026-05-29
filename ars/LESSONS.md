@@ -99,6 +99,36 @@ Append-only log of failures the pre-registration framework did not catch on its 
 
 ---
 
+## 2026-05-29 (later) — framework expansion seeded (3 candidates landed)
+
+Not a failure entry; a process expansion entry, recorded here so future agents see the framework's own evolution log next to the failure log.
+
+**Triggered by**: owner directive to execute primitives ①②③ from `docs/standards/ai_native_research_primitives.md`.
+
+**Landed**:
+
+1. **Onboarding curriculum** — `arki/wiki/onboarding/` (6 files, 00 through 05). Bootstrap reading order for any new AI / human collaborator. Each lesson in this file has a corresponding actionable rule in `arki/wiki/onboarding/04_lessons_distilled.md`. Closes "next session won't repeat past mistakes" gap.
+
+2. **Sanitizer for external review** — `scripts/sanitize_for_external_review.py` + `outputs/external_share/<date>/`. Smoke-tested: 11 replacements on cheatsheet (owner name, firm, $50k, downstream PROD repo names, extreme leverage figures), 0 PII leak verified by grep, sanitized cheatsheet still passes `verify_cheatsheet.py`. Closes "want external review but cannot share absolute paths / capital / owner identity" gap.
+
+3. **Domain reviewer LLM (Path A)** — `.claude/skills/ars-review-paper/` (SKILL.md + reviewer_prompt.md + assumption_checks.md + schema.yaml). Hard discipline: every concern must include verbatim paper quote; no paraphrase. Schema parses cleanly. Closes "Martin §2.3 misreading" pattern by automating the kind of fresh-eyes paper-vs-pre-reg check that an external reviewer would do.
+
+**Why this counts as a lesson**: the failure modes that surfaced in the 2026-05-29 sMOM unbounded-w and Martin §2.3 misreading entries were caught by ad-hoc owner / reviewer attention. The three primitives above turn that ad-hoc attention into either (a) pre-session reading (onboarding), (b) reproducible self-audit on demand (review skill), or (c) reproducible external review on demand (sanitizer). All three are PASSIVE generation + delivery primitives; none blocks the Agent Loop with sign-off pauses (per owner directive recorded in `ars/PROMOTION.md`).
+
+**Cross-references**:
+- Design rationale: `docs/standards/ai_native_research_primitives.md` §1-§5.
+- Onboarding entry point: `arki/wiki/onboarding/00_orientation.md`.
+- Sanitizer entry point: `scripts/sanitize_for_external_review.py --help`.
+- Review skill entry point: `.claude/skills/ars-review-paper/SKILL.md`.
+- First sanitized share package: `outputs/external_share/2026-05-29/`.
+
+**Open follow-ups** (do not block this commit):
+- ④ Self-reproducibility independent re-impl agent — design pending.
+- ⑤ Cost-aware token budget per phase — design pending.
+- Wave 2 of primitives doc: Paper-citation gate (§2 of design doc) needs schema in `_template/preregistration.md`; current implementation is enforced via the `ars-review-paper` skill rather than at commit time.
+
+---
+
 ## How to use this file
 
 - **Before pre-registering a new experiment**: read every entry. The durable rules ARE the gates you must pass at design time.

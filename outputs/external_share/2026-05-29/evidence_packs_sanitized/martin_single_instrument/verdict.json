@@ -1,0 +1,95 @@
+{
+  "ars_version": "0.1",
+  "project_name": "pysystemtrade",
+  "experiment_slug": "martin_single_instrument",
+  "run_id": "20260528T161350Z_martin_single_instrument",
+  "run_type": "exploratory",
+  "pre_registration": "ars/evidence_packs/martin_single_instrument/martin_single_instrument_preregistration.md (POST-HOC)",
+  "git_commit_at_run": "5fa88c4c",
+  "data_snapshot_id": "data/futures/adjusted_prices_csv/{US10,SP500}.csv @ 5fa88c4c (cutoff 2026-04-03)",
+  "status": "promoted_post_hoc",
+  "reconciliation": {
+    "diff_pct_tolerance": 5.0,
+    "values": {
+      "US10": -1.17,
+      "SP500": 0.853
+    },
+    "verdict": "PASS"
+  },
+  "gates": [
+    {
+      "id": "G1",
+      "claim": "US10 market-return skewness positive at intermediate M (Martin Fig 1, rates side)",
+      "metric": "market_skew_at_m60 (vol-normalised non-overlapping blocks)",
+      "threshold": "> 0",
+      "observed": 0.204,
+      "extra": {"peak_at_m40": 0.244},
+      "verdict": "PASS"
+    },
+    {
+      "id": "G2",
+      "claim": "SP500 market-return skewness negative across most M (Martin Fig 1, equity side)",
+      "metric": "market_skew_at_m60",
+      "threshold": "< 0",
+      "observed": -0.037,
+      "extra": {"daily_market_skew": -0.247, "negative_horizons": "M=1..40, 100..250"},
+      "verdict": "PASS"
+    },
+    {
+      "id": "G3",
+      "claim": "Pure trend amplifies skew at the trade level (Martin §2.3)",
+      "metric": "US10 skew_per_trade - skew_daily",
+      "threshold": "> 1.0",
+      "observed": 4.206,
+      "extra": {"skew_per_trade": 4.382, "skew_daily": 0.176},
+      "verdict": "PASS"
+    },
+    {
+      "id": "G4",
+      "claim": "Long-option signature on US10 (Martin §3)",
+      "metric": "US10 win_rate_pct < 50 AND skew_per_trade > 1.0",
+      "threshold": "both",
+      "observed": {"win_rate_pct": 23.4, "skew_per_trade": 4.382},
+      "verdict": "PASS"
+    },
+    {
+      "id": "G5",
+      "claim": "US10 single-instrument gross Sharpe in expected range, refuting 0.7-1.0 claim",
+      "metric": "US10 sharpe_gross",
+      "threshold": "in [0.2, 0.6]",
+      "observed": 0.396,
+      "verdict": "PASS"
+    }
+  ],
+  "headline": {
+    "US10": {
+      "sharpe_gross": 0.396,
+      "sharpe_net": 0.350,
+      "ann_return_gross_pct": 8.873,
+      "ann_vol_pct": 22.431,
+      "max_drawdown_pct_geom": -55.347,
+      "skew_daily": 0.176,
+      "skew_per_trade": 4.382,
+      "market_skew_at_m60": 0.204,
+      "n_trades": 342,
+      "win_rate_pct": 23.4
+    },
+    "SP500": {
+      "sharpe_gross": -0.005,
+      "sharpe_net": -0.009,
+      "ann_return_gross_pct": -0.112,
+      "ann_vol_pct": 24.534,
+      "max_drawdown_pct_geom": -85.036,
+      "skew_daily": -1.988,
+      "skew_per_trade": 4.327,
+      "market_skew_at_m60": -0.037,
+      "n_trades": 335,
+      "win_rate_pct": 19.7
+    }
+  },
+  "promotion_path": "Z",
+  "owner_signoff_utc": "2026-05-29T00:00:00Z",
+  "decision_log_anchor": "ars/DECISIONS.md#2026-05-29-martin-single-instrument-post-hoc-registration",
+  "finding_if_falsified": null,
+  "notes": "All 5 headline gates PASS; reconciliation tight. Promotion under Path Z (post-hoc grandfathering) because pre-registration was missing at run-start. Framework adopted 2026-05-29; future runs require pre-registration before run-start git SHA."
+}
