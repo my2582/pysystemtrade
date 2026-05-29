@@ -9,7 +9,24 @@
   --ink:#1a1a1a; --muted:#666; --line:#e5e5e5; --bg:#fafaf7; --card:#fff;
   --bad:#b94a48; --hold:#b58900; --good:#2a7f3f; --navy:#2a4a6b;
   --f1:#7c3aed; --f2:#0891b2; --f3:#db2777; --f4:#16a34a; --f5:#ea580c;
+  --fM:#475569;
 }
+.mech-card{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--fM);margin:14px 0;padding:14px 18px}
+.mech-card h3.mc-name{font-size:14.5px;margin:6px 0 8px;color:var(--ink);font-weight:600}
+.mech-card .mc-applies{font-size:12.5px;color:var(--muted);margin:0 0 8px}
+.mech-card .mc-sub{margin:10px 0 6px;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--fM);font-weight:700;border-bottom:1px solid var(--line);padding-bottom:3px}
+.mech-card .mc-formula{background:#f5f7fa;border-left:3px solid var(--fM);padding:8px 12px;margin:5px 0;font-family:"SF Mono",Menlo,monospace;font-size:12.5px;overflow-x:auto}
+.mech-card .mc-vars{font-size:12.5px;line-height:1.55;margin:4px 0}
+.mech-card .mc-vars b{font-family:"SF Mono",Menlo,monospace;color:var(--fM)}
+.mech-card .mc-note{font-size:11.5px;color:var(--muted);font-style:italic;margin:4px 0}
+.mech-card table.mc-action{width:100%;border-collapse:collapse;font-size:12.5px;margin:4px 0}
+.mech-card table.mc-action th{background:#eef2f7;text-align:left;padding:5px 9px;font-weight:600;color:var(--fM);width:32%;font-size:11.5px;border-bottom:1px solid var(--line)}
+.mech-card table.mc-action td{padding:5px 9px;border-bottom:1px solid var(--line)}
+.mech-card.mech-bad{border-left-color:var(--bad)}
+.mech-card.mech-good{border-left-color:var(--good)}
+.mech-card.mech-hold{border-left-color:var(--hold)}
+.mech-card .verdict-bar{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;color:#fff;margin-left:8px}
+.verdict-bar.b-good{background:var(--good)}.verdict-bar.b-bad{background:var(--bad)}.verdict-bar.b-hold{background:var(--hold)}
 *{box-sizing:border-box}
 body{font:15.5px/1.55 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;color:var(--ink);background:var(--bg);margin:0;padding:44px 52px;max-width:1280px}
 h1{font-size:30px;margin:0 0 4px;letter-spacing:-.4px}
@@ -203,6 +220,132 @@ tr.good td{background:#e8f5ea} tr.bad td{background:#fdeceb} tr.hi td{background
     <div class="why">Pre-registered question: does the Hanauer cross-sectional-equity result transfer to a single rates futures? If yes, expect Sharpe lift ≥ +0.10 AND maxDD improvement ≥ +5 pp AND skew_per_trade ≥ 1.0 (preservation).</div>
   </div>
 </div>
+
+<!-- ============================================================ M MECHANISM CHEATSHEETS -->
+<div class="banner" style="border-left-color:var(--fM)"><span class="l" style="color:var(--fM)">M — Mechanism cheatsheets</span><span class="n">Formula → Trigger → Action per experiment (HITL audit surface)</span><span class="r">read these BEFORE Results</span></div>
+
+<section class="mech-card mech-good">
+  <h3 class="mc-name">Martin baseline — 6-speed EWMAC pure trend <span class="verdict-bar b-good">promoted_post_hoc</span></h3>
+  <p class="mc-applies"><b>Applies to:</b> US10 (rates) and SP500 (equity), single instrument, $50k capital, integer contracts.</p>
+
+  <div class="mc-sub">1. Core formula tested</div>
+  <p>Per-rule normalised trend forecast (one of six speeds), then equal-weight combine + soft cap.</p>
+  <div class="mc-formula">F<sub>k,t</sub> = (EMA<sub>fast,k</sub>(P<sub>t</sub>) − EMA<sub>slow,k</sub>(P<sub>t</sub>)) / σ̂<sub>t</sub><br>
+  F<sub>combined,t</sub> = clip(Σ<sub>k</sub> w<sub>k</sub> · scalar<sub>k</sub> · F<sub>k,t</sub>, ±20)</div>
+  <p class="mc-vars"><b>k</b> ∈ {2_8, 4_16, 8_32, 16_64, 32_128, 64_256} (fast_span, slow_span pairs); <b>w<sub>k</sub></b> = 1/6 each (no tuning); <b>scalar<sub>k</sub></b> = chapter-15 default (10.6, 7.5, 5.3, 3.75, 2.65, 1.87); <b>σ̂<sub>t</sub></b> = pysystemtrade default daily price-vol; <b>±20 cap</b> = §4 nonlinearity (Paper Eq. predicts capping reduces max skew, contradicts our earlier "Martin-compliant" framing).</p>
+  <p class="mc-note">paper mapping: linear class instance with a<sub>j</sub> determined by EMA difference of price LEVELS (not price changes as in paper EMA2). Inside the linear class but ≠ paper's variational optimum te^(−α̇t).</p>
+
+  <div class="mc-sub">2. Triggering condition</div>
+  <p><b>Continuous.</b> Position re-evaluated every business day at close. No event trigger; no entry/exit threshold beyond the combined forecast crossing zero.</p>
+  <div class="mc-formula">pos<sub>t</sub> = round(F<sub>combined,t</sub> / 10 · capital · vol_target / instr_value_vol<sub>t</sub>)</div>
+  <p class="mc-vars"><b>vol_target</b> = 20% annualised; <b>buffered position</b> sticky in a band → trade only when desired exits band (turnover control).</p>
+
+  <div class="mc-sub">3. Action</div>
+  <table class="mc-action"><tbody>
+    <tr><th>Trade shape</th><td><b>Discrete contract adjustment</b> to round(desired). Long/short BOTH used (engine native; see DECISIONS post-review for verdict on per-instrument skew interpretation).</td></tr>
+    <tr><th>Observation date (T)</th><td>Close of business day T. EWMAC, vol, forecast all computed on data ≤ T close. No look-ahead.</td></tr>
+    <tr><th>Trade date (T+1)</th><td>Open of T+1 (pysystemtrade convention: pandl<sub>t+1</sub> uses pos<sub>t</sub> · ΔP<sub>t→t+1</sub>). Lagged-position attribution.</td></tr>
+    <tr><th>Between trade days</th><td>Position held; daily P&amp;L from pos<sub>t</sub> × price change.</td></tr>
+    <tr><th>Leverage / sizing cap</th><td><b>±5 contracts observed max</b> over 1985-2026 at $50k cap, 20% vol_target. ≈ $550k notional / 11× leverage on capital at peak; avg ~3×. Engine has no hard contract cap (vol-target limits naturally).</td></tr>
+    <tr><th>Re-entry rule</th><td>No re-entry rule — continuous. Sign flips through 0 = exit + new opposite-sign entry.</td></tr>
+  </tbody></table>
+</section>
+
+<section class="mech-card mech-bad">
+  <h3 class="mc-name">dMOM overlay — Daniel-Moskowitz dynamic scaler <span class="verdict-bar b-bad">falsified</span></h3>
+  <p class="mc-applies"><b>Applies to:</b> Martin baseline daily strategy returns on US10 and SP500.</p>
+
+  <div class="mc-sub">1. Core formula tested</div>
+  <div class="mc-formula">w<sub>dMOM,t</sub> = (1 / 2λ) · μ̂<sub>t</sub> / σ̂²<sub>strategy,t</sub><br>
+  μ̂<sub>t</sub> from expanding OLS: R<sub>MOM,t</sub> = γ<sub>0</sub> + γ<sub>int</sub> · I<sub>Bear,t−1</sub> · σ²<sub>RMRF,t−1</sub> + ε<sub>t</sub></div>
+  <p class="mc-vars"><b>I<sub>Bear,t−1</sub></b> = 1 if cumulative 24-mo back-adjusted price change &lt; 0; <b>σ²<sub>RMRF</sub></b> = 126d realized variance of vol-normalised market returns; <b>σ̂²<sub>strategy</sub></b> = 126d realized variance of baseline daily strategy returns; <b>λ</b> = closed-form so std(R · w) = std(R) full-sample (scalar).</p>
+  <p class="mc-note">Paper class: §4 nonlinear (ψ(V<sub>n</sub>) with V<sub>n</sub> = past R²<sub>negative</sub>, not just past U<sub>n</sub>). §2.3 Eq. 12 does NOT apply.</p>
+
+  <div class="mc-sub">2. Triggering condition</div>
+  <p><b>Continuous, daily.</b> w<sub>dMOM,t</sub> computed every day from expanding-window regression up to t−1.</p>
+
+  <div class="mc-sub">3. Action</div>
+  <table class="mc-action"><tbody>
+    <tr><th>Trade shape</th><td>Multiplicative scaler on baseline daily returns (NOT on positions). Equivalent to position scaling under fixed capital + continuous positions.</td></tr>
+    <tr><th>Observation date (T)</th><td>End of day T. Regression on [start, T−1].</td></tr>
+    <tr><th>Trade date (T+1)</th><td>Effective leverage applied to T+1 strategy return.</td></tr>
+    <tr><th>Between rebals</th><td>n/a — daily.</td></tr>
+    <tr><th>Leverage / sizing cap</th><td><b>NO declared cap</b> (pre-reg gap; surfaced by sMOM lesson). w can flip negative (bear+high-vol regimes) and is unbounded.</td></tr>
+    <tr><th>Re-entry rule</th><td>Sign flip of w = effective position direction flip (overlay).</td></tr>
+  </tbody></table>
+</section>
+
+<section class="mech-card mech-hold">
+  <h3 class="mc-name">sMOM overlay — Wang-Yan semi-vol scaler <span class="verdict-bar b-hold">registered_pending_remediation</span></h3>
+  <p class="mc-applies"><b>Applies to:</b> Martin baseline daily strategy returns on US10 and SP500. <em>Status downgraded from `promoted` after unbounded-w finding and Martin §4 confound critique.</em></p>
+
+  <div class="mc-sub">1. Core formula tested</div>
+  <div class="mc-formula">w<sub>sMOM,t</sub> = √(target_var) / √(semi_var<sub>126d,t</sub>) &nbsp; / &nbsp; λ<br>
+  semi_var<sub>126d,t</sub> = (1/126) · Σ<sub>j=1..126</sub> R²<sub>baseline,t−j</sub> · I{R<sub>baseline,t−j</sub> &lt; 0}</div>
+  <p class="mc-vars"><b>target_var</b> = full-sample mean of R²<sub>baseline</sub> (scalar; OOS-violation at the level, but invariant for Sharpe/skew/maxDD ratios); <b>λ</b> = closed-form vol-match scalar (similar invariance); <b>sign(w) = +1 always</b> (positive ratio of square roots).</p>
+  <p class="mc-note">Paper class: §4 nonlinear (ψ(V<sub>n</sub>) with V<sub>n</sub> = past R²<sub>negative</sub>). §2.3 Eq. 12 does NOT apply.</p>
+
+  <div class="mc-sub">2. Triggering condition</div>
+  <p><b>Continuous, daily.</b> w<sub>sMOM,t</sub> computed every day from rolling 126d window strictly before t.</p>
+
+  <div class="mc-sub">3. Action</div>
+  <table class="mc-action"><tbody>
+    <tr><th>Trade shape</th><td>Multiplicative scaler on baseline daily returns. Same trade boundaries / directions as baseline (sign(w) always +1).</td></tr>
+    <tr><th>Observation date (T)</th><td>End of day T. semi_var from R²<sub>negative</sub> on [T−126, T−1].</td></tr>
+    <tr><th>Trade date (T+1)</th><td>Leverage applied to T+1 strategy return.</td></tr>
+    <tr><th>Between rebals</th><td>n/a — daily.</td></tr>
+    <tr><th>Leverage / sizing cap</th><td><b style="color:var(--bad)">NO declared cap (defect)</b>. Historical max observed: w = 2,927 in 2020-24 window when semi_var collapsed. Effective leverage at peak ≈ 6,439× on $50k capital. Drives ~50%+ of the headline +0.255 Sharpe lift.</td></tr>
+    <tr><th>Re-entry rule</th><td>n/a — sign never flips.</td></tr>
+  </tbody></table>
+</section>
+
+<section class="mech-card mech-bad">
+  <h3 class="mc-name">Fast-tilt EWMAC — linear-decay forecast weights <span class="verdict-bar b-bad">falsified</span></h3>
+  <p class="mc-applies"><b>Applies to:</b> US10 + SP500 baseline replaced; one design decision = forecast weight redistribution.</p>
+
+  <div class="mc-sub">1. Core formula tested</div>
+  <p>Same EWMAC stack, different weights — biased toward fast speeds.</p>
+  <div class="mc-formula">w<sub>k</sub> = [0.30, 0.25, 0.20, 0.15, 0.07, 0.03] for k ∈ {2_8, 4_16, 8_32, 16_64, 32_128, 64_256}</div>
+  <p class="mc-vars">Linear-decay heuristic, no tuning on result. Sum = 1.00. Otherwise identical to Martin baseline.</p>
+
+  <div class="mc-sub">2. Triggering condition</div>
+  <p><b>Continuous, daily.</b> Same as baseline; only the forecast combination weights changed at config time.</p>
+
+  <div class="mc-sub">3. Action</div>
+  <table class="mc-action"><tbody>
+    <tr><th>Trade shape</th><td>Discrete contract adjustment, same engine; faster sign changes due to ewmac2_8 dominance.</td></tr>
+    <tr><th>Observation date (T)</th><td>Same as baseline.</td></tr>
+    <tr><th>Trade date (T+1)</th><td>Same as baseline.</td></tr>
+    <tr><th>Between trade days</th><td>Same as baseline.</td></tr>
+    <tr><th>Leverage / sizing cap</th><td>±5 contracts max (same as baseline). <b>Turnover</b>: 485 → 806 trades (+66%); structural cost rises with no Sharpe benefit.</td></tr>
+    <tr><th>Re-entry rule</th><td>Same as baseline.</td></tr>
+  </tbody></table>
+</section>
+
+<section class="mech-card mech-hold">
+  <h3 class="mc-name">Carry-toggle — trend + carry stack <span class="verdict-bar b-hold">refuted §2.3 implication</span></h3>
+  <p class="mc-applies"><b>Applies to:</b> US10 + SP500 baseline forecast composition changed; one design decision = enable carry rule.</p>
+
+  <div class="mc-sub">1. Core formula tested</div>
+  <p>EWMAC 6-speed renormalised to 0.70 total + carry rule at 0.30.</p>
+  <div class="mc-formula">F<sub>combined,t</sub> = clip(0.117 · Σ<sub>k</sub> scalar<sub>k</sub> · F<sub>EWMAC,k,t</sub> + 0.30 · scalar<sub>carry</sub> · F<sub>carry,t</sub>, ±20)<br>
+  F<sub>carry,t</sub> = roll yield from chapter-15 carry rule (smooth_days = 90)</div>
+  <p class="mc-vars">carry rule = pysystemtrade default chapter-15; forecast_scalar = 30.</p>
+  <p class="mc-note">Paper class: §2 linear extended (still φ<sub>n</sub> = Σ a<sub>j</sub> · U<sub>n−j</sub>), but a<sub>j</sub> now mixes EWMAC weights AND carry weights. Outcome: <b>skew INCREASED on US10</b> (5.35 → 7.34), refuting the §2.3 implication that non-trend should reduce skew. Interpretation: bond carry (positive roll yield in backwardation under secular rate-down) is itself a positively-skewed return source.</p>
+
+  <div class="mc-sub">2. Triggering condition</div>
+  <p>Continuous, daily — same engine as baseline.</p>
+
+  <div class="mc-sub">3. Action</div>
+  <table class="mc-action"><tbody>
+    <tr><th>Trade shape</th><td>Discrete contract adjustment. Carry component shifts position more slowly than EWMAC → 485 → 365 trades (−25%).</td></tr>
+    <tr><th>Observation date (T)</th><td>Same as baseline + carry signal from contract roll term-structure on day T.</td></tr>
+    <tr><th>Trade date (T+1)</th><td>Same as baseline.</td></tr>
+    <tr><th>Between trade days</th><td>Same as baseline.</td></tr>
+    <tr><th>Leverage / sizing cap</th><td>Same as baseline.</td></tr>
+    <tr><th>Re-entry rule</th><td>Same as baseline.</td></tr>
+  </tbody></table>
+</section>
 
 <!-- ============================================================ F3 RESULTS -->
 <div id="f3" class="banner f3"><span class="l">F3 — Results</span><span class="n">Martin PASS 5/5 (Path Z grandfather); dMOM FALSIFIED per pre-registered gates</span><span class="r">paired evidence packs</span></div>

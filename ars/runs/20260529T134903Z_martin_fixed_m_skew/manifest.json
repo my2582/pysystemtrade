@@ -1,0 +1,48 @@
+{
+  "run_utc": "20260529T134903Z",
+  "purpose": "Step 2+3 post-review correction: fixed-M strategy skew (Paper Eq. 12 direct test) + cap=20 vs cap=INF ablation (\u00a74 effect quantification)",
+  "engine": "native pysystemtrade futures_chapter15",
+  "git_sha": "db5a3207282a0c022b46064ec8c17a782f3c8125",
+  "python": "3.10.15",
+  "instruments": [
+    "US10",
+    "SP500"
+  ],
+  "ewmac_rules": [
+    "ewmac2_8",
+    "ewmac4_16",
+    "ewmac8_32",
+    "ewmac16_64",
+    "ewmac32_128",
+    "ewmac64_256"
+  ],
+  "capital_usd": 50000,
+  "vol_target_pct": 20.0,
+  "horizons_M_days": [
+    1,
+    2,
+    5,
+    10,
+    20,
+    40,
+    60,
+    100,
+    150,
+    200,
+    250
+  ],
+  "cap_variants": {
+    "cap20": 20.0,
+    "capINF": 9999.0
+  },
+  "paper_predictions": {
+    "skew_at_M1": "\u2248 0",
+    "skew_shape": "peak at finite M, decay as M^(-1/2)",
+    "EMA1_max_skew_approx": 2.41,
+    "EMA1_peak_at_M": "\u2248 1.07 \u00b7 N",
+    "EMA2_max_skew_approx": 2.1,
+    "EMA2_peak_at_M": "\u2248 1.7 (N_alpha + N_beta)",
+    "section_4_capping_effect": "any cap REDUCES max skew (sigmoid sigmoid, hard cap, or binary)"
+  },
+  "decision_log_anchor": "ars/DECISIONS.md#2026-05-29-post-review-correction"
+}

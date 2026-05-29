@@ -14,6 +14,33 @@ Schema per entry:
 
 ---
 
+## 2026-05-29 (post-review correction, written after paper re-read)
+
+The Martin entry below was written before a careful re-read of Martin (2023) §2 and §4. A subsequent review surfaced material misreadings that affect the framing (not the numerical results) of gates G1 and G2 specifically. Rather than rewriting the original entry (which is locked at its run-time git SHA), this correction is appended chronologically per ARS append-only convention.
+
+**Specific misreadings**:
+
+1. **Asset attribution**: I read "US10 market skew positive at M=40-60 / SP500 market skew negative" as evidence that "rates are good for trend, equity is bad for trend." Paper §1 explicitly states the opposite mechanism: trading-return skew is "a product of the design of the strategy ... not a property of the asset class." Even on symmetric market returns, all-a_j-positive linear trend produces positively skewed trading returns. Therefore G1/G2 (Martin Fig 1 verdicts) do NOT validate Martin §2.3, they merely confirm the market-context plot the paper used to introduce the problem.
+
+2. **Underlying assumption**: Paper §2 assumes κ_3(U_n) = 0 (one-period vol-normalised returns are symmetric). My SP500 U has strong daily skew ≈ -0.25 → paper's closed-form Eq. 12 does not apply cleanly. The negative strategy-return skew I observed on SP500 is consistent with U-leak, NOT a refutation of Martin §2.3 nor evidence of "equity bad for trend."
+
+3. **`forecast_cap = 20` is a §4 nonlinearity, not "Martin-compliant"**: Paper §4 establishes that any cap (sigmoid or hard) REDUCES max trading-return skew. I framed `forecast_cap = 20` as Martin-compliant in cheatsheet F2; this is reversed. My baseline is `linear + §4 capping`, not pure §2.3 linear.
+
+4. **`skew_per_trade` ≠ Paper's M-period skew**: My sign-episode `skew_per_trade` measures skew over variable-length holding periods. Paper's Eq. 12 closed-form and the M^(-1/2) decay refer to **fixed-M non-overlapping aggregations** of trading returns. The two are different mathematical objects; my measurement does not directly test Paper's central prediction.
+
+5. **"EWMAC = Martin EMA2" mapping is approximate**: Paper EMA2 = difference of two EMAs of dX_s (price *changes*). pysystemtrade EWMAC = (fast_EMA(price) - slow_EMA(price))/σ̂ = difference of EMAs of price *levels*. Both inside the linear-strategy class, but with different a_j weights. The variational optimum te^(-α̇t) ("EMA2=") is a single Laguerre-style kernel, not a 6-pair equal-weight stack.
+
+**Net implication for the Martin entry**: numerical results stand. Verdict text needs reframing:
+- G1/G2 (Fig 1 sign contrast): downgraded from "Martin §2.3 validated" to "Fig 1 market-context reproduced; does not validate §2.3."
+- G3/G4 (per-trade skew): note that sign-episode skew is NOT Paper's fixed-M trading return skew; remeasurement needed (Step 2 below).
+- G5 (Sharpe ceiling): unchanged; refutes the prior 0.7-1.0 claim independently of Martin's framework.
+
+A follow-up experiment (`scripts/martin_fixed_m_skew.py`, Step 2) measures fixed-M trading-return skew on the baseline. A second experiment (Step 3) ablates `forecast_cap` to separate the linear-vs-§4 effect.
+
+The lesson, recorded under ARS process change: pre-registered gates must reference specific paper sections + equations, not Figure/section slogans. See `ars/LESSONS.md` (forthcoming).
+
+---
+
 ## 2026-05-29 — martin_single_instrument — POST-HOC REGISTRATION
 
 **Status:** `promoted_post_hoc` (framework's first registry entry; pre-registration written after the run as a special-case grandfathering).
