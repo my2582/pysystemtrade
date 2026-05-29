@@ -210,3 +210,40 @@ This is an important nuance for downstream: Martin §2.3 holds AS WRITTEN (pure 
 **Artifacts:** Run `ars/runs/20260528T181556Z_carry_toggle/`. Evidence pack `ars/evidence_packs/carry_toggle/`. Code `scripts/momentum_variants_backtest.py`.
 
 **Implications:** since carry on US10 (a) lifts Sharpe by ~0.09 AND (b) lifts skew, carry-toggle is a candidate enhancement for a future trend+carry production system on US10. Note this would be a Path A promotion candidate in a separate experiment with appropriate pre-registered Sharpe-lift gates.
+
+
+---
+
+## 2026-05-29 — top1rot_pit50k — FALSIFIED (implementation finding: vol-target sizing mismatch)
+
+**Status:** `falsified` (pre-reg Path A requires G1+G2 both PASS; G1 PASS, G2 FAIL; does not fit Path B which requires G2 PASS with G1 allowed to fail).
+
+**Hypothesis under test (H-T1, H-T2):** weekly top-1 momentum rotation over the PIT-eligible universe lifts gross Sharpe by ≥ +0.05 AND reduces geometric MaxDD by ≥ +5pp vs the martin US10 single-instrument baseline. Single-decision variable = instrument selection rule (fixed-US10 vs rotation); all other parameters (6-speed EWMAC signal, 20% vol target, $50k, integer contracts) held identical.
+
+**Measured result (rotation vs martin US10 baseline):**
+
+| Gate | Threshold | Observed | Verdict |
+|---|---|---|---|
+| G1 Sharpe lift | ≥ +0.05 | **+0.073** | PASS |
+| G2 maxDD lift (pp) | ≥ +5.0 | **−25.69** | FAIL |
+| G3 ann turnover | ≤ 68.82 | 38.70 | PASS |
+| G4 skew_per_trade | ≥ 1.0 | 7.17 | PASS |
+| G_recon | < 5% | 1.67% | PASS |
+
+Rotation: Sharpe 0.469, ann_ret +24.62%, ann_vol **52.50%** (vs target 20%), maxDD −81.04%, 435 trades, 12-year cum +265.5%.
+Baseline US10: Sharpe 0.396, ann_vol 22.43%, maxDD −55.35%.
+
+**Verdict text:** G1 confirms direction-of-edge — rotation does extract Sharpe lift from the cross-section. But G2 fails by 26pp and the cause is a runner-design problem, not a strategy-thesis problem: realized vol is **52.5% (2.6× the target 20%)**. The pre-registered sizing rule ("fixed-vol-target integer contracts to hit capital × vol_target $-vol") does not scale by forecast magnitude. Top-1 selection biases the held forecast toward the 15–20 range (we always pick the strongest signal), so unit-scaled sizing systematically over-sizes by ~1.5–2× relative to a forecast-scaled implementation. Martin baseline uses pysystemtrade-native forecast-scaled sizing (position ∝ forecast/10), which keeps realized vol close to target.
+
+This makes the single-decision rule **compromised**: the run varies TWO things vs baseline (universe choice AND effective sizing rule), not one. Sharpe-lift PASS is direction-of-edge evidence, but maxDD comparison at unequal vol levels is structurally unfavorable to the higher-vol arm and cannot be cleanly attributed to universe choice.
+
+**Promotion path:** FALSIFIED with implementation finding; not eligible for promotion until the sizing rule mismatch is corrected.
+
+**Artifacts:** Run `ars/runs/20260529T145911Z_top1rot_pit50k/`. Pre-registration `ars/evidence_packs/top1rot_pit50k/top1rot_pit50k_preregistration.md` (locked at git `a430628e`). Runner `scripts/run_top1rot_pit50k.py`. Strategy module `src/arki_strategies/absmom_rotation.py`. No evidence pack created (falsified, runner needs revision).
+
+**Implications and next experiment:**
+
+1. **Bug postmortem** — the runner had two real bugs found during execution (trade ledger gross_pnl_usd accumulator missing for continued-hold weeks; daily P&L timestamp normalization missing). Both fixed in-flight; reconciliation PASS confirms the post-fix daily P&L matches trade ledger to 1.67%. These were not pre-reg compliance issues; they were implementation defects.
+2. **Design correction needed** — sizing rule must change from "fixed-vol-target" to "pysystemtrade-native forecast-scaled vol-target" to match baseline. This is a runner change, NOT a pre-reg amendment, but the pre-reg's §3 cell-1 description should explicitly state forecast-scaled sizing for the next iteration.
+3. **Next run** — a fresh pre-registration is recommended (e.g. `top1rot_pit50k_v2` or amend §3 of current pre-reg if owner agrees the original sizing language was an oversight). The fix-and-rerun should preserve the single-decision posture: only universe choice differs from baseline.
+4. **Single-decision discipline lesson** — when reusing a baseline's sizing language, write the pre-reg §3 to point explicitly at the baseline's sizing FUNCTION (e.g. "pysystemtrade `positionSize.get_subsystem_position`") rather than describing the abstract objective ("hit capital × vol_target $-vol"). Otherwise an implementer can satisfy the words while diverging from the baseline's behavior.

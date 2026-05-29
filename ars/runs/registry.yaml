@@ -275,3 +275,73 @@ runs:
     path: ars/runs/20260528T181556Z_carry_toggle
     evidence_pack: ars/evidence_packs/carry_toggle
     decision_log: ars/DECISIONS.md#2026-05-29-carry-toggle-refuted
+
+  - id: 20260529T145911Z_top1rot_pit50k
+    label: top1rot_pit50k
+    timestamp: '2026-05-29T14:59:11Z'
+    hypothesis_ref: ars/evidence_packs/top1rot_pit50k/top1rot_pit50k_preregistration.md  # locked @ a430628e (pre-run)
+    status: falsified
+    config:
+      capital_usd: 50000
+      vol_target_pct: 20.0
+      universe: PIT-derived (ex-FX, ex-OilGas, ex-China; min_contracts_held=3; ADV>=1000; min_history>=5y; staleness<=15d)
+      pit_membership_parquet: references/strategy/pit_universe_c50k_n1_v20_k3.parquet
+      pit_membership_sha256: 89f7009d7f4727247e9180224e8bb85f21df5625c35492f53b24b2f046b36a7a
+      rules: [ewmac2_8, ewmac4_16, ewmac8_32, ewmac16_64, ewmac32_128, ewmac64_256]
+      forecast_weights: equal_1_6
+      forecast_cap: 20.0
+      selection: argmax of combined EWMAC forecast (always LONG per pre-reg)
+      sizing: fixed-vol-target integer contracts (NO forecast-magnitude scaling)
+      rebalance: W-FRI
+      runner: scripts/run_top1rot_pit50k.py
+      strategy_module: src/arki_strategies/absmom_rotation.py
+      window: '2015-01-04 to 2026-04-02'
+    results:
+      rotation:
+        sharpe_gross: 0.469
+        ann_return_pct: 24.62
+        ann_vol_pct: 52.50
+        max_drawdown_pct_geom: -81.04
+        skew_per_trade: 7.17
+        n_trades: 435
+        ann_subsystem_turnover: 38.70
+        reconciliation_diff_pct: 1.67
+        cumulative_return_pct: 265.5
+    baseline_reference:
+      run_id: 20260528T161350Z_martin_single_instrument
+      US10:
+        sharpe_gross: 0.396
+        max_drawdown_pct_geom: -55.347
+        ann_vol_pct: 22.431
+        skew_per_trade: 4.382
+        ann_subsystem_turnover: 34.41
+    gates:
+      G1_sharpe_lift: {observed: +0.073, threshold: ">= +0.05", verdict: PASS}
+      G2_maxDD_lift_pp: {observed: -25.69, threshold: ">= +5.0 pp", verdict: FAIL}
+      G3_turnover: {observed: 38.70, threshold: "<= 68.82", verdict: PASS}
+      G4_skew_per_trade: {observed: 7.17, threshold: ">= 1.0", verdict: PASS}
+      G_recon: {observed: 1.67, threshold: "< 5.0", verdict: PASS}
+    verdict_summary: |
+      FALSIFIED by exclusion: G1 PASS (Sharpe lift +0.073 above gate) but G2 FAIL
+      (rotation MaxDD -81% vs baseline -55%, i.e. 26pp WORSE). Outcome does not fit
+      pre-reg Path A (requires G1+G2 both PASS) nor Path B (regime-conditional —
+      requires G2 PASS with G1 allowed to fail). The dual G1-PASS / G2-FAIL bucket
+      was not anticipated in §4 and is treated as falsified-with-finding under
+      the spirit of single-decision attribution.
+    finding: |
+      Root cause is OVER-SIZING. Realized ann vol is 52.5% vs target 20.0%
+      (2.6x overshoot). The pre-registered sizing rule ("fixed-vol-target integer
+      contracts") does not scale by forecast magnitude, but top-1 selection
+      biases the held forecast toward the 15-20 range (we pick the strongest signal).
+      Martin baseline uses pysystemtrade-native forecast-scaled sizing (position
+      proportional to forecast/10), which keeps realized vol close to target.
+      Thus the single-decision rule is COMPROMISED: this run varies TWO things vs
+      baseline (universe choice AND sizing rule), not one. Sharpe-lift is real
+      direction-of-edge evidence (PASS at higher realized vol), but the unequal
+      vol levels make the maxDD comparison structurally unfavorable.
+      Next experiment: re-pre-register top1rot_pit50k with sizing rule changed
+      to pysystemtrade-native forecast-scaled (matching baseline). Until then,
+      universe-choice attribution remains uncleanly identified.
+    path: ars/runs/20260529T145911Z_top1rot_pit50k
+    evidence_pack: null
+    decision_log: ars/DECISIONS.md#2026-05-29-top1rot-pit50k-falsified
