@@ -1,0 +1,46 @@
+# Mechanism cheatsheet — tbm_meta_us10_baseline_1m
+# Source: ars/evidence_packs/tbm_meta_us10_baseline/tbm_meta_us10_baseline_preregistration.md §1-§3
+# Hand-authored 2026-05-31 for CPC v1 Arki. Formula/triggering/action only.
+applies_to: >
+  TBM meta-labeling overlay on the Martin single-EMA2 primary side (US10 / ZN,
+  $1M, carver_native). The engine is NOT touched: side = sign(Martin position);
+  size = learned meta-classifier scaler g(m) in [g_min, 1.0].
+core_formula:
+  name: "Triple-Barrier label + meta-sizer on Martin vol-normalised returns"
+  latex: >
+    U_n = \frac{X_{n+1}-X_n}{\hat{\sigma}_n}, \quad
+    \hat{\sigma}_n^2 = \mathrm{EMA}_{\alpha=0.05}\big((X_n-X_{n-1})^2\big), \quad
+    \mathrm{PT}=8\hat{\sigma},\; \mathrm{SL}=4\hat{\sigma},\; T_{\max}=120\,\text{bd}
+  vars: >
+    <b>X</b> = ZN panama-adjusted price; <b>&sigma;&#770;</b> = Martin §2.5 20-day EMA of squared
+    <i>absolute</i> price changes (&gamma;=0.95 &rArr; &alpha;=0.05) — absolute-change form because
+    ZN crosses zero and pct-returns explode. Barriers in raw price-sigma units
+    (PT:SL = 2:1, justified by 4.5&times; MFE/MAE asymmetry). Sigma-floor (no look-ahead):
+    clip(lower = &sigma;.expanding(20).median()&times;0.2).
+  note: >
+    Labels sampled at symmetric-CUSUM events (LdP 2018 ch.2 §2.5 Eq.(2.5), &kappa;=1.0&sigma;),
+    pooled across a 6-speed pseudo-cross-section for thickness; SIDE stays single-EMA2.
+    Three gap-handling rules (5.2.a CUSUM reset / 5.2.b &sigma; re-warmup / 5.2.c cross-gap drop)
+    applied to every &gt;5-bd gap.
+triggering:
+  rule: >
+    The meta-classifier (sklearn, 100 trees) emits per-event probability m_t. The
+    position scaler fires continuously: g(m_t) ramps the Martin side size between
+    g_min=0.30 and 1.0. Training labels are triple-barrier outcomes (PT-touch = 1,
+    SL/vertical = 0) over CUSUM events; features led by Kaufman Efficiency Ratio
+    (ER 20d/60d — dominant US10 conditioner, bucket-Sharpe spread 5.64).
+  scale_factor: >
+    g(m_t) \in [0.30,\,1.0], \qquad \text{pos}_t = g(m_t)\cdot \mathrm{sign}\big(\text{Martin}_t\big)
+  cells: >
+    Internal grid (honest DSR N): &tau; &isin; {0.40, 0.50, 0.55, 0.60} &times; feature-subset
+    {ER-only, ER+rest} = <b>8 configs</b>. This run reports feat=ER_plus_rest, &tau;=0.50.
+action:
+  trade_shape: >
+    <b>Continuous re-sizing</b> of the existing Martin side (no new side, no new alpha).
+    Stage-1 value is risk-shape: drawdown reduction + positive-skew preservation
+    (Martin §4 Eq.(20) all-non-negative-weight regime preserved by g &ge; 0).
+  observation: "CUSUM event day (T); meta-features computed strictly before T (no look-ahead)."
+  trade: "Next bar (T+1) — size scaler applied to the engine's native position."
+  between_rebals: "g(m_t) updates daily from the meta-model; floored at 0.30, capped at 1.0."
+  leverage_cap: "max(g_t) &le; 1.0 hard cap (Rule-2 bounded multiplicative weight); g_min=0.30 floor."
+  re_entry: "Not applicable — overlay only scales an always-on side; never fully exits."

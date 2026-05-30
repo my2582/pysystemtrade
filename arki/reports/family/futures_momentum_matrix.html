@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>futures_momentum — family matrix</title>
+<script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+<style>
+  body{font-family:-apple-system,"SF Pro Text",Helvetica,sans-serif;max-width:1180px;margin:24px auto;padding:0 18px;color:#1a1a1a;}
+  h1{font-family:"Cormorant Garamond",Georgia,serif;font-size:30px;color:#265844;margin-bottom:2px;}
+  h2{font-family:"Cormorant Garamond",Georgia,serif;font-size:22px;color:#265844;border-bottom:1px solid #d0d4cd;padding-bottom:4px;margin-top:30px;}
+  table{border-collapse:collapse;width:100%;font-size:11.5px;margin-bottom:6px;}
+  th,td{padding:4px 6px;border-bottom:1px solid #e5e7eb;text-align:left;}
+  th{background:#f5f7f4;color:#265844;}
+  td.slug{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;}
+  td.read{color:#374151;font-size:10.5px;}
+  td.st,span.st{text-align:center;font-weight:700;border-radius:3px;padding:2px 6px;font-size:10.5px;}
+  .pro{background:#e6f4ea;color:#166534;} .meas{background:#e0f2fe;color:#075985;}
+  .rem{background:#fef9c3;color:#854d0e;} .fal{background:#fce8e6;color:#991b1b;}
+  .que{background:#ede9fe;color:#5b21b6;}
+  tr.confound td{background:#fafafa;color:#9ca3af;}
+  .meta{color:#6b7280;font-size:12px;margin-bottom:8px;}
+  .thesis{background:#f8f9f6;border-left:4px solid #265844;padding:10px 14px;font-size:12.5px;line-height:1.5;border-radius:4px;margin:10px 0 4px;}
+  .kpi{display:inline-block;background:#eef0eb;border-radius:4px;padding:6px 12px;margin:4px 8px 4px 0;font-size:12px;}
+  .kpi b{color:#265844;font-size:15px;}
+  .tnote{color:#6b7280;font-size:11px;margin:2px 0 14px;line-height:1.4;}
+  .legend{font-size:11px;color:#4a4a4a;margin:6px 0 0;}
+  a{color:#0891b2;text-decoration:none;} a:hover{text-decoration:underline;}
+</style></head><body>
+
+<h1>futures_momentum — family matrix</h1>
+<p class="meta">Single-page family status dashboard · generated 2026-05-30 17:36 UTC ·
+source: <code>ars/families/futures_momentum/family.yaml</code> + findings.md + queue.md</p>
+
+<div class="thesis">Futures momentum exploration across two distinct objectives, kept in separate panels to prevent confound:</div>
+<div>
+  <span class="kpi">n_configs_searched <b>58</b></span>
+  <span class="kpi">expected_max_Sharpe@N <b>0.3326</b></span>
+  <span class="kpi">cells registered <b>12</b></span>
+  <span class="kpi">pre-reg queued <b>14</b></span>
+  <span class="kpi">selection correction <b>deflated_sharpe_lopez_de_prado_2014</b></span>
+</div>
+<p class="legend">Legend: <span class="st pro">✅PRO</span> · <span class="st pro">✅PRO*</span> · <span class="st meas">📊MEAS</span> · <span class="st rem">⚠REM</span> · <span class="st fal">❌FAL</span> · <span class="st fal">❌REF</span> · <span class="st que">⏳QUE</span></p>
+
+<h2>Panel A — single-instrument status grid</h2>
+<table class="grid"><thead><tr><th>cell_id</th><th>inst</th><th>vol_est</th><th>rule</th><th>overlay</th><th>exec_profile</th><th>cap</th><th>status</th><th>Sharpe</th><th>report</th></tr></thead><tbody><tr><td class="slug">martin_post_hoc_baseline_us10</td><td>US10</td><td>carver_mixed_35d</td><td>six_speed_ewmac_equal</td><td>none</td><td>carver_native</td><td>50000</td><td class="st pro">✅PRO*</td><td>0.350</td><td>—</td></tr><tr><td class="slug">martin_post_hoc_baseline_sp500</td><td>SP500</td><td>carver_mixed_35d</td><td>six_speed_ewmac_equal</td><td>none</td><td>carver_native</td><td>50000</td><td class="st pro">✅PRO*</td><td>-0.009</td><td>—</td></tr><tr><td class="slug">dmom_us10</td><td>US10</td><td>carver_mixed_35d</td><td>six_speed_ewmac_equal</td><td>dMOM</td><td>carver_native</td><td>50000</td><td class="st fal">❌FAL</td><td></td><td>—</td></tr><tr><td class="slug">smom_us10</td><td>US10</td><td>carver_mixed_35d</td><td>six_speed_ewmac_equal</td><td>sMOM</td><td>carver_native</td><td>50000</td><td class="st rem">⚠REM</td><td></td><td>—</td></tr><tr><td class="slug">fast_tilt_ewmac</td><td>US10</td><td>carver_mixed_35d</td><td>fast_tilted_weights</td><td>none</td><td>carver_native</td><td>50000</td><td class="st fal">❌FAL</td><td></td><td>—</td></tr><tr><td class="slug">carry_toggle</td><td>US10</td><td>carver_mixed_35d</td><td>six_speed_ewmac_equal</td><td>carry</td><td>carver_native</td><td>50000</td><td class="st fal">❌REF</td><td></td><td>—</td></tr><tr><td class="slug">exec_friction_carver_6speed_us10_50k</td><td>US10</td><td>carver_mixed_35d</td><td>six_speed_ewmac_equal</td><td>none</td><td>carver_native</td><td>50000</td><td class="st meas">📊MEAS</td><td>0.350</td><td>—</td></tr><tr><td class="slug">exec_friction_carver_6speed_us10_1m</td><td>US10</td><td>carver_mixed_35d</td><td>six_speed_ewmac_equal</td><td>none</td><td>carver_native</td><td>1000000</td><td class="st meas">📊MEAS</td><td>0.317</td><td>—</td></tr><tr><td class="slug">exec_friction_martin_baseline_us10_50k</td><td>US10</td><td>martin_20d_ema_of_sq</td><td>six_speed_ewmac_equal</td><td>none</td><td>carver_native</td><td>50000</td><td class="st meas">📊MEAS</td><td>0.353</td><td>—</td></tr><tr><td class="slug">exec_friction_martin_baseline_us10_1m</td><td>US10</td><td>martin_20d_ema_of_sq</td><td>six_speed_ewmac_equal</td><td>none</td><td>carver_native</td><td>1000000</td><td class="st meas">📊MEAS</td><td>0.355</td><td>—</td></tr><tr><td class="slug">exec_friction_martin_primary_us10_50k</td><td>US10</td><td>martin_20d_ema_of_sq</td><td>single_ema2_20_40</td><td>none</td><td>paper_fidelity_numpy</td><td>50000</td><td class="st meas">📊MEAS</td><td>0.316</td><td>—</td></tr><tr><td class="slug">exec_friction_martin_primary_us10_1m</td><td>US10</td><td>martin_20d_ema_of_sq</td><td>single_ema2_20_40</td><td>none</td><td>paper_fidelity_numpy</td><td>1000000</td><td class="st meas">📊MEAS</td><td>0.316</td><td>—</td></tr><tr><td class="slug">tbm_meta_us10_tmax40</td><td>US10</td><td>martin_20d_ema_of_sq</td><td>single_ema2_20_40_with_6</td><td>TBM_meta_label_tmax40</td><td>carver_native</td><td>1000000</td><td class="st que">⏳QUE</td><td></td><td><a href="../2026-05-31/cells/tbm_meta_us10_tmax40_cpc.html">CPC ↗</a></td></tr><tr><td class="slug">tbm_meta_us10_baseline_1m</td><td>US10</td><td>martin_20d_ema_of_sq</td><td>single_ema2_20_40_with_6</td><td>TBM_meta_label</td><td>carver_native</td><td>1000000</td><td class="st que">⏳QUE</td><td></td><td><a href="../2026-05-31/cells/tbm_meta_us10_baseline_1m_cpc.html">CPC ↗</a></td></tr></tbody></table>
+
+<h2>DSR threshold timeline (self-correcting loop)</h2>
+<div id="dsr" style="height:320px;"></div><script>Plotly.newPlot("dsr", [{"x": [41, 50, 58], "y": [0.314, 0.325, 0.3326], "type": "scatter", "mode": "lines+markers+text", "text": ["N=41<br>0.314", "N=50<br>0.325", "N=58<br>0.3326"], "textposition": "top left", "line": {"color": "#265844", "width": 2}, "marker": {"size": 9, "color": "#d97706"}, "name": "expected_max_sharpe_at_N"}], {margin:{l:60,r:20,t:30,b:50}, yaxis:{title:"expected max Sharpe (ann)"}, xaxis:{title:"n_configs_searched (N)"}, title:"DSR threshold — self-correcting loop"});</script><table class="grid"><thead><tr><th>lock date</th><th>N</th><th>threshold</th><th>triggering event</th></tr></thead><tbody><tr><td>2026-05-29</td><td>41</td><td>0.314</td><td>pre-TBM family baseline</td></tr><tr><td>2026-05-30</td><td>50</td><td>0.325</td><td>tbm_meta_us10_baseline_1m lock (+8)</td></tr><tr><td>2026-05-31</td><td>58</td><td>0.3326</td><td>tbm_meta_us10_tmax40 sensitivity lock (+8)</td></tr></tbody></table><p class="tnote">Locking pre-regs RAISES the absolute-promotion bar for ALL cells (arki.utils.dsr.expected_max_sharpe, sr_trials_std=0.1426, ann=256).</p>
+
+<h2>Panel A elasticity (clean-pair audit)</h2>
+<table class="grid"><thead><tr><th>Axis</th><th>Direction</th><th>mean Δ Sharpe</th><th>n clean pairs</th><th>Tentative read</th></tr></thead><tbody><tr class=""><td>vol_estimator (carver vs martin)</td><td>≈ 0</td><td>0.0035</td><td>2</td><td class="read">near-zero on US10 at integer+cap; UNTESTED elsewhere / in Panel B</td></tr><tr class=""><td>overlay (none → carry/sMOM/dMOM/fast/TBM)</td><td>mixed</td><td>varies</td><td>4</td><td class="read">high-RISK axis: 3 falsified, sMOM +0.255 pre-remediation, TBM_meta UNTESTED→now MEAS</td></tr><tr class="confound"><td>rule_structure (single_ema2 vs 6-speed)</td><td>hint 6sp>single</td><td>0.039</td><td>0</td><td class="read">NO CLEAN PAIR — confounded with exec_profile (de-confound cell queued #2)</td></tr><tr class="confound"><td>exec_profile (numpy vs carver_native)</td><td>hint native>numpy</td><td>0.084</td><td>0</td><td class="read">NO CLEAN PAIR — same confound as rule_structure</td></tr><tr class=""><td>capital_usd (50k vs 1m)</td><td>≈0 Sharpe, +skew</td><td>0.020 / 1.88</td><td>3</td><td class="read">Sharpe capital-invariant on US10; per-trade skew grows at $1M</td></tr></tbody></table><p class="tnote">Direction-only (n_pairs ≤ 2). Confounded pairs (n=0) shaded. No cross-panel inheritance. Source: findings.md (2026-05-31).</p>
+
+<h2>Queue — top 5 (elasticity-ranked)</h2>
+<table class="grid"><thead><tr><th>#</th><th>cell_id</th><th>status</th><th>grid size</th><th>resolves</th></tr></thead><tbody><tr><td>1</td><td class="slug">tbm_meta_us10_baseline_1m</td><td>in_progress→MEASURED</td><td>8</td><td class="read">overlay axis untested level — DONE: meta DSR-uplift +0.0115, near-floor sizer (g_max 0.551)</td></tr><tr><td>2</td><td class="slug">rule_structure_deconfound_us10</td><td>queued</td><td>1</td><td class="read">resolves the only n=0-clean-pair axis (single_ema2 + carver_native vs 6-speed)</td></tr><tr><td>3</td><td class="slug">vol_estimator_transport_to_bund</td><td>queued</td><td>2</td><td class="read">confirm/refute ≈0 vol_estimator finding outside US10</td></tr><tr><td>4</td><td class="slug">smom_remediation</td><td>blocked</td><td>2</td><td class="read">sMOM +0.255 lift pre-downgrade; blocked on sizing-rule fix</td></tr><tr><td>5</td><td class="slug">panel_B_open_dm_rates_5</td><td>queued</td><td>5</td><td class="read">opens Panel B (DM_rates_5, equal_weight, TS_only); waits on de-confound #2</td></tr></tbody></table><p class="tnote">Elasticity-ranked. Source: queue.md (2026-05-31).</p>
+
+<h2>Linked artifacts</h2>
+<ul style="font-size:12px;color:#374151;">
+  <li><a href="../../../ars/families/futures_momentum/family.yaml">family.yaml</a> (Layer 2 SOT)</li>
+  <li><a href="../../../ars/families/futures_momentum/findings.md">findings.md</a> (Layer 3 elasticity)</li>
+  <li><a href="../../../ars/families/futures_momentum/queue.md">queue.md</a></li>
+  <li>CPC v1 reports: <a href="../2026-05-31/cells/">cells/</a> · <a href="../2026-05-31/comparisons/">comparisons/</a></li>
+  <li>Registry: <code>ars/runs/registry.yaml</code></li>
+</ul>
+<p class="tnote">Format: family matrix v1 · builder: scripts/build_family_matrix.py ·
+handoff: docs/arki/handoff_unified_cpc_reporting_2026-05-31.md</p>
+
+</body></html>

@@ -1,0 +1,376 @@
+# =====================================================================
+# futures_momentum family — schema-locked SOT for futures momentum
+# research at Arki Finance. Replaces ad-hoc per-experiment registry
+# scattering with a 2-panel matrix that an AI agent (or human) can
+# query in one read.
+#
+# Layer hierarchy (this file = Layer 2):
+#   Layer 1: ars/runs/registry.yaml   — per-experiment entries (one cell per row)
+#   Layer 2: this file                — family-level matrix + dims + multiple-testing
+#   Layer 3: findings.md (next to)    — axis-level elasticity + transport status
+#
+# Append-only discipline:
+#   - Cells are NEVER deleted (falsified is a status, not removal).
+#   - Schema additions go through pre-reg + DECISIONS entry.
+#   - n_cells_registered and n_configs_searched only increase.
+# =====================================================================
+
+family:
+  name: futures_momentum
+  thesis: |
+    Futures momentum exploration across two distinct objectives, kept in
+    separate panels to prevent confound:
+
+    Panel A (single-instrument): which {vol_estimator, rule_structure,
+        overlay, exec_profile, capital_tier} maximises positive-skew
+        long-option payoff (Martin 2023) net of execution friction on a
+        given futures contract?
+
+    Panel B (portfolio): given a chosen single-instrument spec from Panel A,
+        which {instrument_set, portfolio_construction, cross_section_mode}
+        produces the best out-of-sample portfolio?
+
+    Panel A finding does NOT transport to Panel B without explicit re-test
+    (e.g. vol_estimator being dead on US10 single-instrument does not imply
+    it is dead inside a risk-parity portfolio where the same estimator
+    feeds instrument weighting). Elasticities are measured INDEPENDENTLY
+    per panel; cells from different panels are never compared on the same
+    axis.
+
+  panels: [single_instrument, portfolio]
+
+  # ===================================================================
+  # Multiple-testing accounting -- inputs to arki.utils.dsr functions
+  # ===================================================================
+  multiple_testing:
+    n_cells_registered: 12           # cells with measurement / promoted-post-hoc status
+    n_cells_pre_registered_queued: 14  # +1 tbm_meta_us10_baseline_1m (2026-05-30)
+                                       # +1 tbm_meta_us10_tmax40 sensitivity (2026-05-31)
+    n_configs_recorded: 28           # 12 base cells (each internal_grid_size=1)
+                                     # + 8 tbm_meta_us10_baseline_1m
+                                     # + 8 tbm_meta_us10_tmax40 (honest sensitivity-sweep cost)
+    n_configs_unrecorded_upper_bound: 30
+    n_configs_searched: 58           # = n_configs_recorded + n_configs_unrecorded_upper_bound
+    selection_correction: deflated_sharpe_lopez_de_prado_2014
+    dsr_function: arki.utils.dsr.deflated_sharpe_ratio
+    pbo_function: arki.utils.dsr.probability_of_backtest_overfitting
+    annualization_factor: 256
+    expected_max_sharpe_at_N: 0.3326  # recomputed 2026-05-31 via
+                                      #   arki.utils.dsr.expected_max_sharpe(
+                                      #     sr_trials_std=0.1426, n_trials=58,
+                                      #     annualization_factor=256) = 0.3326
+                                      # rises from 0.325 (N=50) due to tbm sensitivity add.
+
+  # ===================================================================
+  # Metric units -- locked at schema level. Cell-level metrics MUST honour
+  # these. Catches strategy-pct vs raw-sigma vs annualisation mismatches.
+  # ===================================================================
+  metric_units:
+    sharpe_net:              pct_of_vol_targeted_capital_per_year_annualised
+    sharpe_gross:            same_as_sharpe_net_but_pre_costs
+    skew_per_trade:          sign_episode_aggregation_dimensionless
+    skew_daily:              daily_returns_third_central_moment_normalised
+    max_drawdown_pct_geom:   geometric_compounded_percent_bounded_in_minus100_to_0
+    win_rate_pct:            percent_of_nonzero_daily_returns_that_are_positive
+    elasticity_delta:        delta_sharpe_net_per_axis_change_annualised
+    tbm_barriers:            raw_price_sigma_units_NOT_vol_targeted_pct
+    tbm_trades.unit:         raw_price_points    # TBM trade_return_pp column in trades_US10.csv
+    internal_grid_size:      integer_count_of_configs_swept_within_cell
+    # ---- annualisation footnote (consistency across all cells / regime analyses) ----
+    annualisation_note: |
+      Sharpe annualisation = 256 throughout (pysystemtrade BUSINESS_DAYS_IN_YEAR
+      convention). When ARS reports show `rolling_*_252d`, the 252 is the rolling
+      WINDOW length (lookback in trading days), NOT an annualisation factor --
+      annualisation is sqrt(256) everywhere. Per-trade reports (e.g.
+      scripts/trade_analysis.py uses PPY=252) are a DIFFERENT sample unit
+      (per-trade, N=#trades) -- not comparable to family / regime daily Sharpe
+      (N=#trading-days), independent of the 252-vs-256 detail.
+
+  # ===================================================================
+  # PANEL A — single-instrument spec exploration
+  # ===================================================================
+  panel_A_single_instrument:
+    purpose: "what's the best per-instrument spec?"
+
+    dimensions:
+      universe:
+        instrument:           [US10, SP500, Bund, BOBL, GILT, JGB, more_to_come]
+      spec:
+        vol_estimator:        [carver_mixed_35d, martin_20d_ema_of_sq]
+        rule_structure:       [single_ema2_20_40, six_speed_ewmac_equal,
+                               speed_subset_3, fast_tilted_weights]
+        overlay:              [none, carry, sMOM, dMOM, TBM_meta_label,
+                               TBM_x_sMOM, fast_tilted_forecast_weights]
+      exec_profile:
+        # NOT a free axis -- enumerated profiles bundle position_quant, cap, buffer
+        enum:
+          - paper_fidelity_numpy:  {position: continuous, cap: off,    buffer: none}
+          - carver_native:         {position: integer,    cap: pm20,   buffer: default}
+          - carver_native_micro:   {position: integer_micro, cap: pm20, buffer: default}
+        capital_usd_meaningful_for: [carver_native, carver_native_micro]
+        capital_usd:          [50000, 1000000, 10000000]
+
+    cells:
+      # ---- pre-execution_friction (prior single-cell entries) ----
+      - cell_id: martin_post_hoc_baseline_us10
+        registry_ref: 20260528T161350Z_martin_single_instrument
+        panel: single_instrument
+        dim_values:
+          universe:     {instrument: US10}
+          spec:         {vol_estimator: carver_mixed_35d,
+                          rule_structure: six_speed_ewmac_equal, overlay: none}
+          exec_profile: {profile: carver_native, capital_usd: 50000}
+        status: promoted_post_hoc
+        sharpe_net: 0.350
+        skew_per_trade: 4.382
+        internal_grid_size: 1
+        artifact_paths:
+          run_dir: ars/runs/20260528T161350Z_martin_single_instrument
+          daily_pct: ars/runs/20260528T161350Z_martin_single_instrument/equity_curves.csv
+          trades: ars/runs/20260528T161350Z_martin_single_instrument/trades_US10.csv
+      - cell_id: martin_post_hoc_baseline_sp500
+        registry_ref: 20260528T161350Z_martin_single_instrument
+        panel: single_instrument
+        dim_values:
+          universe:     {instrument: SP500}
+          spec:         {vol_estimator: carver_mixed_35d,
+                          rule_structure: six_speed_ewmac_equal, overlay: none}
+          exec_profile: {profile: carver_native, capital_usd: 50000}
+        status: promoted_post_hoc
+        sharpe_net: -0.009
+        skew_per_trade: 4.327
+        internal_grid_size: 1
+        artifact_paths:
+          run_dir: ars/runs/20260528T161350Z_martin_single_instrument
+          trades: ars/runs/20260528T161350Z_martin_single_instrument/trades_SP500.csv
+
+      - cell_id: dmom_us10
+        registry_ref: 20260528T173334Z_dmom_us10
+        panel: single_instrument
+        dim_values:
+          universe:     {instrument: US10}
+          spec:         {vol_estimator: carver_mixed_35d,
+                          rule_structure: six_speed_ewmac_equal, overlay: dMOM}
+          exec_profile: {profile: carver_native, capital_usd: 50000}
+        status: falsified
+        internal_grid_size: 1   # lookback values fixed at registration time
+        finding: G1 and G2 both FAIL; dMOM mitigates no observed drawdown on US10 rates
+
+      - cell_id: smom_us10
+        registry_ref: 20260528T181556Z_smom_us10
+        panel: single_instrument
+        dim_values:
+          universe:     {instrument: US10}
+          spec:         {vol_estimator: carver_mixed_35d,
+                          rule_structure: six_speed_ewmac_equal, overlay: sMOM}
+          exec_profile: {profile: carver_native, capital_usd: 50000}
+        status: registered_pending_remediation
+        internal_grid_size: 1
+        blocked_by: sizing_rule_mismatch  # see ars/LESSONS.md
+
+      - cell_id: fast_tilt_ewmac
+        registry_ref: 20260528T181556Z_fast_tilt_ewmac
+        panel: single_instrument
+        dim_values:
+          universe:     {instrument: US10}
+          spec:         {vol_estimator: carver_mixed_35d,
+                          rule_structure: fast_tilted_weights, overlay: none}
+          exec_profile: {profile: carver_native, capital_usd: 50000}
+        status: falsified
+        internal_grid_size: 1
+
+      - cell_id: carry_toggle
+        registry_ref: 20260528T181556Z_carry_toggle
+        panel: single_instrument
+        dim_values:
+          universe:     {instrument: US10}
+          spec:         {vol_estimator: carver_mixed_35d,
+                          rule_structure: six_speed_ewmac_equal, overlay: carry}
+          exec_profile: {profile: carver_native, capital_usd: 50000}
+        status: refuted
+        internal_grid_size: 2   # toggle on/off
+        finding: Carry INCREASES skew on US10 rates (refutes Martin §2.3 implication)
+
+      # ---- execution_friction 6 sub-cells ----
+      - cell_id: exec_friction_carver_6speed_us10_50k
+        registry_ref: 20260529T172150Z_execution_friction_us10_3specs
+        registry_subref: cells.carver_6speed_us10_50k
+        panel: single_instrument
+        dim_values:
+          universe:     {instrument: US10}
+          spec:         {vol_estimator: carver_mixed_35d,
+                          rule_structure: six_speed_ewmac_equal, overlay: none}
+          exec_profile: {profile: carver_native, capital_usd: 50000}
+        status: measurement
+        sharpe_net: 0.350
+        skew_per_trade: 4.382
+        internal_grid_size: 1
+        artifact_paths:
+          run_dir: ars/runs/20260529T172232Z_carver_6speed_us10_50k
+
+      - cell_id: exec_friction_carver_6speed_us10_1m
+        registry_ref: 20260529T172150Z_execution_friction_us10_3specs
+        registry_subref: cells.carver_6speed_us10_1m
+        panel: single_instrument
+        dim_values:
+          universe:     {instrument: US10}
+          spec:         {vol_estimator: carver_mixed_35d,
+                          rule_structure: six_speed_ewmac_equal, overlay: none}
+          exec_profile: {profile: carver_native, capital_usd: 1000000}
+        status: measurement
+        sharpe_net: 0.317
+        skew_per_trade: 6.655
+        internal_grid_size: 1
+        artifact_paths:
+          run_dir: ars/runs/20260529T172243Z_carver_6speed_us10_1m
+
+      - cell_id: exec_friction_martin_baseline_us10_50k
+        registry_ref: 20260529T172150Z_execution_friction_us10_3specs
+        registry_subref: cells.martin_baseline_us10_50k
+        panel: single_instrument
+        dim_values:
+          universe:     {instrument: US10}
+          spec:         {vol_estimator: martin_20d_ema_of_sq,
+                          rule_structure: six_speed_ewmac_equal, overlay: none}
+          exec_profile: {profile: carver_native, capital_usd: 50000}
+        status: measurement
+        sharpe_net: 0.353
+        skew_per_trade: 4.109
+        internal_grid_size: 1
+        finding_flag: G_recon FAIL (|recon_pct| = 9.5%, numerical artefact with sub-1-contract integer)
+        artifact_paths:
+          run_dir: ars/runs/20260529T172150Z_martin_baseline_us10_50k
+
+      - cell_id: exec_friction_martin_baseline_us10_1m
+        registry_ref: 20260529T172150Z_execution_friction_us10_3specs
+        registry_subref: cells.martin_baseline_us10_1m
+        panel: single_instrument
+        dim_values:
+          universe:     {instrument: US10}
+          spec:         {vol_estimator: martin_20d_ema_of_sq,
+                          rule_structure: six_speed_ewmac_equal, overlay: none}
+          exec_profile: {profile: carver_native, capital_usd: 1000000}
+        status: measurement
+        sharpe_net: 0.355
+        skew_per_trade: 5.990
+        internal_grid_size: 1
+        artifact_paths:
+          run_dir: ars/runs/20260529T172206Z_martin_baseline_us10_1m
+
+      - cell_id: exec_friction_martin_primary_us10_50k
+        registry_ref: 20260529T172150Z_execution_friction_us10_3specs
+        registry_subref: cells.martin_primary_ema2_us10_50k
+        panel: single_instrument
+        dim_values:
+          universe:     {instrument: US10}
+          spec:         {vol_estimator: martin_20d_ema_of_sq,
+                          rule_structure: single_ema2_20_40, overlay: none}
+          exec_profile: {profile: paper_fidelity_numpy, capital_usd: 50000}
+        status: measurement
+        sharpe_net: 0.316
+        skew_per_trade: 3.861
+        internal_grid_size: 1
+        artifact_paths:
+          run_dir: ars/runs/20260529T172218Z_martin_primary_ema2_us10_50k
+
+      - cell_id: exec_friction_martin_primary_us10_1m
+        registry_ref: 20260529T172150Z_execution_friction_us10_3specs
+        registry_subref: cells.martin_primary_ema2_us10_1m
+        panel: single_instrument
+        dim_values:
+          universe:     {instrument: US10}
+          spec:         {vol_estimator: martin_20d_ema_of_sq,
+                          rule_structure: single_ema2_20_40, overlay: none}
+          exec_profile: {profile: paper_fidelity_numpy, capital_usd: 1000000}
+        status: measurement
+        sharpe_net: 0.316
+        skew_per_trade: 3.861
+        internal_grid_size: 1
+        artifact_paths:
+          run_dir: ars/runs/20260529T172225Z_martin_primary_ema2_us10_1m
+
+      # ---- TBM Stage-1 sensitivity (single-variable T_max ablation, locked 2026-05-31) ----
+      - cell_id: tbm_meta_us10_tmax40
+        registry_ref: pending_first_run
+        panel: single_instrument
+        dim_values:
+          universe:     {instrument: US10}
+          spec:         {vol_estimator: martin_20d_ema_of_sq,
+                          rule_structure: single_ema2_20_40_with_6speed_pseudo_xs_pool_for_labels,
+                          overlay: TBM_meta_label_tmax40}
+          exec_profile: {profile: carver_native, capital_usd: 1000000}
+        status: pre_registered_queued
+        sharpe_net: pending
+        internal_grid_size: 8        # honest sensitivity-axis cost (raises family threshold)
+        pre_registration: ars/evidence_packs/tbm_meta_us10_baseline/tbm_meta_us10_baseline_preregistration.md  # §5.1.1
+        pre_reg_locked_at: 2026-05-31
+        sensitivity_to: tbm_meta_us10_baseline_1m
+        sensitivity_axis: t_max (120 vs 40 business days; single-variable diagnostic)
+        depends_on:
+          baseline_cell:        tbm_meta_us10_baseline_1m
+          baseline_first_run:   ars/runs/20260530T154455Z_tbm_meta_us10_baseline_1m
+        purpose: "discriminate effective-sample collapse vs no-signal regime; output is g_max_observed and avg_uniqueness, NOT gate pass/fail"
+
+      # ---- queued / pre-reg-locked but not yet run ----
+      - cell_id: tbm_meta_us10_baseline_1m
+        registry_ref: pending_first_run    # registry entry created at runner first-execute
+        panel: single_instrument
+        dim_values:
+          universe:     {instrument: US10}
+          spec:         {vol_estimator: martin_20d_ema_of_sq,
+                          rule_structure: single_ema2_20_40_with_6speed_pseudo_xs_pool_for_labels,
+                          overlay: TBM_meta_label}
+          exec_profile: {profile: carver_native, capital_usd: 1000000}
+        status: pre_registered_queued
+        sharpe_net: pending
+        internal_grid_size: 8    # tau {0.40, 0.50, 0.55, 0.60} x feature_subset {ER_only, ER+rest} = 8
+        pre_registration: ars/evidence_packs/tbm_meta_us10_baseline/tbm_meta_us10_baseline_preregistration.md
+        pre_reg_locked_at: 2026-05-30
+        depends_on:
+          baseline_cell:        exec_friction_martin_baseline_us10_1m
+          primary_cell:         exec_friction_martin_primary_us10_1m
+          regime_features_csv:  arki/results/2026-05-29/execution_friction_us10_regime_analysis_regime_buckets.csv
+          per_trade_mfe_mae:    arki/results/2026-05-29/execution_friction_us10_regime_analysis_per_trade_mfe_mae.csv
+        acceptance_gates_summary: "DSR uplift > 0 vs g=1 baseline + PBO < 0.5 + MaxDD reduction + skew preserved + F1 > naive base-rate (all OOS via CPCV straddling 2003-06-13 break)"
+
+  # ===================================================================
+  # PANEL B — portfolio construction (empty; opens when first multi-
+  # instrument cell is pre-registered)
+  # ===================================================================
+  panel_B_portfolio:
+    purpose: "given a Panel-A-validated spec, what's the best multi-instrument portfolio?"
+    dimensions:
+      universe:
+        instrument_set:        [[US10, Bund], [US10, Bund, BOBL],
+                                 DM_rates_5, DM_all_37]
+        portfolio_construction: [equal_weight, risk_parity, vol_scaled,
+                                 idm_optimised]
+        cross_section_mode:    [TS_only, XS_only, hybrid]
+      spec:
+        # Definitional inheritance ONLY -- elasticity findings DO NOT
+        # transport from Panel A. See findings.md note on no-inherit.
+        vol_estimator:  inherit_definitions_from_panel_A
+        rule_structure: inherit_definitions_from_panel_A
+        overlay:        inherit_definitions_from_panel_A
+      exec_profile:
+        inherit_definitions_from: panel_A
+    cells: []   # opens with first pre-reg of a multi-instrument experiment
+    queued_first_step:
+      - "DM_rates_5 = [US10, Bund, BOBL, GILT, JGB], equal_weight, TS_only,
+         best Panel A spec on US10 replicated per instrument, see queue.md"
+
+  # ===================================================================
+  # Queue + findings live in sibling files (avoid yaml bloat)
+  # ===================================================================
+  queue_file:    ars/families/futures_momentum/queue.md
+  findings_file: ars/families/futures_momentum/findings.md
+  matrix_file:   ars/families/futures_momentum/matrix.md
+
+  # ===================================================================
+  # Curated reporting (CPC v1 Arki adopted 2026-05-31 as the single
+  # unified standard; see ars/DECISIONS.md 2026-05-31 + handoff
+  # docs/arki/handoff_unified_cpc_reporting_2026-05-31.md). ars/runs/<run>/
+  # going forward = raw artifacts only; HTML reports live under reports_root.
+  # ===================================================================
+  reports_root: arki/reports/2026-05-31/          # canonical curated reports location
+  matrix_html:  arki/reports/family/futures_momentum_matrix.html

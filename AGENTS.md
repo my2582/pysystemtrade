@@ -34,3 +34,9 @@ This repository includes an Antigravity-compatible ARS review skill at:
 `./.agents/skills/arki-ars-review/SKILL.md`
 
 Use it for read-only independent ARS reviews. Do not let Antigravity modify files unless explicitly approved.
+
+## Source of truth — `arki/wiki/`
+
+Durable knowledge lives in the committed wiki `arki/wiki/` (start at `arki/wiki/index.md`); agent memory
+is a cache (pointers only). Session-prime card: `arki/wiki/system/system-card.md`. Full rule + fork-safety:
+`arki/README.md`. Never edit upstream-tracked files (this is a fork of `robcarver17/pysystemtrade`).

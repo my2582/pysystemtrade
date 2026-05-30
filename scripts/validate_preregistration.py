@@ -91,7 +91,7 @@ class ValidationResult:
 # Rule 1 — section + equation citation, NEVER figure alone -----------------
 
 def check_rule1_citations(text: str, path: Path) -> list[Violation]:
-    violations = []
+    violations: list[Violation] = []
     # find lines that look like gate definitions
     gate_pattern = re.compile(r"(?:^[\-\*]\s*\*\*?G[\d_]+\b|G[\d_]+\s*[:=])", re.MULTILINE)
     lines = text.split("\n")
@@ -117,7 +117,7 @@ def check_rule1_citations(text: str, path: Path) -> list[Violation]:
 # Rule 2 — bound on degenerate-denominator multiplicative weights ----------
 
 def check_rule2_weight_bounds(text: str, path: Path) -> list[Violation]:
-    violations = []
+    violations: list[Violation] = []
     # detect degenerate-denominator patterns
     degen_hits = []
     for pat in DENOM_DEGENERATE_HINTS:
@@ -142,7 +142,7 @@ def check_rule2_weight_bounds(text: str, path: Path) -> list[Violation]:
 # Rule 3 — paper-derived gates verify assumptions empirically --------------
 
 def check_rule3_assumption_checks(text: str, path: Path) -> list[Violation]:
-    violations = []
+    violations: list[Violation] = []
     has_paper_citation = bool(re.search(r"\b(Martin|Hanauer|Wang|Daniel|Carver|Pedersen|Barroso)\b", text))
     if not has_paper_citation:
         return violations
@@ -161,7 +161,7 @@ def check_rule3_assumption_checks(text: str, path: Path) -> list[Violation]:
 # Rule 4 — aggregation declared per gate ------------------------------------
 
 def check_rule4_aggregation(text: str, path: Path) -> list[Violation]:
-    violations = []
+    violations: list[Violation] = []
     has_gates = bool(re.search(r"\bG\d|gate", text, re.I))
     if not has_gates:
         return violations
@@ -173,6 +173,51 @@ def check_rule4_aggregation(text: str, path: Path) -> list[Violation]:
             location=f"{path.name}",
             description="Gates defined but no aggregation method declared (fixed-M, sign-episode, overlapping, ...). This is ambiguous for any skew/return metric.",
             suggested_fix="Declare aggregation explicitly: `skew_per_trade uses sign-episode aggregation (variable M)` or `skew uses fixed-M=20 non-overlapping`.",
+        ))
+    return violations
+
+
+# Rule 6 — family DSR awareness --------------------------------------------
+
+def check_rule6_family_dsr_awareness(text: str, path: Path) -> list[Violation]:
+    """Rule 6 -- if pre-reg cites a family, it MUST acknowledge the family's
+    current multiple-testing context (DSR threshold or n_configs_searched).
+
+    This forces an explicit handshake: an experiment that joins a family
+    must state ex-ante that it understands the deflation it will face on
+    headline claim review. Soft check (warning) -- measurement-only
+    pre-regs (no headline Sharpe claim) often need not deflate, but
+    omitting the family context entirely is sloppy.
+    """
+    violations: list[Violation] = []
+    # Detect a family reference (depends_on / family: / ars/families/ path)
+    has_family_ref = bool(
+        re.search(r"\bfamily\s*[:=]\s*[\w_/]+", text)
+        or re.search(r"ars/families/\w+", text)
+        or re.search(r"\bdepends_on\b", text, re.I)
+    )
+    if not has_family_ref:
+        return violations
+    # If family-referenced, look for DSR / multiple-testing / threshold acknowledgement
+    has_dsr_ack = bool(
+        re.search(r"\b(DSR|deflated[\s_-]?sharpe|expected[\s_-]?max[\s_-]?sharpe|"
+                  r"n_configs_searched|multiple[\s-]?testing|selection[\s_-]?correction)\b",
+                  text, re.I)
+    )
+    if not has_dsr_ack:
+        violations.append(Violation(
+            rule="Rule 6 (family DSR awareness)",
+            severity="warning",
+            location=f"{path.name}",
+            description=(
+                "Pre-registration references a family or depends_on input, but does "
+                "not acknowledge the family's multiple-testing context "
+                "(DSR / expected_max_sharpe / n_configs_searched)."),
+            suggested_fix=(
+                "Add a line in §4 Gates or §7 CPC plan: 'Family DSR threshold at "
+                "N=<n_configs_searched from family.yaml> computed via "
+                "`arki.utils.dsr.expected_max_sharpe(ann_factor=256)`; headline "
+                "Sharpe claim must clear this threshold.'"),
         ))
     return violations
 
@@ -194,6 +239,7 @@ def validate_file(path: Path) -> ValidationResult:
         (check_rule2_weight_bounds, "Rule 2 (weight bounds)"),
         (check_rule3_assumption_checks, "Rule 3 (assumption checks)"),
         (check_rule4_aggregation, "Rule 4 (aggregation)"),
+        (check_rule6_family_dsr_awareness, "Rule 6 (family DSR awareness)"),
     ]:
         v = check_fn(text, path)
         if v:

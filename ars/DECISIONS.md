@@ -482,3 +482,29 @@ The TBM meta-labeling work the owner is preparing (skeleton at `/Users/msyeom/Do
 - tau tuned on ZN does NOT transfer to other instruments without re-tuning.
 
 **Next action:** write `scripts/tbm_meta_us10_baseline_runner.py`. Integration is "Option B" (label-only attachment): lift `cusum_events`, `triple_barrier_labels`, `average_uniqueness`, `sample_weights`, `build_features`, `MetaSizer`, `size_from_meta`, `position` from the skeleton; REPLACE skeleton's `daily_vol` with absolute-change form per Martin §2.5 (the ZN panama sign-crossing fix); REPLACE skeleton's DSR/PBO with `from arki.utils.dsr import ...`.
+
+---
+
+## 2026-05-31 -- CPC v1 Arki adopted as the single unified reporting standard
+
+**Trigger:** owner decision (option γ) per handoff [docs/arki/handoff_unified_cpc_reporting_2026-05-31.md](../docs/arki/handoff_unified_cpc_reporting_2026-05-31.md). Reporting was fragmented across three roots (`ars/runs/<run>/report.*`, `arki/results/<date>/*trade_analysis*`, cross-cell aggregators) — up to 4 files per cell; recent TBM Stage-1 runs had NO HTML at all.
+
+**Decision:** adopt b3-saa-etf's CPC v1 as the SINGLE futures-momentum reporting standard, adapted to daily futures (ann_factor=256, no FX) + Arki extensions. One canonical root: **`arki/reports/<date>/`**. Going forward `ars/runs/<run>/` holds RAW ARTIFACTS ONLY; curated HTML lives under `reports_root`. Existing reports under `ars/runs/` + `arki/results/2026-05-29/` are NOT deleted (archive; separate hygiene cycle).
+
+**New tooling (Arki-added, no upstream file touched):**
+
+- `scripts/build_cpc_v1_arki.py` — CPC v1 builder. Risk/return table uses NATIVE `summary.csv` values (ARS: preserve engine outputs); the realised-equity path drives only the cumulative chart + sign-coloured monthly grids, both honestly labelled "native units". Comparison uses a NATIVE-metric lift table (pre-reg §7), NOT capture/regression — the equity-curve diffs are lumpy (a handful of real bond-crash days give ~160% annualised "vol") and do not reproduce the engine Sharpe, so no trustworthy daily-return stream exists to regress. Arki extension renderers: acceptance-gates table, TBM diagnostics block (uniqueness / g-distribution / CPCV F1 / gap-rule 5.2.a-c audit), per-trade ledger, family-context block, verification-anchors block. TBM blocks skip gracefully for non-TBM cells.
+- `scripts/build_family_matrix.py` — single-page family dashboard (`arki/reports/family/futures_momentum_matrix.html`): Panel-A status grid (14 cells, colour-coded, click-through to CPC HTML), DSR threshold timeline (0.314 N=41 → 0.325 N=50 → 0.3326 N=58), elasticity table, queue top-5.
+- `arki/reports/_mechanism_cards/<slug>.yaml` — hand-authored cheatsheet content (formula / triggering / action) for the two TBM cells, sourced from pre-reg §1-§3 / §5.1.1.
+
+**Reports generated (4):** `arki/reports/2026-05-31/cells/tbm_meta_us10_baseline_1m_cpc.html`, `.../cells/tbm_meta_us10_tmax40_cpc.html`, `.../comparisons/tbm_baseline_vs_tmax40_cpc.html`, `.../comparisons/execution_friction_us10_6cell_cpc.html`. The 6-cell umbrella **supersedes** `arki/results/2026-05-29/execution_friction_us10_6cell.html` + `..._regime_analysis.html` (kept as archive).
+
+**Trade-analysis arrow fix:** `scripts/trade_analysis.py` lines 590-599 — entry marker now encodes direction (long `^`, short `v`); exit uses directionless `o`. Verified: regenerated `results/runs/20260405_0147_arki_v4_optimized` trade report renders without error (reconcile ε=6.8e-13).
+
+**Headline read (TBM baseline, from its CPC):** meta-sized Sharpe 0.3208 vs g=1 baseline 0.3165 — G-TBM1 DSR uplift **+0.0115 PASS**, G-TBM3/4/5/6 PASS, G-TBM2 PBO N/A (single config), **G-family-DSR FAIL** (0.3208 < 0.3326 absolute threshold — reporting gate only). Near-floor sizer (g_max 0.551, avg_uniqueness 0.071 < 0.20). T_max=40 ablation g_max 0.591 (still <0.60→0.75 band) → diagnostic leans "no learnable conditional edge on ZN-post-2003", not effective-sample collapse. **No promotion claimed** (live_trading: false invariant).
+
+**family.yaml:** added `reports_root` + `matrix_html` keys.
+
+**Out of scope (tracked):** backfilling the older 13 cells to CPC v1; deleting deprecated reports; external-share re-render. The two TBM cells were executed (run dirs 2026-05-30/31) but their `family.yaml` cell status remains `pre_registered_queued` / `registry_ref: pending_first_run` — registry entry creation for the TBM runs is a separate follow-up, not part of this reporting handoff.
+
+**No upstream-tracked file modified.** Changes confined to `scripts/` (Arki-added), `arki/reports/`, `ars/families/`, `ars/DECISIONS.md`.

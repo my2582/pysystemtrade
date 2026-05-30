@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<title>futures_momentum — Session Retrospective Cheatsheet · 2026-05-30/31</title>
+<style>
+  body { font-family: -apple-system, "Inter", system-ui, sans-serif; max-width: 1240px;
+         margin: 0 auto; padding: 28px 32px 60px; color: #1a1f2c;
+         background: #f8f9fb; line-height: 1.5; font-size: 13.5px; }
+  .head { background: #0d4f3f; color: white; padding: 22px 28px; border-radius: 10px;
+          margin-bottom: 24px; }
+  .head h1 { margin: 0 0 6px; font-size: 24px; }
+  .head .sub { font-size: 13px; opacity: 0.85; }
+  .head .kpis { display: flex; gap: 28px; margin-top: 16px; font-size: 13px; }
+  .head .kpi b { display: block; font-size: 22px; font-weight: 700; margin-bottom: 2px; }
+  .panel { background: white; border-radius: 10px; padding: 20px 24px; margin-bottom: 20px;
+           box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .panel h2 { color: #0d4f3f; margin: 0 0 6px; font-size: 17px;
+              border-bottom: 2px solid #0d4f3f; padding-bottom: 5px; display: inline-block; }
+  .panel h2 .tag { color: #5b6470; font-size: 12px; font-weight: 500; margin-left: 8px; }
+  .panel .lede { color: #5b6470; font-size: 13px; margin: 6px 0 14px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card { background: #f0f8f4; border-left: 4px solid #0d4f3f; padding: 12px 14px;
+          border-radius: 4px; font-size: 12.5px; }
+  .card h3 { margin: 0 0 6px; font-size: 13px; color: #0d4f3f; }
+  .card .small { color: #5b6470; font-size: 11.5px; }
+  table { border-collapse: collapse; width: 100%; font-size: 12px; margin: 8px 0; }
+  th, td { border-bottom: 1px solid #e3e8ee; padding: 5px 8px; text-align: right; }
+  th { background: #0d4f3f; color: white; font-weight: 600; text-align: center; }
+  td:first-child, th:first-child { text-align: left; }
+  .ok    { background: #d8efe2; color: #14532d; font-weight: 600; }
+  .warn  { background: #fef3c7; color: #783712; font-weight: 600; }
+  .fail  { background: #fdd9d4; color: #7f1d1d; font-weight: 600; }
+  .meas  { background: #dbeafe; color: #1e3a8a; font-weight: 600; }
+  .queue { background: #ece5f4; color: #4c1d95; font-weight: 600; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11.5px; }
+  .source { font-size: 11px; color: #6b7280; margin-top: 4px; font-family: ui-monospace, monospace; }
+  .footer { color: #6b7280; font-size: 11.5px; margin-top: 24px; text-align: center; }
+  .scorecard td { padding: 8px 12px; font-size: 13px; }
+  .scorecard .big { font-size: 28px; font-weight: 700; color: #0d4f3f; }
+  .lesson { border-left: 3px solid #cf222e; padding: 8px 14px; margin: 10px 0;
+            background: #fff8f7; font-size: 12.5px; }
+  .lesson h4 { margin: 0 0 4px; color: #cf222e; font-size: 13px; }
+  .lesson .rule { background: #fef3c7; padding: 6px 10px; margin-top: 8px;
+                  border-radius: 4px; font-style: italic; font-size: 12px; }
+</style></head><body>
+
+<div class="head">
+  <h1>futures_momentum · Session Retrospective Cheatsheet</h1>
+  <div class="sub">2026-05-30 → 2026-05-31 · Arki Finance · Owner: Minsu Yeom · Single-page visual retro</div>
+  <div class="kpis">
+    <div class="kpi"><b>0</b>alpha discovered</div>
+    <div class="kpi"><b>14</b>cells in family</div>
+    <div class="kpi"><b>7.5/10</b>prediction hits</div>
+    <div class="kpi"><b>3</b>handoffs authored</div>
+    <div class="kpi"><b>B+ / F</b>process / alpha grades</div>
+  </div>
+</div>
+
+<!-- F1 ============================================= -->
+<div class="panel">
+  <h2>F1 — Session thesis <span class="tag">한 줄 + 4-stage journey</span></h2>
+  <div class="lede"><b>ZN 단독 momentum에 layer를 쌓아 alpha를 찾는다 — 진행 결과.</b>
+    Stage-1 NO SIGNAL, sMOM remediated, framework built; alpha still queued.</div>
+  <table>
+    <thead><tr><th>Stage</th><th>Date</th><th>Output</th></tr></thead>
+    <tbody>
+    <tr><td>0. Paper grounding</td><td>2026-05-27</td><td>Martin 2023 전문 + Hanauer 2022 흡수 → §2.3 misread → Rule 1 (Eq+§ citation)</td></tr>
+    <tr><td>1. 5-experiment batch</td><td>2026-05-28/29</td><td>martin / dmom / smom / fast_tilt / carry_toggle — sMOM unbounded-w 6,439× artifact 발견 → Rule 2 (degenerate-denominator bound)</td></tr>
+    <tr><td>2. Framework adoption</td><td>2026-05-29</td><td>b3-style registry + DECISIONS + evidence packs; Path A pre-reg discipline</td></tr>
+    <tr><td>3. execution_friction 6-cell + regime</td><td>2026-05-30</td><td>3 specs × 2 capital; 8-section regime analysis; 2003-06-13 break; ER as dominant feature</td></tr>
+    <tr><td>4. Family layer + TBM Stage-1</td><td>2026-05-30/31</td><td>3-layer family system + DSR utility + lint Rule 6; TBM baseline + sensitivity NO SIGNAL verdict + sMOM capped remediation; 3 handoffs</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- F2 ============================================= -->
+<div class="panel">
+  <h2>F2 — Process built <span class="tag">3 cards · institutional-grade hygiene</span></h2>
+  <div class="grid3">
+    <div class="card">
+      <h3>(a) Family 3-layer system</h3>
+      registry (per-experiment) → family.yaml (panel + dims + multiple-testing) → findings.md (axis elasticity).<br>
+      <b>2 panels</b>, <b>3-tier dims</b> (universe / spec / exec_profile), no cross-panel inheritance, honest n_configs accounting.
+      <div class="source">ars/families/futures_momentum/</div>
+    </div>
+    <div class="card">
+      <h3>(b) DSR / PBO single SOT</h3>
+      <b>arki/utils/dsr.py</b> — Bailey-LdP 2014 with <b>annualisation-aware</b> (per-period vs annualised bug fixed); <code>expected_max_sharpe</code> helper for family threshold.<br>
+      Self-check: `python -m arki.utils.dsr` PASS.
+      <div class="source">arki/utils/dsr.py</div>
+    </div>
+    <div class="card">
+      <h3>(c) Pre-reg discipline</h3>
+      <b>6 lint rules</b>: §+Eq citation / degenerate-denom bound / assumption_set / aggregation / [reserved 5] / family DSR awareness.<br>
+      <b>3 gap rules</b>: CUSUM reset (5.2.a) / σ re-warmup (5.2.b) / cross-gap label drop (5.2.c).<br>
+      <b>Proposed Rule 7</b>: `predictions:` block (this session's scorecard).
+      <div class="source">scripts/validate_preregistration.py</div>
+    </div>
+  </div>
+</div>
+
+<!-- F3 ============================================= -->
+<div class="panel">
+  <h2>F3 — Experiments scoreboard <span class="tag">14 cells · status × Sharpe × verdict</span></h2>
+  <table>
+    <thead><tr><th>cell_id</th><th>spec</th><th>overlay</th><th>exec</th><th>cap</th><th>status</th><th>Sharpe_net</th><th>skew/trade</th></tr></thead>
+    <tbody>
+    <tr><td>martin_post_hoc_baseline_us10</td><td>6sp</td><td>none</td><td>native</td><td>50k</td><td class="ok">✅POH</td><td>0.350</td><td>4.38</td></tr>
+    <tr><td>martin_post_hoc_baseline_sp500</td><td>6sp</td><td>none</td><td>native</td><td>50k</td><td class="ok">✅POH</td><td>−0.009</td><td>4.33</td></tr>
+    <tr><td>dmom_us10</td><td>6sp</td><td>dMOM</td><td>native</td><td>50k</td><td class="fail">❌FAL</td><td>—</td><td>—</td></tr>
+    <tr><td>smom_us10 (uncapped)</td><td>6sp</td><td>sMOM</td><td>native</td><td>50k</td><td class="warn">⚠REM</td><td>0.602*</td><td>4.69</td></tr>
+    <tr><td>fast_tilt_ewmac</td><td>fast-tilt wt</td><td>none</td><td>native</td><td>50k</td><td class="fail">❌FAL</td><td>—</td><td>—</td></tr>
+    <tr><td>carry_toggle</td><td>6sp</td><td>carry</td><td>native</td><td>50k</td><td class="fail">❌REF</td><td>0.437</td><td>7.34</td></tr>
+    <tr><td>exec_friction_carver_6speed_us10_50k</td><td>6sp</td><td>none</td><td>native</td><td>50k</td><td class="meas">📊MEAS</td><td>0.350</td><td>4.38</td></tr>
+    <tr><td>exec_friction_carver_6speed_us10_1m</td><td>6sp</td><td>none</td><td>native</td><td>1m</td><td class="meas">📊MEAS</td><td>0.317</td><td>6.66</td></tr>
+    <tr><td>exec_friction_martin_baseline_us10_50k</td><td>6sp</td><td>none</td><td>native</td><td>50k</td><td class="meas">📊MEAS</td><td>0.353</td><td>4.11</td></tr>
+    <tr><td>exec_friction_martin_baseline_us10_1m</td><td>6sp</td><td>none</td><td>native</td><td>1m</td><td class="meas">📊MEAS</td><td>0.355</td><td>5.99</td></tr>
+    <tr><td>exec_friction_martin_primary_us10_50k</td><td>1ema2</td><td>none</td><td>paper</td><td>50k</td><td class="meas">📊MEAS</td><td>0.316</td><td>3.86</td></tr>
+    <tr><td>exec_friction_martin_primary_us10_1m</td><td>1ema2</td><td>none</td><td>paper</td><td>1m</td><td class="meas">📊MEAS</td><td>0.316</td><td>3.86</td></tr>
+    <tr><td>tbm_meta_us10_baseline_1m</td><td>1ema2 side</td><td>TBM</td><td>native</td><td>1m</td><td class="meas">📊MEAS</td><td>0.321</td><td>—</td></tr>
+    <tr><td>tbm_meta_us10_tmax40 <i>(sensitivity)</i></td><td>1ema2 side</td><td>TBM (T_max=40)</td><td>native</td><td>1m</td><td class="meas">📊MEAS</td><td>0.315</td><td>—</td></tr>
+    </tbody>
+  </table>
+  <div class="source">* smom_us10 uncapped: leverage artifact; capped remediation gave Sharpe 0.623 (registered, ambiguous due to G4)</div>
+  <div class="lede" style="margin-top:10px"><b>Family DSR threshold @ N=58: 0.3326 ann.</b>
+    가장 좋은 cell (smom_uncapped 0.602) 도 leverage artifact로 강등; 그 외 일관되게 threshold ~0.33 근방에 위치. <b>Confident absolute promotion = 0건.</b></div>
+</div>
+
+<!-- F4 ============================================= -->
+<div class="panel">
+  <h2>F4 — Findings axis-level <span class="tag">elasticity + transport + confound</span></h2>
+  <div class="lede">Honest clean-pair audit (n=clean pairs; confounded pairs excluded). Cross-panel inheritance forbidden.</div>
+  <table>
+    <thead><tr><th>Axis</th><th>direction</th><th>mean \|ΔSharpe\|</th><th>n clean</th><th>confound risk</th><th>transport status</th></tr></thead>
+    <tbody>
+    <tr><td>vol_estimator</td><td>≈ 0</td><td>0.0035</td><td>2</td><td>low</td><td>untested elsewhere</td></tr>
+    <tr><td>overlay</td><td>mixed (3 fal + 1 pending + 1 ambig)</td><td>varies</td><td>4</td><td>medium</td><td>untested elsewhere</td></tr>
+    <tr><td>rule_structure</td><td>hint 6sp &gt; single</td><td><i>0.039 confounded</i></td><td><b class="fail">0</b></td><td>HIGH (exec coupled)</td><td>not yet attributed — queue #2 priority</td></tr>
+    <tr><td>exec_profile</td><td>hint native &gt; numpy</td><td><i>0.084 confounded</i></td><td><b class="fail">0</b></td><td>HIGH (rule coupled)</td><td>not yet attributed — queue #2 priority</td></tr>
+    <tr><td>capital_usd</td><td>≈ 0 Sharpe; big skew effect</td><td>0.020</td><td>3</td><td>low</td><td>US10 single</td></tr>
+    </tbody>
+  </table>
+  <div class="lede" style="margin-top:10px"><b>Critical observation</b>: 2 of 5 axes (rule_structure, exec_profile) have <b>0 clean pairs</b> — direction hints exist but are *confounded* in every available comparison. Resolving this is queue item #2 (highest-information next cell).</div>
+</div>
+
+<!-- F5 ============================================= -->
+<div class="panel">
+  <h2>F5 — Defect → Lesson chain <span class="tag">4 entries · framework evolution log</span></h2>
+  <div class="lede">Each defect produced a durable rule. Reading them together shows how the framework adapted to specific failure modes. Two were caught by owner/reviewer intuition; one by framework itself.</div>
+
+  <div class="lesson">
+    <h4>2026-05-29 — sMOM unbounded w → Rule 2 (degenerate-denominator bound)</h4>
+    sMOM reported Sharpe lift +0.255 with all gates PASS. <b>max|w| = 2,927</b> on 39 days, 6,439× leverage on $50K. Caught by owner question "몇 계약?", not by framework.
+    <div class="rule">Rule: weight formulas with a denominator that can approach zero (1/σ, 1/var, 1/semi_var, ...) MUST declare a hard cap at pre-reg time. Lint validates via regex on degenerate-denominator hints.</div>
+  </div>
+
+  <div class="lesson">
+    <h4>2026-05-29 — Martin §2.3 misreading → Rule 1 (Eq + § citation)</h4>
+    Gates cited "Martin Fig 1" as slogan. Paper §1 thesis was opposite of our reading ("skew is property of STRATEGY, not asset"). Caught by external reviewer rereading §2.3 carefully.
+    <div class="rule">Rule: every gate cites paper as <code>&lt;paper&gt; §X.Y Eq.M</code> or <code>§X.Y claim:"..."</code>, never <code>Fig N</code> alone. Companion rule: paper-derived gates MUST list assumption_set + empirical assumption_check.</div>
+  </div>
+
+  <div class="lesson">
+    <h4>2026-05-31 — G4 control-gate ambiguity → vol-paired diagnostic</h4>
+    sMOM capped: SP500 Sharpe rescued from −0.009 → +0.305 via vol collapse 24.34 → 6.23. G4 ("Sharpe &lt; 0.20") fired FAIL — but this was MECHANISM not bug. <b>Caught by framework's own pre-reg logic execution.</b>
+    <div class="rule">Rule: control gates of form "Sharpe &lt; N on instrument Y" pair with vol diagnostic. If vol_capped/vol_baseline ≤ 0.7 → rescue via vol reduction = MECHANISM_NOTE not FAIL.</div>
+  </div>
+
+  <div class="lesson">
+    <h4>2026-05-31 — Rule 2 scope refinement</h4>
+    Original Rule 2 ("all multiplicative weights must declare bound") was too broad — fired false positives on safe forecast-style weights (F/σ̂ where σ̂ has positive floor). Scope-corrected to <b>degenerate-denominator class only</b>.
+    <div class="rule">Rule (refined): bound required when denominator can approach zero on a path the strategy traverses. Constant weights, pre-tuned scalars, F/σ̂ (σ̂ floored) exempt. Cost of declaring unneeded bound = 0; cost of missing needed bound = sMOM 6,439× artifact.</div>
+  </div>
+</div>
+
+<!-- F6 ============================================= -->
+<div class="panel">
+  <h2>F6 — Honest scorecard <span class="tag">정직한 differentiator</span></h2>
+  <table class="scorecard">
+    <thead><tr><th style="width:30%">Dimension</th><th>Grade</th><th>Note</th></tr></thead>
+    <tbody>
+    <tr><td><b>Process built</b></td><td class="ok"><span class="big">B+</span></td><td>LdP-textbook hygiene level; transport untested; 14 cells in single thesis × single instrument</td></tr>
+    <tr><td><b>Alpha discovered</b></td><td class="fail"><span class="big">F</span></td><td>0/14 cells clear family DSR threshold 0.3326 with confident lift; TBM Stage-1 verdict = NO SIGNAL; sMOM capped = registered_ambiguous</td></tr>
+    <tr><td><b>Prediction skill (this session)</b></td><td class="meas"><span class="big">75%</span></td><td>7.5/10 retroactive Popper-style score. Categorical 100% / quantitative 0%. n=10, suggestive not conclusive.</td></tr>
+    <tr><td><b>Confidence justification</b></td><td class="warn"><span class="big">partial</span></td><td>75% prediction hit-rate is non-trivial (vs 50% random) but n=10 sample on 1 thesis. Next 30-40 predictions decide if 75% holds.</td></tr>
+    </tbody>
+  </table>
+  <div class="lede" style="margin-top:12px"><b>The right confidence stance:</b> we are better than coin-flip at predicting REGIME of momentum overlays on US10; we are at coin-flip on MAGNITUDES; sample is 1 thesis × 1 instrument. Process discipline ≠ alpha existence — confidence-leap requires future positive evidence, not just better hygiene.</div>
+</div>
+
+<!-- F7 ============================================= -->
+<div class="panel">
+  <h2>F7 — What would change the grade <span class="tag">forward · concrete gates</span></h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>Alpha grade F → B+ (any one of)</h3>
+      • Stage-2 (speed-tilt λ(s_t)) NON-NO-SIGNAL result.<br>
+      • Panel B (DM_rates_5 equal-weight TS-only) 1 cell with confident lift after family DSR deflation.<br>
+      • Cold-start handoff success: a different session/agent advances queue #2 unaided (see Handoff #3 item D).<br>
+      • 3+ consecutive predict-then-measure cycles with &gt; 65% hit rate.
+    </div>
+    <div class="card">
+      <h3>Process grade B+ → A (any one of)</h3>
+      • Framework gate (not owner intuition) catches a critical defect BEFORE promotion (currently 1/3).<br>
+      • Process-cost measurement shows avg cell cycle ≤ 1 business day across 3 cells (item F in Handoff #3).<br>
+      • One paper-family-exit experiment (Koijen carry / Hamilton regime / Carver inst-sel) successfully integrated into schema (item E).<br>
+      • Multi-instrument transport: one finding replicated on Bund / GILT successfully.
+    </div>
+  </div>
+</div>
+
+<!-- F8 ============================================= -->
+<div class="panel">
+  <h2>F8 — Queue + commitments <span class="tag">time-bound, deadline-triggered</span></h2>
+  <table>
+    <thead><tr><th>Item</th><th>What</th><th>Commit deadline</th><th>Trigger if missed</th></tr></thead>
+    <tbody>
+    <tr><td class="queue">#2</td><td>rule_structure de-confound (single_ema2 + carver_native; HOLD exec_profile constant vs martin_baseline_us10_1m)</td><td>pre-reg lock by 2026-06-07; result by 2026-06-10</td><td>process-cost review (CPCV folds simplified?)</td></tr>
+    <tr><td class="queue">#1.2</td><td>sMOM capped G4 refinement (LESSONS Entry 3 vol-paired rule applied)</td><td>pre-reg amendment + re-verdict by 2026-06-12</td><td>G4 redesign</td></tr>
+    <tr><td class="queue">#5</td><td>Panel B open — DM_rates_5 equal_weight TS-only on best Panel A US10 spec</td><td>pre-reg lock by 2026-06-21 (after #2 confirms rule choice)</td><td>re-prioritise; Stage-2 takes precedence</td></tr>
+    </tbody>
+  </table>
+  <h3 style="color:#0d4f3f;font-size:14px;margin-top:18px">Handoff #3 forward enhancements (separable, parallel)</h3>
+  <table>
+    <thead><tr><th>Item</th><th>What</th><th>Effort</th></tr></thead>
+    <tbody>
+    <tr><td>D</td><td>Cold-start handoff stress test (other session reads only family.yaml + findings.md + queue.md, advances #2)</td><td>~30 min on cold side</td></tr>
+    <tr><td>E</td><td>Paper-family exit experiment (Koijen 2018 carry / Hamilton 1989 regime / Carver Ch.19 inst-sel — pick one)</td><td>~1 day</td></tr>
+    <tr><td>F</td><td>Process-cost instrumentation (5 timestamps in manifest.json + cycle time aggregation)</td><td>~30 min</td></tr>
+    <tr><td>G</td><td>Lint Rule 7 — `predictions:` block validation per session_predictions_scorecard</td><td>~30 min</td></tr>
+    </tbody>
+  </table>
+  <div class="lede" style="margin-top:12px"><b>Future-evidence threshold</b>: after queue #2, #1.2, #5 complete, total family predictions ≈ 30-40. Hit rate at that point either raises or lowers current 75% baseline. Below 65% → framework discipline review triggered.</div>
+</div>
+
+<div class="footer">
+  Source files (all under <code>/Users/msyeom/Developer/pysystemtrade/</code>):
+  ars/families/futures_momentum/{family.yaml, findings.md, queue.md, matrix.md} ·
+  ars/LESSONS.md · ars/DECISIONS.md · ars/runs/registry.yaml ·
+  docs/arki/session_predictions_scorecard_2026-05-31.md ·
+  docs/arki/handoff_{tbm_stage1_no_signal_decision, unified_cpc_reporting, session_retrospective_cheatsheet}_2026-05-31.md ·
+  arki/utils/dsr.py · scripts/validate_preregistration.py<br>
+  Generated 2026-05-31 · single-page retrospective · Visual Report Methodology v1 adaptation
+</div>
+
+</body></html>
