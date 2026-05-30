@@ -1,0 +1,17 @@
+stats:
+  ann_mean_pct: -14.488661491261345
+  ann_std_pct: 3.062999025869697
+  sharpe_gross: -4.73022073101949
+  years: 11.24
+  max_drawdown_pct_geom: -81.4723767640839
+  skew_daily: -4.381425632353797
+  kurt_daily: 39.68394285054847
+  total_pnl_usd: -84287.21327852832
+  final_equity_usd: -34287.21327852832
+  n_trades: 435
+  win_rate_pct: 31.264367816091955
+  median_trade_return_pct: -0.16000000000000908
+  skew_per_trade: 1.7726196798791354
+  mean_trade_holding_days: 7.572413793103448
+  ann_subsystem_turnover: 38.70493300852618
+period: 2015-01-04 -> 2026-04-02

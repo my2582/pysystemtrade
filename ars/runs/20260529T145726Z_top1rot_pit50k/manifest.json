@@ -1,0 +1,64 @@
+{
+  "run_id": "20260529T145726Z_top1rot_pit50k",
+  "label": "top1rot_pit50k",
+  "slug": "top1rot_pit50k",
+  "timestamp_utc": "2026-05-29T14:57:26Z",
+  "git_sha": "d4063d83cdb9400836adf4fa77f24927268b2c90",
+  "python_version": "3.10.15",
+  "preregistration": "ars/evidence_packs/top1rot_pit50k/top1rot_pit50k_preregistration.md",
+  "pit_universe_path": "references/strategy/pit_universe_c50k_n1_v20_k3.parquet",
+  "pit_universe_sha256": "89f7009d7f4727247e9180224e8bb85f21df5625c35492f53b24b2f046b36a7a",
+  "params": {
+    "capital_usd": 50000.0,
+    "vol_target": 0.2,
+    "forecast_cap": 20.0,
+    "ewmac_speeds": [
+      [
+        2,
+        8
+      ],
+      [
+        4,
+        16
+      ],
+      [
+        8,
+        32
+      ],
+      [
+        16,
+        64
+      ],
+      [
+        32,
+        128
+      ],
+      [
+        64,
+        256
+      ]
+    ],
+    "ewmac_scalars": {
+      "2_8": 12.1,
+      "4_16": 8.53,
+      "8_32": 5.95,
+      "16_64": 4.1,
+      "32_128": 2.79,
+      "64_256": 1.91
+    },
+    "start": "2015-01-04",
+    "end": "2026-04-02",
+    "rebalance": "W-FRI",
+    "selection": "argmax of combined 6-speed EWMAC, always long",
+    "tie_break": "alphabetical (NB: pre-reg specifies 21d Sharpe \u2192 simplified to alpha here; \u03b5 for exact ties only)",
+    "min_contracts_held_in_universe_filter": 3,
+    "n_eligible_universe_at_end": 11
+  },
+  "baseline_reference": {
+    "run_id": "20260528T161350Z_martin_single_instrument",
+    "us10_sharpe_gross": 0.396,
+    "us10_max_drawdown_pct_geom": -55.347,
+    "us10_skew_per_trade": 4.382,
+    "us10_ann_turnover": 34.41
+  }
+}

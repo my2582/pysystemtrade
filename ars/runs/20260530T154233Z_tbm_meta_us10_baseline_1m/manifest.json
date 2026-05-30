@@ -1,0 +1,59 @@
+{
+  "run_utc": "20260530T154233Z",
+  "spec": "tbm_meta_us10_baseline_1m",
+  "panel": "single_instrument",
+  "family": "futures_momentum",
+  "purpose": "TBM Stage-1 meta-labeling overlay on ZN Martin primary",
+  "pre_registration": "ars/evidence_packs/tbm_meta_us10_baseline/tbm_meta_us10_baseline_preregistration.md",
+  "literature": "Lopez de Prado 2018 ch.2/3/4/12/14; Bailey-LdP 2014 \u00a73 Eq.12; Martin 2023 \u00a71 Eq.1, \u00a72.5, \u00a74 Eq.20",
+  "engine": "standalone (numpy + sklearn) attaching to pysystemtrade ZN price",
+  "vol_estimator_tag": "martin_20d_ema_of_sq_absolute_change",
+  "dsr_source": "arki.utils.dsr (single SOT; no skeleton local copies)",
+  "ann_factor": 256,
+  "barrier_pt_sigma_mult": 8.0,
+  "barrier_sl_sigma_mult": 4.0,
+  "t_max_business_days": 120,
+  "g_min": 0.3,
+  "g_max": 1.0,
+  "cusum_kappa": 1.0,
+  "gap_threshold_days": 5,
+  "speeds": [
+    [
+      39,
+      79
+    ],
+    [
+      9,
+      17
+    ],
+    [
+      5,
+      9
+    ],
+    [
+      17,
+      35
+    ],
+    [
+      35,
+      71
+    ],
+    [
+      71,
+      143
+    ]
+  ],
+  "tau_grid": [
+    0.5
+  ],
+  "feature_subsets": [
+    "ER_plus_rest"
+  ],
+  "n_cv_groups": 6,
+  "n_estimators": 100,
+  "git_sha": "83e43dd64e1760f8f1a2a594d498d7a8f720b1b2",
+  "python": "3.10.15",
+  "internal_grid_size": 1,
+  "family_dsr_threshold_at_N_50_ann": 0.325,
+  "verification_anchor": "scripts/tbm_sigma_verification.py (sigma median 0.3871 PASS 2026-05-30)"
+}

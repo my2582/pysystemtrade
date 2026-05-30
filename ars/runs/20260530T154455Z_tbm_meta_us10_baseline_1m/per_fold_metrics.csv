@@ -1,0 +1,17 @@
+config,fold,n_train,n_test,precision,recall,f1_at_classify_thr,classify_threshold
+feat=ER_plus_rest_tau=0.50,0,2029,2073,0.5244,0.1803,0.2683,0.5
+feat=ER_plus_rest_tau=0.50,1,1339,2072,0.406,0.1234,0.1893,0.5
+feat=ER_plus_rest_tau=0.50,2,642,2072,0.4762,0.2273,0.3077,0.5
+feat=ER_plus_rest_tau=0.50,4,1339,2072,0.4618,0.1517,0.2284,0.5
+feat=ER_plus_rest_tau=0.50,5,642,2072,0.4631,0.2083,0.2873,0.5
+feat=ER_plus_rest_tau=0.50,7,642,2071,0.4282,0.217,0.288,0.5
+feat=ER_plus_rest_tau=0.50,10,1989,2072,0.4247,0.1729,0.2457,0.5
+feat=ER_plus_rest_tau=0.50,11,1292,2072,0.4916,0.2118,0.2961,0.5
+feat=ER_plus_rest_tau=0.50,12,650,2072,0.4647,0.3733,0.414,0.5
+feat=ER_plus_rest_tau=0.50,13,1292,2071,0.3933,0.1701,0.2375,0.5
+feat=ER_plus_rest_tau=0.50,14,650,2071,0.4052,0.4451,0.4242,0.5
+feat=ER_plus_rest_tau=0.50,15,650,2071,0.463,0.386,0.4211,0.5
+feat=ER_plus_rest_tau=0.50,16,1983,2071,0.4078,0.3275,0.3633,0.5
+feat=ER_plus_rest_tau=0.50,17,1341,2071,0.4108,0.6432,0.5014,0.5
+feat=ER_plus_rest_tau=0.50,18,1341,2071,0.4772,0.6271,0.542,0.5
+feat=ER_plus_rest_tau=0.50,19,2032,2070,0.4059,0.5808,0.4778,0.5
