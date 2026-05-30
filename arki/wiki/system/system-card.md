@@ -1,7 +1,7 @@
 # pysystemtrade — system card
 
-> **Status: IN TRANSITION** — baseline **v4** (`arki_production.yaml`) → candidate **dm37** (`dm37_1m.yaml`). Research only; `live_trading: false`; no run formally promoted (`results/runs/registry.yaml`). Session-prime card (SessionStart-injected); fact-only, every number cited.
-> `derived_from:` arki_production.yaml · dm37_1m.yaml · results/runs/20260414_0130_dm37_1m_v25/stats.yaml · docs/arki/{strategy_evolution,instrument_universe,universe_sweep_report}.md — `update_on:` any config change / new leading run (re-derive, then re-lint the wiki) — `last_verified:` 2026-05-28 (data → 2026-04-09).
+> **Status: IN TRANSITION** — baseline **v4** (`arki_production.yaml`) → candidate **dm37** (`dm37_1m.yaml`). Research only; `live_trading: false`; no run formally promoted (`results/runs/registry.yaml`). Active research family: **`futures_momentum`** (single-instrument US10 + queued multi-instrument Panel B) — see `ars/families/futures_momentum/`. Session-prime card (SessionStart-injected); fact-only, every number cited.
+> `derived_from:` arki_production.yaml · dm37_1m.yaml · results/runs/20260414_0130_dm37_1m_v25/stats.yaml · docs/arki/{strategy_evolution,instrument_universe,universe_sweep_report}.md · ars/families/futures_momentum/{family.yaml, findings.md} — `update_on:` any config change / new leading run / new family entry (re-derive, then re-lint the wiki) — `last_verified:` 2026-05-31 (data → 2026-04-09; family DSR threshold @ N=58 = 0.3326 ann; TBM Stage-1 NO SIGNAL verdict).
 
 **What it is:** diversified systematic **futures** system on the unmodified pysystemtrade engine (Carver framework). Dynamic optimisation ("Mr. Greedy"); base currency USD. Owner: Minsu Yeom (Arki Finance).
 
@@ -14,6 +14,12 @@
 **Data as-of:** 2026-04-09 (dm37 run series end). ⚠ Several instruments frozen 2024-03-28 → [universe.md](universe.md).
 
 **Active workstream (not production):** single-position absmom rotation (top-1, 30% vol, weekly, $50k) — DRAFT, `references/strategy/2026-05-27_absmom_rotation_spec.md`.
+
+**Research family — `futures_momentum`** (single-instrument & portfolio; ARS-governed, 2026-05-31 state):
+- 14 cells across Panel A (single-instrument US10), 0 cells in Panel B (queued). Family DSR threshold (N=58) = **0.3326 ann**; no cell currently clears for confident absolute promotion. Honest read: **process B+ / alpha F / prediction skill 75% (n=10)**.
+- Notable verdicts: TBM Stage-1 meta-labeling = **NO SIGNAL** (g_max<0.60 on T_max=120 and T_max=40, decision tree route); sMOM capped = `registered, ambiguous` (G4 vol-mechanism vs bug ambiguity, LESSONS Entry 3); dMOM / fast_tilt / carry = falsified or refuted.
+- Family files: [`ars/families/futures_momentum/{family.yaml, findings.md, matrix.md, queue.md}`](../../../ars/families/futures_momentum/) · DSR utility: [`arki/utils/dsr.py`](../../utils/dsr.py) · Session retro: [`arki/reports/2026-05-31/family/futures_momentum_session_retro_cheatsheet.html`](../../reports/2026-05-31/family/futures_momentum_session_retro_cheatsheet.html).
+- Pending owner decision: `docs/arki/handoff_tbm_stage1_no_signal_decision_2026-05-31.md` (3 branches A/B/C). Forward enhancements queued: `docs/arki/handoff_session_retrospective_cheatsheet_2026-05-31.md` (items D/E/F/G).
 
 **Frozen-core + fork-safety:** never edit upstream-tracked files; all AI-Native artifacts live under `arki/` → [../../README.md](../../README.md).
 
