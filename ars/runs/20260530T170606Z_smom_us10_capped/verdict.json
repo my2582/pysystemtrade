@@ -1,0 +1,56 @@
+{
+  "gates": {
+    "G1_sharpe_lift": {
+      "observed": 0.276,
+      "threshold": ">= +0.05",
+      "verdict": "PASS"
+    },
+    "G2_maxdd_improvement_pp": {
+      "observed": 11.185,
+      "threshold": ">= +3.0",
+      "verdict": "PASS"
+    },
+    "G3_skew_per_trade": {
+      "observed": 4.616,
+      "threshold": ">= 1.0",
+      "verdict": "PASS"
+    },
+    "G4_sp500_control": {
+      "observed": 0.305,
+      "threshold": "< 0.20",
+      "verdict": "FAIL"
+    },
+    "G5_cap_vs_uncap_ratio": {
+      "observed": 1.082,
+      "threshold": "in [0.30, 1.20]",
+      "verdict": "PASS"
+    },
+    "G_safety_bound": {
+      "observed": {
+        "max_w": 3.0,
+        "min_semi_var": 0.0001
+      },
+      "threshold": "max_w <= 3.0 AND min_semi_var >= 0.0001",
+      "verdict": "PASS"
+    },
+    "G_recon": {
+      "observed": 0.0,
+      "threshold": "< 1.0%",
+      "verdict": "PASS"
+    }
+  },
+  "status": "registered",
+  "promotion_path": "ambiguous",
+  "diag_us10": {
+    "semi_var_floor": 0.0001,
+    "w_cap": 3.0,
+    "lambda": 1.621516,
+    "min_semi_var_raw_observed": 9e-08,
+    "min_semi_var_floored_observed": 0.0001,
+    "n_days_floor_binding": 140,
+    "max_w_before_cap": 86.4765,
+    "max_w_after_cap": 3.0,
+    "n_days_cap_binding": 209,
+    "w_median": 1.0052
+  }
+}

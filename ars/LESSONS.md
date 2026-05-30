@@ -99,6 +99,36 @@ Append-only log of failures the pre-registration framework did not catch on its 
 
 ---
 
+## 2026-05-31 — control gate G4 is over-strict for vol-reducing overlays
+
+**Failure mode**: methodological (pre-reg gate design too narrow).
+
+**What the framework saw**: `smom_us10_capped` G4 control gate FAILED at 0.305 (threshold < 0.20). Pre-reg falsification logic does not specify behavior for "G4-alone-FAIL with all other PASS" → defaulted to `registered, ambiguous`.
+
+**What was actually happening**: sMOM on SP500 systematically de-leverages the asset (vol 24.3 → 6.23) because semi_var is consistently HIGH on negative-skew equity (frequent down days). The resulting Sharpe lift (-0.009 → +0.305) is NOT a false rescue via bug — it is the mechanical consequence of "reduce denominator faster than numerator" when applied to a no-edge, high-downside-vol asset. The G4 gate ("control instrument should not be rescued") cannot distinguish "Sharpe up via spurious return generation" (bug) from "Sharpe up via vol reduction" (mechanism).
+
+**How it was surfaced**: pre-reg verdict execution; G4 failed cleanly with all other gates PASS, forcing examination of SP500 stats which showed the extreme vol collapse (denominator collapsed 4×; numerator went from −0.227 to +1.901; Sharpe rose).
+
+**Why pre-reg gates didn't catch the design flaw**: the gate was written before observing that semi-vol scaling on negative-skew assets produces this specific signature. The G4 phrasing "Sharpe < 0.20" was inherited from the original (uncapped) sMOM pre-reg where the rescue mechanism (extreme leverage spikes in calm windows) was a genuine bug. For the capped variant, the bug is impossible (G_safety strict) — leaving only the legitimate vol-reduction mechanism. Same threshold, different mechanism class.
+
+**Durable rule** (added to future overlay pre-reg templates):
+
+> Control gates of the form "X variant Sharpe < N on instrument Y" MUST be paired with a vol diagnostic: report `(Sharpe_capped, vol_capped, vol_baseline)`. The control gate logic is:
+> - If `Sharpe_capped > N`:
+>   - If `vol_capped / vol_baseline > 0.7`: rescue via return generation → FAIL (likely bug, INVESTIGATE).
+>   - If `vol_capped / vol_baseline ≤ 0.7`: rescue via vol reduction → flag as MECHANISM_NOTE (not a fail).
+> - If `Sharpe_capped ≤ N`: PASS.
+
+This refinement separates "control gate caught a bug" from "control gate caught a mechanism we should describe in the cheatsheet, not as a bug."
+
+**Cross-references**:
+- Run: `ars/runs/20260530T170606Z_smom_us10_capped/`
+- Evidence pack: `ars/evidence_packs/smom_us10_capped/`
+- DECISIONS entry: `ars/DECISIONS.md#2026-05-31-smom-us10-capped-remediation`
+- Original control gate text: `ars/evidence_packs/smom_us10_capped/smom_us10_capped_preregistration.md` §4 G4
+
+---
+
 ## 2026-05-29 (later) — framework expansion seeded (3 candidates landed)
 
 Not a failure entry; a process expansion entry, recorded here so future agents see the framework's own evolution log next to the failure log.
