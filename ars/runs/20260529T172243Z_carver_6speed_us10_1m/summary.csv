@@ -1,0 +1,2 @@
+spec,instrument,capital_usd,start,end,n_days,ann_return_gross_pct,ann_return_net_pct,ann_vol_pct,sharpe_gross,sharpe_net,skew_daily,skew_per_trade,n_trades,median_trade_days,median_trade_return_pct,win_rate_pct,max_drawdown_pct_geom,ann_subsystem_turnover,reconciliation_diff_pct,forecast_clip_frac,frac_flat,mean_abs_pos
+carver_6speed_us10,US10,1000000,1982-08-30,2026-04-03,11375,8.045,7.004,22.106,0.364,0.317,0.137,6.655,375,10,-0.628,22.1,-55.674,34.41,-0.4019,0.0546,0.0139,25.8913

@@ -1,0 +1,2 @@
+spec,instrument,capital_usd,start,end,n_days,ann_return_gross_pct,ann_return_net_pct,ann_vol_pct,sharpe_gross,sharpe_net,skew_daily,skew_per_trade,n_trades,median_trade_days,median_trade_return_pct,win_rate_pct,max_drawdown_pct_geom,ann_subsystem_turnover,reconciliation_diff_pct,forecast_clip_frac,frac_flat,mean_abs_pos
+martin_baseline_us10,US10,50000,1982-08-30,2026-04-03,11375,9.043,7.95,22.535,0.401,0.353,0.284,4.109,347,12,-1.146,19.6,-58.455,34.56,9.5343,0.0525,0.2215,1.3676

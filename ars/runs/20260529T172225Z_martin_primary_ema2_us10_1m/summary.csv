@@ -1,0 +1,2 @@
+spec,instrument,capital_usd,start,end,n_days,ann_return_gross_pct,ann_return_net_pct,ann_vol_pct,sharpe_gross,sharpe_net,skew_daily,skew_per_trade,n_trades,median_trade_days,median_trade_return_pct,win_rate_pct,max_drawdown_pct_geom,ann_subsystem_turnover,reconciliation_diff_pct,frac_flat,mean_abs_pos,forecast_clip_frac,K_normalisation
+martin_primary_ema2_us10,US10,1000000,1982-11-09,2026-04-03,9916,7.89,7.89,24.923,0.317,0.317,-0.067,3.861,106,56,-1.91,26.4,-65.972,3.77,0.6348,0.0,0.9276,0.0,0.013576

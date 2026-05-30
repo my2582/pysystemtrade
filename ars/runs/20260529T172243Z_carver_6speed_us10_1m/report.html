@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>carver_6speed_us10 @ $1,000,000</title>
+  <style>
+    @page { size: A4; }
+    :root {
+      --primary: #265844;   /* Arki Main Green */
+      --secondary: #1e4537; /* Darker Green */
+      --accent: #3a7d5c;    /* Mid Green */
+      --highlight: #4a9570; /* Lighter Green */
+      --cream: #F5EBC1;     /* Arki Cream */
+      --bg-light: #f8f9fa;
+      --border-color: #e9ecef;
+      --pass: #2e7d32;
+      --fail: #c62828;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      max-width: 210mm; margin: 0 auto;
+      background-color: #f0f0f0; color: #2d3748;
+      line-height: 1.5; font-size: 10pt; padding: 0;
+    }
+    .page {
+      width: 210mm; min-height: 297mm; padding: 13mm 15mm;
+      margin: 20px auto; background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      page-break-after: always; position: relative;
+    }
+    h1, h2, h3 {
+      font-family: 'Roboto', sans-serif; color: var(--primary);
+      margin-bottom: 0.5rem; line-height: 1.2;
+    }
+    .page-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 12px; margin-bottom: 20px;
+      border-bottom: 3px solid var(--primary);
+    }
+    .page-header h1 {
+      font-size: 18pt; font-weight: 700; margin: 0;
+      color: var(--primary);
+    }
+    .page-header h1::before {
+      content: ''; display: inline-block; width: 4px; height: 18px;
+      background: var(--primary); margin-right: 10px; vertical-align: middle;
+    }
+    .page-header .subtitle {
+      font-size: 9pt; color: var(--secondary); margin: 4px 0 0 14px;
+    }
+    .date-badge {
+      background: var(--primary); color: white;
+      padding: 6px 12px; font-size: 9pt; font-weight: 600;
+      border-radius: 3px;
+    }
+    h2 {
+      font-size: 12pt; font-weight: 700; margin-top: 16px; margin-bottom: 6px;
+      border-left: 4px solid var(--primary); padding-left: 10px;
+    }
+    h3 { font-size: 10pt; font-weight: 600; color: var(--secondary); margin-bottom: 4px; }
+    p { margin-bottom: 6px; }
+    table {
+      width: 100%; border-collapse: collapse; margin-bottom: 12px;
+      font-size: 9pt;
+    }
+    th, td {
+      border: 1px solid var(--border-color);
+      padding: 5px 8px; text-align: right;
+    }
+    th {
+      background: var(--primary); color: white; font-weight: 600;
+      text-align: center;
+    }
+    th.lbl, td.lbl { text-align: left; }
+    tr:nth-child(even) td { background: var(--bg-light); }
+    .verdict {
+      padding: 10px 14px; margin: 10px 0; border-radius: 4px;
+      border-left: 5px solid var(--primary);
+      background: rgba(38,88,68,0.05);
+    }
+    .verdict .v-row {
+      display: flex; align-items: center; gap: 10px; margin: 4px 0;
+      font-size: 9.5pt;
+    }
+    .pass { color: var(--pass); font-weight: 700; }
+    .fail { color: var(--fail); font-weight: 700; }
+    .v-claim { flex: 1; }
+    .v-evidence { color: #555; font-size: 8.5pt; font-style: italic; }
+    .fig {
+      margin: 8px 0; padding: 6px; border: 1px solid var(--border-color);
+      background: white; text-align: center;
+    }
+    .fig img { max-width: 100%; height: auto; }
+    .fig .caption {
+      font-size: 8.5pt; color: var(--secondary); margin-top: 4px;
+      text-align: left;
+    }
+    .footer {
+      position: absolute; bottom: 10mm; left: 15mm; right: 15mm;
+      font-size: 7.5pt; color: #888; border-top: 1px solid var(--border-color);
+      padding-top: 4px; display: flex; justify-content: space-between;
+    }
+    .kv { font-size: 8.5pt; }
+    .kv td.lbl { color: var(--secondary); font-weight: 600; width: 35%; }
+    .literature {
+      font-size: 8pt; color: #555; padding: 6px 10px;
+      background: var(--cream); border-radius: 3px; margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- PAGE 1 — Executive Summary -->
+<section class="page">
+  <div class="page-header">
+    <div>
+      <h1>carver_6speed_us10 @ $1,000,000</h1>
+      <div class="subtitle">execution_friction_us10 -- single cell</div>
+    </div>
+    <div class="date-badge">As of 2026-05-29</div>
+  </div>
+
+  <h2>Headline Verification</h2>
+  <div class="verdict">
+    <div class="v-row"><span class="pass">PASS</span><span class="v-claim">Reconciliation within 5%</span><span class="v-evidence">|recon| = 0.4019%</span></div>
+<div class="v-row"><span class="pass">PASS</span><span class="v-claim">Sharpe positive (no falsification, reporting only)</span><span class="v-evidence">sharpe_gross = 0.364</span></div>
+<div class="v-row"><span class="pass">PASS</span><span class="v-claim">Per-trade skew positive (Martin §2.3 sign check)</span><span class="v-evidence">skew_per_trade = 6.655</span></div>
+  </div>
+
+  <h2>Summary Metrics</h2>
+  <table><thead><tr><th>instrument</th><th>instrument</th><th>capital_usd</th><th>start</th><th>end</th><th>n_days</th><th>ann_return_gross_pct</th><th>ann_return_net_pct</th><th>ann_vol_pct</th><th>sharpe_gross</th><th>sharpe_net</th><th>skew_daily</th><th>skew_per_trade</th><th>n_trades</th><th>median_trade_days</th><th>median_trade_return_pct</th><th>win_rate_pct</th><th>max_drawdown_pct_geom</th><th>ann_subsystem_turnover</th><th>reconciliation_diff_pct</th><th>forecast_clip_frac</th><th>frac_flat</th><th>mean_abs_pos</th></tr></thead><tbody><tr><td class="lbl">carver_6speed_us10</td><td>US10</td><td>1,000,000</td><td>1982-08-30</td><td>2026-04-03</td><td>11,375</td><td>8.045</td><td>7.004</td><td>22.106</td><td>0.364</td><td>0.317</td><td>0.137</td><td>6.655</td><td>375</td><td>10</td><td>-0.628</td><td>22.1</td><td>-55.674</td><td>34.41</td><td>-0.402</td><td>0.055</td><td>0.014</td><td>25.891</td></tr></tbody></table>
+
+  <h2>Equity Curves</h2>
+  <div class="fig">
+    <img src="equity_curve.png" alt="Equity curves">
+    <div class="caption">Compounded % return on $1,000,000 capital</div>
+  </div>
+
+  <div class="literature"><b>Literature:</b> Martin (2023) Design and analysis of momentum trading strategies</div>
+
+  <div class="footer">
+    <span>Arki Finance Pte. Ltd. — ARS Run Report</span>
+    <span>Run 20260529T172243Z · git 83e43dd6</span>
+  </div>
+</section>
+
+<!-- PAGE 2 — Trade-Level Analysis & Manifest -->
+<section class="page">
+  <div class="page-header">
+    <div>
+      <h1>Per-Trade Analysis</h1>
+      <div class="subtitle">Sign-episode trade ledger · US10</div>
+    </div>
+    <div class="date-badge">2026-05-29</div>
+  </div>
+
+  <h2>Per-Trade Distribution</h2>
+  <div class="fig">
+    <img src="trade_dist.png" alt="Per-trade distribution">
+    <div class="caption">Per-trade (sign-episode) return distribution</div>
+  </div>
+
+  
+
+  <h2>Trade Statistics</h2>
+  <table><thead><tr><th>instrument</th><th>n_trades</th><th>median_days</th><th>median_return_pct</th><th>win_rate_pct</th><th>skew_per_trade</th></tr></thead><tbody><tr><td class="lbl">carver_6speed_us10</td><td>375</td><td>10</td><td>-0.628</td><td>22.1</td><td>6.655</td></tr></tbody></table>
+
+  <h2>Run Manifest</h2>
+  <table class="kv"><tbody><tr><td class="lbl">spec</td><td>carver_6speed_us10</td></tr><tr><td class="lbl">capital_usd</td><td>$1,000,000</td></tr><tr><td class="lbl">engine</td><td>pysystemtrade</td></tr><tr><td class="lbl">vol_estimator</td><td>carver_mixed_vol_calc_default</td></tr><tr><td class="lbl">forecast_cap</td><td>20</td></tr><tr><td class="lbl">roundpositions</td><td>1</td></tr><tr><td class="lbl">instrument</td><td>US10</td></tr><tr><td class="lbl">pre_registration</td><td>ars/evidence_packs/execution_friction_us10/execution_friction_us10_preregistration.md</td></tr><tr><td class="lbl">git_sha</td><td>83e43dd64e17</td></tr></tbody></table>
+
+  <div class="footer">
+    <span>Arki Robust Standard · do_not_reimplement_engine=true</span>
+    <span>Run 20260529T172243Z · git 83e43dd6</span>
+  </div>
+</section>
+
+</body>
+</html>

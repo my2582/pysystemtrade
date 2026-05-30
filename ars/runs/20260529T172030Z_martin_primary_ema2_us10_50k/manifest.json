@@ -1,0 +1,23 @@
+{
+  "run_utc": "20260529T172030Z",
+  "spec": "martin_primary_ema2_us10",
+  "capital_usd": 50000,
+  "purpose": "execution_friction_us10 6-cell matrix",
+  "pre_registration": "ars/evidence_packs/execution_friction_us10/execution_friction_us10_preregistration.md",
+  "literature": "references/research/Design and analysis of momentum trading strategies.pdf",
+  "engine": "standalone",
+  "vol_estimator_tag": "martin_20d_ema_of_sq",
+  "vol_calc_func": "arki.utils.martin_vol.martin_ema_vol",
+  "rules": [
+    "ewmac20_40_single_ema2"
+  ],
+  "forecast_weights": "single_rule",
+  "forecast_cap": null,
+  "roundpositions": false,
+  "percentage_vol_target": 20.0,
+  "carry_included": false,
+  "instrument": "US10",
+  "git_sha": "83e43dd64e1760f8f1a2a594d498d7a8f720b1b2",
+  "python": "3.10.15",
+  "trade_def": "sign-episode (constant non-zero sign on continuous phi)"
+}
