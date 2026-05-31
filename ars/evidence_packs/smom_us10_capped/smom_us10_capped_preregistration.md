@@ -1,5 +1,7 @@
 # smom_us10_capped — Pre-registration
 
+<!-- pre_rule7_grandfathered: authored before Rule 7 (2026-05-31); see docs/arki/session_predictions_scorecard_2026-05-31.md -->
+
 **Date written**: 2026-05-31 (BEFORE run)
 **Branch**: `feat/arki-backtest-toolkit`
 **ARS stage**: Exploratory Research (Stage-0). L2 cap (Backtest runner).

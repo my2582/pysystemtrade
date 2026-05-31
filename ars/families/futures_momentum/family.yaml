@@ -366,6 +366,15 @@ family:
   findings_file: ars/families/futures_momentum/findings.md
   matrix_file:   ars/families/futures_momentum/matrix.md
 
+  # Process-cost instrumentation (Handoff #3 item F). Each new cell records 5
+  # lifecycle timestamps in its manifest.json via:
+  #   python -m arki.utils.process_cost record --manifest <run>/manifest.json --stage <stage>
+  # Aggregate cycle times (flags mean > 1 business day) via:
+  #   python -m arki.utils.process_cost report --runs-dir ars/runs
+  # After >=3 cells carry a complete timeline, paste the printed `process_cost:`
+  # block into this multiple_testing section.
+  process_cost_tool: arki/utils/process_cost.py
+
   # ===================================================================
   # Curated reporting (CPC v1 Arki adopted 2026-05-31 as the single
   # unified standard; see ars/DECISIONS.md 2026-05-31 + handoff

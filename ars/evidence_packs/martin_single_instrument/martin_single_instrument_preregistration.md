@@ -1,5 +1,7 @@
 # martin_single_instrument — Pre-registration  ⚠️ POST-HOC
 
+<!-- pre_rule7_grandfathered: authored before Rule 7 (2026-05-31); see docs/arki/session_predictions_scorecard_2026-05-31.md -->
+
 > **POST-HOC DISCLOSURE.** This document was written on 2026-05-29 AFTER
 > the runs at `ars/runs/20260528T161350Z_martin_single_instrument/`
 > (initial `bb533839 feat(scripts): Martin (2023) single-instrument futures

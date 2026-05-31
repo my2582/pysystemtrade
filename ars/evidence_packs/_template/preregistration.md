@@ -30,6 +30,29 @@ Material threshold (e.g. `+1.0` skew_per_trade vs baseline) goes here.
 - **H-X1 (null)**: ...
 - **H-X1 (alternative)**: ...
 
+### Predictions (lint Rule 7 — predict-then-measure)
+
+At least one falsifiable prediction, logged BEFORE the run. Categorical
+(direction-of-effect) preferred over quantitative — we predict direction
+better than magnitude (see docs/arki/session_predictions_scorecard_2026-05-31.md).
+
+```yaml
+predictions:
+  - id: P1
+    statement: "<categorical, falsifiable claim about the result>"
+    rationale: "<why — literature / prior cell / mechanism>"
+    type: categorical                 # categorical | quantitative
+    score_method: "sign(<metric>) > 0 -> MATCH; else MISS"
+  - id: P2
+    statement: "<a quantitative claim, only if you must>"
+    rationale: "<why>"
+    type: quantitative
+    expected_range: "<|Δ| < 0.05>"
+    score_method: "in-range -> MATCH; same sign out of range -> MATCH-direction; opposite -> MISS"
+```
+
+After the run, append a `prediction_scores:` block to the cell's summary.csv.
+
 ## 3. Grid (one decision per row)
 
 Each row changes EXACTLY one parameter vs the baseline. Bundling is
@@ -51,6 +74,10 @@ Per-gate PASS / FAIL thresholds. Reconciliation tolerance. FALSIFIED criteria.
 |---|---|---|---|
 | G1 | <metric> | <threshold> | <PASS implication> |
 | G_recon | `|reconciliation_diff_pct|` | `< 5%` | Trade attribution clean |
+
+**Aggregation (lint Rule 4)** — declare per metric: e.g. `skew_per_trade uses
+sign-episode aggregation (variable M)`; `Sharpe uses daily non-overlapping
+returns annualised at 256`.
 
 Promotion (Path A — strict): ALL gates PASS, reconciliation clean.
 Promotion (Path B — owner override): explicit owner sign-off recorded

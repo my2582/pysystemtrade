@@ -1,5 +1,7 @@
 # execution_friction_us10 — Pre-registration  ✅ PATH A (pre-run lock)
 
+<!-- pre_rule7_grandfathered: authored before Rule 7 (2026-05-31); see docs/arki/session_predictions_scorecard_2026-05-31.md -->
+
 **Date written**: 2026-05-30 (PRE-RUN, before any cell executes)
 **Branch**: `feat/arki-backtest-toolkit`
 **Pre-reg git SHA at lock**: `83e43dd6` (commit just prior to runner authoring; runs will record their own SHA)

@@ -17,6 +17,13 @@ Rules enforced (from arki/wiki/onboarding/04_lessons_distilled.md):
   Rule 4: aggregation method is declared per gate (verification or reporting mode).
   Rule 5: no proposed primitive blocks the Agent Loop on a default owner sign-off
           (this is a structural check on framework documents, not pre-registrations).
+  Rule 6: if a pre-reg cites a family / depends_on input, it must acknowledge the
+          family's multiple-testing context (DSR / n_configs_searched).
+  Rule 7: every Path A pre-reg pre-registers >=1 falsifiable prediction in a
+          `predictions:` block (id, statement, type, score_method); categorical
+          preferred over quantitative. Soft check (warning); pre-Rule-7 docs may
+          opt out with a `pre_rule7_grandfathered` marker. See
+          docs/arki/session_predictions_scorecard_2026-05-31.md §Proposed Rule 7.
 
 Usage:
     venv/bin/python scripts/validate_preregistration.py \\
@@ -222,6 +229,92 @@ def check_rule6_family_dsr_awareness(text: str, path: Path) -> list[Violation]:
     return violations
 
 
+# Rule 7 — predictions block (predict-then-measure discipline) -------------
+
+def check_rule7_predictions_block(text: str, path: Path) -> list[Violation]:
+    """Rule 7 -- every Path A pre-reg pre-registers at least one falsifiable
+    prediction in a `predictions:` block. Each entry needs id, statement, type
+    (categorical | quantitative), score_method. Categorical is preferred over
+    quantitative (empirical: 2026-05-31 scorecard hit 100% categorical / 0%
+    quantitative).
+
+    Soft check (warning) by default; policy is to upgrade to error after the
+    first 5 Rule-7-aware pre-regs (left as warning here -- tighten when ready).
+    Pre-Rule-7 pre-regs may opt out with a grandfather marker:
+        pre_rule7_grandfathered: true        (yaml-style line), or
+        <!-- pre_rule7_grandfathered: <reason> -->   (html comment).
+    """
+    violations: list[Violation] = []
+
+    # Grandfather opt-out for pre-Rule-7 documents.
+    if (re.search(r"pre_rule7_grandfathered\s*[:=]\s*(true|yes)", text, re.I)
+            or re.search(r"<!--\s*pre_rule7_grandfathered", text, re.I)):
+        return violations
+
+    block_start = re.search(r"^\s*predictions\s*:\s*$", text, re.MULTILINE)
+    if not block_start:
+        violations.append(Violation(
+            rule="Rule 7 (predictions block)",
+            severity="warning",
+            location=f"{path.name}",
+            description=("No `predictions:` block found. Every Path A pre-reg must "
+                         "pre-register at least one falsifiable prediction."),
+            suggested_fix=("Add a `predictions:` block (§2) with >=1 entry, each: id, "
+                           "statement, type (categorical|quantitative), score_method. "
+                           "Categorical preferred. For a pre-Rule-7 doc add "
+                           "`<!-- pre_rule7_grandfathered: <reason> -->`."),
+        ))
+        return violations
+
+    # Slice the block: from the predictions: line until the first non-indented,
+    # non-list line (new top-level key / prose) or a closing code fence.
+    rest = text[block_start.end():]
+    block_lines: list[str] = []
+    for ln in rest.splitlines():
+        if ln.strip() == "":
+            block_lines.append(ln)
+            continue
+        if ln.startswith("```") or (not ln[0].isspace()
+                                    and not ln.lstrip().startswith("-")):
+            break
+        block_lines.append(ln)
+    block = "\n".join(block_lines)
+
+    if not re.search(r"-\s*id\s*[:=]", block):
+        violations.append(Violation(
+            rule="Rule 7 (predictions block)",
+            severity="warning",
+            location=f"{path.name}",
+            description="`predictions:` block present but has no entry with an `id:` field.",
+            suggested_fix="Each prediction needs at least: id, statement, type, score_method.",
+        ))
+        return violations
+
+    missing = [f for f in ("id", "statement", "type", "score_method")
+               if not re.search(rf"\b{f}\s*[:=]", block)]
+    if missing:
+        violations.append(Violation(
+            rule="Rule 7 (predictions block)",
+            severity="warning",
+            location=f"{path.name}",
+            description=f"`predictions:` block missing required field(s): {', '.join(missing)}.",
+            suggested_fix="Each entry needs id, statement, type (categorical|quantitative), score_method.",
+        ))
+
+    types = [t.lower() for t in re.findall(r"\btype\s*[:=]\s*[\"']?(\w+)", block)]
+    if types and all(t == "quantitative" for t in types):
+        violations.append(Violation(
+            rule="Rule 7 (categorical preference)",
+            severity="warning",
+            location=f"{path.name}",
+            description=("All predictions are type=quantitative. We predict direction "
+                         "better than magnitude (2026-05-31 scorecard: 0/2 quantitative)."),
+            suggested_fix="Prefer type: categorical (direction-of-effect bins) where possible.",
+        ))
+
+    return violations
+
+
 # Validate one file ---------------------------------------------------------
 
 def validate_file(path: Path) -> ValidationResult:
@@ -240,6 +333,7 @@ def validate_file(path: Path) -> ValidationResult:
         (check_rule3_assumption_checks, "Rule 3 (assumption checks)"),
         (check_rule4_aggregation, "Rule 4 (aggregation)"),
         (check_rule6_family_dsr_awareness, "Rule 6 (family DSR awareness)"),
+        (check_rule7_predictions_block, "Rule 7 (predictions block)"),
     ]:
         v = check_fn(text, path)
         if v:

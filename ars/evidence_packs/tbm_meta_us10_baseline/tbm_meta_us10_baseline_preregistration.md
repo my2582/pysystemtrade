@@ -1,5 +1,7 @@
 # tbm_meta_us10_baseline — Pre-registration  ✅ PATH A (pre-run lock)
 
+<!-- pre_rule7_grandfathered: authored before Rule 7 (2026-05-31); see docs/arki/session_predictions_scorecard_2026-05-31.md -->
+
 **Date written**: 2026-05-30 (PRE-RUN, before any cell executes)
 **Branch**: `feat/arki-backtest-toolkit`
 **Pre-reg git SHA at lock**: to be filled by the runner at first execution.

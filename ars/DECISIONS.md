@@ -508,3 +508,49 @@ The TBM meta-labeling work the owner is preparing (skeleton at `/Users/msyeom/Do
 **Out of scope (tracked):** backfilling the older 13 cells to CPC v1; deleting deprecated reports; external-share re-render. The two TBM cells were executed (run dirs 2026-05-30/31) but their `family.yaml` cell status remains `pre_registered_queued` / `registry_ref: pending_first_run` — registry entry creation for the TBM runs is a separate follow-up, not part of this reporting handoff.
 
 **No upstream-tracked file modified.** Changes confined to `scripts/` (Arki-added), `arki/reports/`, `ars/families/`, `ars/DECISIONS.md`.
+
+
+---
+
+## 2026-05-31 — Handoff #3 items D/E/F/G executed (session-retro forward enhancements)
+
+Source: docs/arki/handoff_session_retrospective_cheatsheet_2026-05-31.md. Item B
+(retro cheatsheet) was already done; items D-G executed this session.
+
+- **Item D — cold-start handoff test (CONDITIONAL PASS).** A fresh isolated
+  agent, given only family.yaml + findings.md + queue.md + CLAUDE.md, advanced
+  queue item #2 (rule_structure de-confound) and authored a Path A pre-reg with
+  ~90% design fidelity, reading ZERO files outside the 4-file SOT. It correctly
+  resolved the one real ambiguity (the $1M comparator). Two HIGH-severity SOT
+  gaps found: (1) no pre-reg template pointer, (2) lint Rules 5-6 text absent
+  from the SOT. Fixes applied to queue.md (template + lint-rule pointers,
+  comparator disambiguation, DSR-N authority note). Full report:
+  docs/arki/coldstart_handoff_test_result_2026-05-31.md.
+
+- **Item E — paper-family-exit pre-reg authored.** carry_primary_us10
+  (Koijen-Moskowitz-Pedersen-Vrugt 2018 "Carry", JFE — deliberately OUTSIDE the
+  canonical Martin/Hanauer/Carver/LdP family). Lint Rules 1-7 PASS (0 errors, 0
+  warnings). SCHEMA-FIT VERDICT: the family.yaml Panel A schema BENDS under a
+  carry-as-primary thesis — `overlay: carry` presumes a momentum base and
+  `rule_structure` has no carry/none level; a new `primary_signal` axis (or a
+  `carry_primary` rule_structure level) is required to encode it faithfully.
+  This CONFIRMS the prior "schema is paper-family-biased" critique. Cell RUN is
+  deferred (needs a carry-primary runner; see pre-reg §6/§9). File:
+  ars/evidence_packs/carry_primary_us10/carry_primary_us10_preregistration.md.
+
+- **Item F — process-cost instrumentation built.** arki/utils/process_cost.py:
+  records the 5 manifest.json lifecycle timestamps, computes per-cell cycle time
+  in business days, aggregates (mean/median/p75), and flags mean > 1 business
+  day (framework-simplification trigger). `--selfcheck` PASS. No cells carry a
+  complete timeline yet; measurement accrues as the next 3 cells run. Pointer
+  added to family.yaml § multiple_testing.
+
+- **Item G — lint Rule 7 implemented.** scripts/validate_preregistration.py now
+  enforces a `predictions:` block (id/statement/type/score_method; categorical
+  preferred) per the 2026-05-31 predictions scorecard. Soft (warning) for now.
+  Existing pre-regs grandfathered via a `pre_rule7_grandfathered` marker; the
+  _template carries a compliant predictions block so new pre-regs inherit it.
+
+Handoff #2 status check (prerequisite): trade_analysis.py arrow patch = DONE
+(lines 592/598); matrix.html = STILL PENDING (family.yaml points to it but the
+file was never built — separate follow-up).

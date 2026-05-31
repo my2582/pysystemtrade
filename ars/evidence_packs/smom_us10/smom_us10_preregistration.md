@@ -1,5 +1,7 @@
 # smom_us10 — Pre-registration
 
+<!-- pre_rule7_grandfathered: authored before Rule 7 (2026-05-31); see docs/arki/session_predictions_scorecard_2026-05-31.md -->
+
 **Date written**: 2026-05-29 (BEFORE run)
 **Owner**: Minsu Yeom · **Implementer**: Claude Opus 4.7
 **Path**: A (genuine pre-registration; locked by the commit that creates this file)

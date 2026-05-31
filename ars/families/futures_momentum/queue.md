@@ -18,6 +18,21 @@ Schema per item:
 
 ---
 
+## Authoring a pre-reg from this SOT (cold-start pointers)
+
+Added 2026-05-31 after the cold-start handoff test
+(docs/arki/coldstart_handoff_test_result_2026-05-31.md) found these were the
+two HIGH-severity gaps for a fresh agent:
+
+- **Template + section schema**: `ars/evidence_packs/_template/preregistration.md`
+  (copy it; it carries a Rule-7 `predictions:` block). A locked worked example:
+  `ars/evidence_packs/tbm_meta_us10_baseline/tbm_meta_us10_baseline_preregistration.md`.
+- **Full lint Rules 1-7 text + checker**: `scripts/validate_preregistration.py`
+  (docstring enumerates all rules) and `arki/wiki/onboarding/04_lessons_distilled.md`.
+  Lint before locking: `venv/bin/python scripts/validate_preregistration.py <prereg.md>`.
+
+---
+
 ## Commitments (added 2026-05-31)
 
 > Process discipline is *defensive* — to justify confidence we need *offensive* alpha hunt
@@ -74,8 +89,12 @@ timestamps in its `manifest.json` (`pre_reg_authored_at`, `runner_started_at`,
 - **depends_on**: existing Carver engine config (no new artifact needs).
 - **panel**: A
 - **design**: register single_ema2_20_40 + **carver_native** + cap ±20
-  + integer (HOLD exec_profile constant vs `martin_baseline_us10`). One
-  new cell at $1M.
+  + integer (HOLD exec_profile constant). One new cell at $1M.
+- **comparator (exact)**: `exec_friction_martin_baseline_us10_1m`
+  (run_dir `ars/runs/20260529T172206Z_martin_baseline_us10_1m`; sharpe_net
+  0.355). The $1M variant is the clean pair — it matches the new cell on every
+  axis except rule_structure. (Was "vs martin_baseline_us10"; disambiguated
+  2026-05-31 per cold-start test gap #5.)
 - **estimated internal_grid_size**: 1 (no sweep — confirmatory)
 - **pre_reg target**: `ars/evidence_packs/rule_deconfound_us10/...preregistration.md`
 - **status**: queued
@@ -144,6 +163,13 @@ If items 1-5 above all get pre-registered: +6 +1 +2 +2 +5 = +16 → new
 to queue, not just by completing**. This is the self-correcting loop
 the family layer is built around — adding queue items raises the bar
 for ALL future promotions including older cells.
+
+> **Authority note (added 2026-05-31, cold-start test gaps #6/#7):** the
+> arithmetic above is *illustrative* and predates the TBM sensitivity add. The
+> LIVE multiple-testing state (current `n_configs_searched = 58`,
+> `expected_max_sharpe_at_N = 0.3326`) is held in
+> `family.yaml § multiple_testing` — treat that file as the single authority;
+> this footer may lag.
 
 ---
 
