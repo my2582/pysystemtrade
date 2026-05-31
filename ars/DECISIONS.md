@@ -14,6 +14,32 @@ Schema per entry:
 
 ---
 
+## 2026-05-31 — session-continuity layer introduced (housekeeping; no backtest)
+
+Introduced a single session-continuity layer so a fresh agent restores state from disk in
+one read (F7 state-on-disk applied to session tracking): **`ars/STATUS.md`** (5-block single
+entry point) + **`ars/handoffs/_index.md`** (handoff ledger, status judged by disk evidence).
+
+- **Downloads dependency removed**: gathered all scattered handoffs + completion reports into
+  `ars/handoffs/` (from `docs/arki/` via git-mv; from `~/Downloads/` via copy —
+  `HANDOFF_stage1_tbm_ZN.md` + its runner `stage1_meta_labeling.py`).
+- **`registry.yaml` yaml-parse defect fixed** (1 line): `vol_estimator` value at the
+  `martin_baseline_us10` spec had an unquoted mid-value colon that broke `yaml.safe_load`
+  (failed at HEAD too — pre-existing). Quoted the value; registry now parses (10 runs).
+- **TBM registry entries created** (unified_cpc §5 follow-up #1 — CLOSED): full rows for
+  `tbm_meta_us10_baseline_1m` (run `20260530T154455Z`) and `tbm_meta_us10_tmax40`
+  (run `20260530T164615Z`), status `relative_pass_absolute_fail`, metrics mirrored from
+  `family.yaml` (no new measurement).
+- **Reconciliation surfaced**: `matrix.html` is **present** (commit `c1076c77`) — the
+  4th-branch reports' "still pending" was stale; recorded as RESOLVED.
+- **`family.yaml`**: added `status_doc` + `handoffs_index` entry-point keys.
+
+**Invariants held**: `n_configs_searched = 58` and `expected_max_sharpe_at_N = 0.3326`
+unchanged (pure housekeeping — no new backtest / experiment / pre-reg). Run dirs + evidence
+packs + handoff *contents* untouched. Upstream-tracked dirs 0 diff.
+
+---
+
 ## 2026-05-31 — smom_us10_capped — REMEDIATION RESULT (status: registered, owner sign-off pending)
 
 **Closes**: `smom_us10` pending-remediation status (originally `registered_pending_remediation` since 2026-05-29 post-review).

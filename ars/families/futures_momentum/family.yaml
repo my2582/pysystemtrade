@@ -439,3 +439,8 @@ family:
   # ===================================================================
   reports_root: arki/reports/2026-05-31/          # canonical curated reports location
   matrix_html:  arki/reports/family/futures_momentum_matrix.html
+
+  # session-continuity entry points (added 2026-05-31; F7 state-on-disk).
+  # A fresh agent reads status_doc first, then handoffs_index for the ledger.
+  status_doc:      ars/STATUS.md
+  handoffs_index:  ars/handoffs/_index.md

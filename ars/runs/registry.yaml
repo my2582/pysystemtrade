@@ -361,7 +361,7 @@ runs:
           forecast_weights: equal_1_6
           forecast_cap: 20.0
           roundpositions: true
-          vol_estimator: martin_20d_ema_of_sq (gamma=0.95, custom: arki.utils.martin_vol.martin_ema_vol)
+          vol_estimator: "martin_20d_ema_of_sq (gamma=0.95, custom: arki.utils.martin_vol.martin_ema_vol)"
         - spec: martin_primary_ema2_us10
           rules: [ewmac20_40_single_ema2]   # strict Martin §2.1 EMA2, alpha=0.95, beta=0.975
           forecast_cap: null                # OFF (continuous)
@@ -566,3 +566,81 @@ runs:
     evidence_pack: ars/evidence_packs/smom_us10_capped
     decision_log: ars/DECISIONS.md#2026-05-31-smom-us10-capped-remediation
     closes_pending: 20260528T181556Z_smom_us10   # this is the remediation for that pending entry
+
+  - id: 20260530T154455Z_tbm_meta_us10_baseline_1m
+    label: tbm_meta_us10_baseline_1m
+    timestamp: '2026-05-30T15:44:55Z'
+    hypothesis_ref: ars/evidence_packs/tbm_meta_us10_baseline/tbm_meta_us10_baseline_preregistration.md
+    status: relative_pass_absolute_fail      # 2026-05-31 verdict; full registry entry backfilled this session (was: family.yaml run_dir ref only). G-TBM1 DSR uplift +0.0115 PASS (relative) but absolute family DSR threshold 0.3326 FAIL.
+    config:
+      capital_usd: 1000000
+      vol_target_pct: 20.0
+      instrument: US10
+      overlay: TBM_meta_label (Lopez de Prado 2018 ch.3 triple-barrier meta-labeling)
+      runner: stage1_meta_labeling.py (standalone numpy+sklearn; ars/handoffs/stage1_meta_labeling.py)
+      engine: standalone (numpy + sklearn) attaching to pysystemtrade ZN price
+      t_max_business_days: 120
+      barrier_pt_sigma_mult: 8.0
+      barrier_sl_sigma_mult: 4.0
+      g_min: 0.30
+      g_max: 1.0
+      n_estimators: 100
+      n_cv_groups: 6
+      git_sha: 83e43dd64e1760f8f1a2a594d498d7a8f720b1b2
+    results:
+      sharpe_net: 0.321                      # full-sample; below absolute family DSR threshold 0.3326
+      g_max_observed: 0.551                  # near 0.30 floor; sizer barely uses its range
+      avg_uniqueness: 0.071                  # < 0.20 as-TBM-iid threshold (eff. sample ~290 vs nominal 4143)
+      dsr_uplift_vs_g1: 0.0115               # PASS (relative) but absolute family-DSR FAIL
+      maxdd_delta_pp: 0.87                   # residual risk-shaping value (MaxDD reduction vs g=1)
+      internal_grid_size: 8                  # tau {0.40,0.50,0.55,0.60} x feature_subset {ER_only, ER+rest}; ALREADY counted in N=58
+    verdict_summary: |
+      TBM Stage-1 meta-labeling on ZN: no DETECTABLE conditional edge under
+      {ER features, TBM labels, bagged trees, g_min=0.30}. g_max 0.551 (sizer
+      barely leaves the 0.30 floor); avg_uniqueness 0.071 < 0.20 (as-TBM-iid
+      violated). DSR uplift +0.0115 vs g=1 is positive (relative pass) but
+      full-sample Sharpe 0.321 < family threshold 0.3326 (absolute fail).
+      Residual value = MaxDD -0.87pp. Member of risk_shaping_size_overlays
+      sub-group (size layer; NOT additive alpha). See tmax40 sensitivity cell.
+    path: ars/runs/20260530T154455Z_tbm_meta_us10_baseline_1m
+    evidence_pack: ars/evidence_packs/tbm_meta_us10_baseline
+    decision_log: ars/DECISIONS.md#2026-05-31-risk-shaping-closeout
+    family_ref: ars/families/futures_momentum/family.yaml  # cell_id tbm_meta_us10_baseline_1m
+
+  - id: 20260530T164615Z_tbm_meta_us10_tmax40_1m
+    label: tbm_meta_us10_tmax40
+    timestamp: '2026-05-30T16:46:15Z'
+    hypothesis_ref: ars/evidence_packs/tbm_meta_us10_baseline/tbm_meta_us10_baseline_preregistration.md  # §5.1.1 sensitivity
+    status: relative_pass_absolute_fail      # 2026-05-31 verdict; full registry entry backfilled this session (was: family.yaml run_dir ref only). T_max 120->40 ablation of the baseline cell.
+    config:
+      capital_usd: 1000000
+      vol_target_pct: 20.0
+      instrument: US10
+      overlay: TBM_meta_label_tmax40 (t_max 40 business-day ablation)
+      runner: stage1_meta_labeling.py (standalone numpy+sklearn; ars/handoffs/stage1_meta_labeling.py)
+      engine: standalone (numpy + sklearn) attaching to pysystemtrade ZN price
+      t_max_business_days: 40                 # vs baseline 120 (single-variable diagnostic)
+      barrier_pt_sigma_mult: 8.0
+      barrier_sl_sigma_mult: 4.0
+      g_min: 0.30
+      g_max: 1.0
+      sensitivity_to: tbm_meta_us10_baseline_1m
+    results:
+      sharpe_net: 0.315                      # full-sample; below absolute family DSR threshold 0.3326
+      g_max_observed: 0.591                  # vs baseline 0.551; +0.04 despite 1.4x effective-sample
+      avg_uniqueness: 0.099                  # < 0.20 as-TBM-iid threshold (eff. sample ~410 vs nominal 4143)
+      dsr_uplift_vs_g1: -0.0026              # sign-flipped vs baseline +0.0115 -> no positive edge
+      maxdd_delta_pp: 2.49                   # residual risk-shaping value (MaxDD reduction vs g=1)
+      internal_grid_size: 8                  # honest sensitivity-axis cost; ALREADY counted in N=58
+    verdict_summary: |
+      T_max 120->40 ablation of the baseline TBM cell. g_max 0.551->0.591
+      (+0.04) despite 1.4x effective-sample -> signal-limited, not timidity
+      (NO SIGNAL branch of the decision tree, g_max < 0.60). DSR uplift
+      sign-flips to -0.0026 (no positive edge); Sharpe 0.315 < threshold
+      0.3326. Confirms baseline verdict: no conditional edge on ZN
+      single-instrument. Residual MaxDD value -2.49pp. Member of
+      risk_shaping_size_overlays sub-group (CLOSED).
+    path: ars/runs/20260530T164615Z_tbm_meta_us10_tmax40_1m
+    evidence_pack: ars/evidence_packs/tbm_meta_us10_baseline
+    decision_log: ars/DECISIONS.md#2026-05-31-risk-shaping-closeout
+    family_ref: ars/families/futures_momentum/family.yaml  # cell_id tbm_meta_us10_tmax40
