@@ -37,7 +37,7 @@ n = 0, the column shows "no clean pair available -- confounded with
 | Axis | Direction | mean Δ Sharpe | n clean pairs | Tentative read |
 |---|---|---:|---:|---|
 | `vol_estimator` (carver_mixed_35d vs martin_20d_ema_of_sq) | ≈ 0 | 0.0035 | **2** | direction: near-zero on US10 at integer+cap exec_profile; UNTESTED on other instruments + UNTESTED inside portfolio (Panel B) |
-| `overlay` (none → carry / sMOM / dMOM / fast_tilt) | mixed: 3 falsified, 1 pending remediation | varies | **4** | high-RISK axis: most overlays kill perf, but sMOM (pre-remediation) showed +0.255 lift; TBM_meta_label UNTESTED |
+| `overlay` (none → carry / sMOM / dMOM / fast_tilt / TBM) | CLOSED: 3 falsified, 2 risk-shaper-only (sMOM Path B, TBM relative-pass), 0 alpha | varies | **5** | size-layer axis CHARACTERISED on ZN: shapes risk, not alpha. sMOM capped +0.276 lift = vol-scaling (SP500 control lifts too), NOT edge; TBM no detectable conditional edge. Do NOT spend more N on single-instrument size overlays — see risk-shaping section below |
 | `rule_structure` (single_ema2_20_40 vs six_speed_ewmac_equal) | hint: 6sp > single | (0.039 *confounded*) | **0** | NO CLEAN PAIR — the only pair (martin_primary vs martin_baseline) ALSO varies exec_profile (numpy+continuous+capoff vs native+integer+cap). Δ 0.039 cannot be attributed to rule alone |
 | `exec_profile` (paper_fidelity_numpy vs carver_native) | hint: native > numpy | (0.084 *confounded*) | **0** | NO CLEAN PAIR — same confound as above (varies rule simultaneously) |
 | `capital_usd` (50k vs 1m within carver_native) | ≈ 0 Sharpe, big skew_per_trade effect | 0.020 Sharpe, 1.88 skew | **3** | Sharpe near-invariant to capital on US10; per-trade skew GROWS at $1M (4.1 → 6.0 / 4.4 → 6.7) as integer grid fines up |
@@ -61,6 +61,41 @@ n = 0, the column shows "no clean pair available -- confounded with
   varies `rule_structure` AND `exec_profile` simultaneously. Δ Sharpe
   0.039 (50k) / 0.039 (1m) reflects BOTH axes combined, not either alone.
   → adds 2 confounded pairs to the *un-attributable* pile.
+
+---
+
+## Risk-shaping size-overlays (ZN single-instrument) — CLOSED
+
+> On US10/ZN single-instrument, **size-layer overlays shape risk but do not generate
+> directional alpha.** Two independent overlays converge on this: capped sMOM
+> (downside-vol scaling) is a **strong** risk-shaper (maxDD −55.35% → −44.16%, +11.19pp;
+> Sharpe lift +0.276) but its lift is mechanical vol-scaling, **proven not-edge** because
+> the same mechanism lifts the no-edge SP500 control (Sharpe −0.009 → +0.305 via vol
+> collapse 24.3→6.23, ratio 0.26). TBM Stage-1 (meta-labeling) is a **weak** risk-shaper
+> (maxDD −0.87 to −2.49pp; DSR uplift ≈ 0, g pinned near its 0.30 floor) with no detectable
+> conditional edge. The alpha levers are elsewhere: **multi-instrument breadth and Stage-2
+> speed-tilt.** Notably the simple tool (sMOM vol-scaling) shaped risk better than the
+> sophisticated one (TBM meta-labeling).
+
+Verdict: **size-layer overlays shape risk, not alpha.**
+
+| overlay | maxDD Δ | Sharpe lift | lift source | alpha? |
+|---|---|---|---|---|
+| sMOM capped (Path B) | +11.19pp | +0.276 | vol-scaling (SP500 control lifts too) | **NO** |
+| TBM Stage-1 (relative-pass) | +0.87–2.49pp | ≈0 (DSR uplift sign-flips) | n/a (g floored) | **NO** |
+
+**Counter-intuitive note:** the simple overlay (sMOM downside-vol scaling) shaped risk
+markedly better than the sophisticated one (TBM meta-labeling). Sophistication did not pay
+on this single-instrument problem.
+
+**Elasticity implication:** the `overlay` axis (size-layer) is now well-characterised on ZN
+as **risk-shaping-only**. Do NOT spend more N on single-instrument size overlays. The live
+axes are `universe` (breadth) and `rule_structure` (speed-tilt). The two cells are bundled
+as the `risk_shaping_size_overlays` sub-group in `family.yaml` (Panel A); do NOT compose a
+`TBM_x_sMOM` cell — same layer, no meaningful product (L6).
+
+**Evidence:** `smom_us10_capped` (run `20260530T170606Z`, Path B) +
+`tbm_meta_us10_baseline_1m` / `tbm_meta_us10_tmax40` (relative_pass_absolute_fail).
 
 ---
 

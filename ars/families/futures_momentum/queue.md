@@ -62,9 +62,42 @@ timestamps in its `manifest.json` (`pre_reg_authored_at`, `runner_started_at`,
 
 ## Top of queue (do next)
 
-### 1. tbm_meta_us10_baseline_1m  ✅ PRE-REG LOCKED 2026-05-30
+> **Re-ranked 2026-05-31 (risk-shaping closeout).** The single-instrument size-overlay line
+> on ZN is CLOSED (old item #1, retained below as a completed record). The alpha levers are
+> now top priority: breadth (Panel B) and Stage-2 speed-tilt (side/forecast layer — additive
+> to the size-layer risk-shaping tools, not competing on the same axis).
 
-- **status**: **in_progress** (pre-registration locked; runner pending)
+### A. stage2_speed_tilt_us10  ← NEW TOP PRIORITY (alpha lever)
+
+- **why**: F3 diagnostics (execution_friction) showed 6-speed EWMAC > single in EVERY crisis
+  window — the larger alpha lever. Lives on the **side/forecast** layer (λ(s_t)), so it is
+  genuinely ADDITIVE to the size-layer risk-shaping tools (sMOM/TBM), not competing.
+- **depends_on**: `exec_friction_carver_6speed_us10_1m` (6-speed side source) + regime CSVs.
+- **panel**: A
+- **design**: speed-tilted forecast weights λ(s_t) — TBD pre-reg (Path A). NOT a size overlay.
+- **pre_reg target**: `ars/evidence_packs/stage2_speed_tilt_us10/...preregistration.md`
+- **status**: queued (author pre-reg next)
+
+### B. panel_B_open_dm_rates_5  ← PROMOTED from #5 (breadth = the other alpha lever)
+
+- **why**: directly resolves the effective-sample ceiling (avg_uniqueness < 0.20) that capped
+  BOTH size overlays. Smallest honest step toward breadth.
+- **CAVEAT (explicit)**: a rates-only universe is **breadth-limited** — DM rates are 0.5–0.8
+  correlated, so the diversification gain is bounded. A genuinely low-correlation universe
+  (rates + commodities + equity + FX) is the higher-information step; rates-5 is the cheapest
+  first probe, not the destination.
+- **depends_on**: best Panel A US10 spec (`exec_friction_carver_6speed_us10_1m`, post-2003 sub-sample first).
+- **panel**: B (first cell) — opens Panel B
+- **estimated internal_grid_size**: 5
+- **pre_reg target**: `ars/evidence_packs/panel_B_dm_rates_5/...preregistration.md`
+- **status**: queued (was #5; still advisable to confirm rule choice via de-confound #2 first)
+
+---
+
+### 1. tbm_meta_us10_baseline_1m  ✅ COMPLETED 2026-05-31 — NO SIGNAL (ZN)
+
+- **status**: **completed_with_verdict_no_signal_ZN** (run done; verdict relative_pass_absolute_fail; risk-shaper only, no alpha — see findings.md risk-shaping section + DECISIONS 2026-05-31)
+- **verdict**: g_max 0.551→0.591 under T_max 120→40 ablation (NO SIGNAL branch <0.60); avg_uniqueness 0.07–0.10 < 0.20 (as-TBM-iid violated); DSR uplift +0.0115→−0.0026 sign-flip. Residual value = MaxDD −0.87 to −2.49pp. Bundled into `risk_shaping_size_overlays` sub-group with smom_us10_capped (Path B).
 - **pre_registration**: [ars/evidence_packs/tbm_meta_us10_baseline/tbm_meta_us10_baseline_preregistration.md](../../evidence_packs/tbm_meta_us10_baseline/tbm_meta_us10_baseline_preregistration.md) — Path A, lint Rules 1-6 PASS at lock time
 - **input handoff**: `/Users/msyeom/Downloads/HANDOFF_stage1_tbm_ZN.md` (locks PT=8σ / SL=4σ / T_max=120 raw-σ, CUSUM-day labeling, ER top features, g_min=0.30, single SOT DSR via `arki.utils.dsr`)
 - **why**: `overlay` axis n=4 clean pairs with mixed direction (3 falsified, 1 pending remediation); TBM_meta_label is the one untested level. Highest expected information per cell.
@@ -138,7 +171,7 @@ timestamps in its `manifest.json` (`pre_reg_authored_at`, `runner_started_at`,
   sub-sample first per regime finding).
 - **panel**: B (first cell)
 - **estimated internal_grid_size**: 5 (one per instrument × portfolio config)
-- **status**: queued (waits for de-confound #2 to confirm rule choice)
+- **status**: **PROMOTED to top of queue as item B** (2026-05-31 risk-shaping closeout) — see "Top of queue". Caveat added there: rates-only breadth is limited (0.5–0.8 corr).
 
 ---
 

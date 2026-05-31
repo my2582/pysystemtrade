@@ -58,6 +58,8 @@ Append-only log of failures the pre-registration framework did not catch on its 
 - Decision log: `ars/DECISIONS.md#2026-05-29-smom-us10-promoted`
 - Downstream consequence: cheatsheet headline +0.255 is overstated.
 
+**⚠ Self-correction (2026-05-31, capped remediation result)**: this entry's predicted "capped Sharpe lift +0.10–0.15" was **empirically reversed**. Capped lift = **+0.276** (HIGHER than uncapped +0.255) — the 6,439× spikes were net-HURTING Sharpe (large positions on volatile days), not inflating it. The downgrade was CORRECT (6,439× is unrealizable), but the stated *reason* ("Sharpe overstated by leverage") is reversed by data: **unrealizability**, not Sharpe inflation, was the true defect. See `ars/runs/20260530T170606Z_smom_us10_capped/` + `ars/DECISIONS.md` 2026-05-31 risk-shaping closeout.
+
 ---
 
 ## 2026-05-29 — Martin §2.3 misreading — Figure-as-slogan vs Equation-as-test

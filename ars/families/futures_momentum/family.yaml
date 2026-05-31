@@ -60,6 +60,13 @@ family:
                                       #     sr_trials_std=0.1426, n_trials=58,
                                       #     annualization_factor=256) = 0.3326
                                       # rises from 0.325 (N=50) due to tbm sensitivity add.
+    # 2026-05-31 risk-shaping closeout — N and threshold HELD at 58 / 0.3326:
+    #  - smom_us10_capped (Path B promote) is a REMEDIATION re-run of smom_us10
+    #    (already in the 12 base cells) → NOT a new config search.
+    #  - TBM baseline + tmax40 moved pre_registered_queued → relative_pass_absolute_fail;
+    #    their 16 configs were ALREADY counted in N=58.
+    #  No new config search occurred this session. The cell-count counters above are the
+    #  last reconciled snapshot; only cell STATUS fields changed (not config count).
 
   # ===================================================================
   # Metric units -- locked at schema level. Cell-level metrics MUST honour
@@ -91,6 +98,24 @@ family:
   # ===================================================================
   panel_A_single_instrument:
     purpose: "what's the best per-instrument spec?"
+
+    # ----------------------------------------------------------------
+    # Sub-groups: cells that form ONE evidence bundle (see findings.md).
+    # Added 2026-05-31 risk-shaping closeout (Branch C / 4th-branch decision).
+    # ----------------------------------------------------------------
+    sub_groups:
+      risk_shaping_size_overlays:
+        status: CLOSED                 # size-overlay line on ZN solo closed 2026-05-31
+        thesis_ref: findings.md#risk-shaping-size-overlays-zn-single-instrument--closed
+        members:
+          - smom_us10_capped           # STRONG risk-shaper, Path B (crash-mitigator only)
+          - tbm_meta_us10_baseline_1m  # WEAK risk-shaper, relative_pass_absolute_fail
+          - tbm_meta_us10_tmax40       # sensitivity cell
+        layer: size                    # all compete on the SAME layer; none is additive alpha
+        unified_verdict: "size-layer shapes risk, not alpha (ZN single-instrument)"
+        metric_units_note: "sMOM lift = vol-scaling (mechanical), NOT edge — see SP500 G4 control (ratio 0.26)"
+        do_not: "Do NOT create a TBM_x_sMOM composed cell — same (size) layer; multiplying two size-scalers is not a meaningful composition (L6)."
+        next_alpha_levers: [universe_breadth_panel_B, stage2_speed_tilt]   # side/forecast layer — genuinely additive, not competing
 
     dimensions:
       universe:
@@ -164,9 +189,30 @@ family:
           spec:         {vol_estimator: carver_mixed_35d,
                           rule_structure: six_speed_ewmac_equal, overlay: sMOM}
           exec_profile: {profile: carver_native, capital_usd: 50000}
-        status: registered_pending_remediation
+        status: superseded_by_smom_us10_capped   # 2026-05-31: pending CLOSED; kept as REFERENCE (6,439x leverage artifact, unrealizable — LESSONS Entry 1)
         internal_grid_size: 1
-        blocked_by: sizing_rule_mismatch  # see ars/LESSONS.md
+        note: "uncapped sMOM — unrealizable leverage artifact; superseded by capped remediation cell below"
+
+      - cell_id: smom_us10_capped
+        registry_ref: 20260530T170606Z_smom_us10_capped
+        panel: single_instrument
+        dim_values:
+          universe:     {instrument: US10}
+          spec:         {vol_estimator: carver_mixed_35d,
+                          rule_structure: six_speed_ewmac_equal, overlay: sMOM}   # same overlay level; bounded (w<=3, semi_var>=1e-4)
+          exec_profile: {profile: carver_native, capital_usd: 50000}
+        status: registered_path_b              # 2026-05-31 owner sign-off (Minsu): crash-mitigator ONLY, NOT alpha
+        sharpe_net: 0.623                       # gross; lift +0.276 vs baseline 0.347
+        skew_per_trade: 4.616
+        maxdd_lift_pp: 11.185
+        bound_w_cap: 3.0                         # Rule 2 compliance (degenerate-denominator)
+        g4_sp500_control: MECHANISM_NOTE        # 0.305 > 0.20 BUT vol ratio 6.23/24.3=0.26 ≤ 0.7 → vol-reduction, not edge (LESSONS Entry 3)
+        internal_grid_size: 1                   # REMEDIATION re-run of smom_us10 (already counted in the 12 base cells) — NOT a new config; n_configs_searched stays 58
+        member_of_sub_group: risk_shaping_size_overlays
+        path_b_note: "Sharpe lift is generic vol-scaling (no-edge SP500 control lifts too); genuine value = maxDD +11.19pp + skew preserved. Do NOT read as alpha downstream."
+        artifact_paths:
+          run_dir: ars/runs/20260530T170606Z_smom_us10_capped
+          verdict: ars/runs/20260530T170606Z_smom_us10_capped/verdict.json
 
       - cell_id: fast_tilt_ewmac
         registry_ref: 20260528T181556Z_fast_tilt_ewmac
@@ -291,7 +337,7 @@ family:
 
       # ---- TBM Stage-1 sensitivity (single-variable T_max ablation, locked 2026-05-31) ----
       - cell_id: tbm_meta_us10_tmax40
-        registry_ref: pending_first_run
+        registry_ref: 20260530T164615Z_tbm_meta_us10_tmax40_1m   # run executed 2026-05-31 (sensitivity); registry.yaml full entry = separate follow-up
         panel: single_instrument
         dim_values:
           universe:     {instrument: US10}
@@ -299,8 +345,13 @@ family:
                           rule_structure: single_ema2_20_40_with_6speed_pseudo_xs_pool_for_labels,
                           overlay: TBM_meta_label_tmax40}
           exec_profile: {profile: carver_native, capital_usd: 1000000}
-        status: pre_registered_queued
-        sharpe_net: pending
+        status: relative_pass_absolute_fail   # 2026-05-31 verdict (no new run; risk-shaping closeout)
+        sharpe_net: 0.315                     # full-sample; below absolute family DSR threshold 0.3326
+        g_max_observed: 0.591                 # vs baseline 0.551; +0.04 despite 1.4x effective-sample → signal-limited, not timidity (NO SIGNAL branch, <0.60)
+        avg_uniqueness: 0.099                 # < 0.20 as-TBM-iid threshold (eff. sample ~410 vs nominal 4143)
+        dsr_uplift_vs_g1: -0.0026             # sign-flipped vs baseline +0.0115 → no positive edge
+        maxdd_delta_pp: 2.49                  # residual risk-shaping value (MaxDD reduction vs g=1)
+        finding: "no DETECTABLE conditional edge under {ER features, TBM labels, bagged trees, g_min=0.30} on ZN single-instrument; avg_uniqueness 0.07-0.10 < 0.20 (as-TBM-iid violated). T_max 120->40 ablation: g_max 0.551->0.591 — signal-limited, not timidity. Residual value = MaxDD -0.87 to -2.49pp. Member of risk_shaping_size_overlays sub-group."
         internal_grid_size: 8        # honest sensitivity-axis cost (raises family threshold)
         pre_registration: ars/evidence_packs/tbm_meta_us10_baseline/tbm_meta_us10_baseline_preregistration.md  # §5.1.1
         pre_reg_locked_at: 2026-05-31
@@ -313,7 +364,7 @@ family:
 
       # ---- queued / pre-reg-locked but not yet run ----
       - cell_id: tbm_meta_us10_baseline_1m
-        registry_ref: pending_first_run    # registry entry created at runner first-execute
+        registry_ref: 20260530T154455Z_tbm_meta_us10_baseline_1m   # run executed 2026-05-30; registry.yaml full entry = separate follow-up
         panel: single_instrument
         dim_values:
           universe:     {instrument: US10}
@@ -321,8 +372,13 @@ family:
                           rule_structure: single_ema2_20_40_with_6speed_pseudo_xs_pool_for_labels,
                           overlay: TBM_meta_label}
           exec_profile: {profile: carver_native, capital_usd: 1000000}
-        status: pre_registered_queued
-        sharpe_net: pending
+        status: relative_pass_absolute_fail   # 2026-05-31 verdict (no new run; risk-shaping closeout)
+        sharpe_net: 0.321                     # full-sample; G-TBM1 DSR uplift +0.0115 PASS but absolute family threshold 0.3326 FAIL
+        g_max_observed: 0.551                 # near 0.30 floor; sizer barely uses its range
+        avg_uniqueness: 0.071                 # < 0.20 as-TBM-iid threshold (eff. sample ~290 vs nominal 4143)
+        dsr_uplift_vs_g1: 0.0115              # PASS (relative) but absolute family-DSR FAIL — relative_pass_absolute_fail
+        maxdd_delta_pp: 0.87                  # residual risk-shaping value (MaxDD reduction vs g=1)
+        finding: "no DETECTABLE conditional edge (see tmax40 cell for full verdict); risk-shaper only, no alpha. Member of risk_shaping_size_overlays sub-group."
         internal_grid_size: 8    # tau {0.40, 0.50, 0.55, 0.60} x feature_subset {ER_only, ER+rest} = 8
         pre_registration: ars/evidence_packs/tbm_meta_us10_baseline/tbm_meta_us10_baseline_preregistration.md
         pre_reg_locked_at: 2026-05-30

@@ -554,3 +554,69 @@ Source: docs/arki/handoff_session_retrospective_cheatsheet_2026-05-31.md. Item B
 Handoff #2 status check (prerequisite): trade_analysis.py arrow patch = DONE
 (lines 592/598); matrix.html = STILL PENDING (family.yaml points to it but the
 file was never built — separate follow-up).
+
+
+---
+
+## 2026-05-31 — risk-shaping sub-family closeout (4th branch): capped sMOM Path B + TBM Stage-1 NO SIGNAL
+
+**Decision (owner: Minsu).** Adopted the **4th branch** (extension of the TBM Stage-1
+decision-handoff Branch C): rather than promoting TBM alone for risk-shaping, **bundle capped
+sMOM (promote Path B) + TBM Stage-1 (relative_pass_absolute_fail)** into one
+`risk_shaping_size_overlays` sub-group and CLOSE the size-overlay line of inquiry on ZN solo.
+Spec: `docs/arki/HANDOFF_risk_shaping_family_closeout.md`.
+
+**Unified verdict.** On ZN single-instrument, **size-layer overlays shape risk but do not
+generate directional alpha.** Two independent overlays converge:
+- **capped sMOM** — STRONG risk-shaper: maxDD −55.35%→−44.16% (+11.19pp), Sharpe lift +0.276.
+  Lift is mechanical vol-scaling, **proven not-edge**: the same mechanism lifts the no-edge
+  SP500 control (−0.009→+0.305 via vol collapse 24.3→6.23, ratio 0.26). → **Path B**
+  (crash-mitigator only), NOT Path A.
+- **TBM Stage-1** — WEAK risk-shaper: maxDD −0.87 to −2.49pp; DSR uplift ≈0 (sign-flips
+  +0.0115→−0.0026 under T_max 120→40); g pinned near 0.30 floor; g_max 0.551→0.591 (NO SIGNAL
+  branch <0.60); avg_uniqueness 0.07–0.10 < 0.20 (as-TBM-iid violated). No detectable
+  conditional edge. → **relative_pass_absolute_fail**.
+- Counter-intuitive: the SIMPLE tool (sMOM vol-scaling) shaped risk better than the
+  SOPHISTICATED one (TBM meta-labeling).
+
+**G4 resolution (LESSONS Entry 3 applied).** capped sMOM's G4 SP500-control "FAIL" (0.305 >
+0.20) reclassified **MECHANISM_NOTE**: vol ratio 0.26 ≤ 0.7 ⇒ rescue via vol-reduction, not
+return-generation. Not a bug; the gate was over-strict for vol-reducing overlays. Verify
+anchors confirmed from `verdict.json`: G3 skew_per_trade 4.616 ≥ 1.0 PASS, G_recon 0.0 < 1%
+PASS, maxdd_lift +11.185pp (≈ target +11.19pp).
+
+**Self-correction (LESSONS Entry 1 was directionally wrong).** Entry 1 predicted capped lift
+would fall to +0.10–0.15 ("partially leverage artifact"). Empirically capped lift = **+0.276**
+(HIGHER than uncapped +0.255). The 6,439× spikes were net-HURTING Sharpe, not inflating it.
+The downgrade was correct (unrealizable), but the stated reason ("Sharpe overstated by
+leverage") is reversed by data → **unrealizability, not Sharpe inflation, was the true
+defect.** Logged into LESSONS Entry 1.
+
+**Next alpha levers (size-overlay line on ZN now closed):**
+1. Multi-instrument breadth (Panel B opens) — but rates-only is breadth-limited (0.5–0.8
+   corr); a genuinely low-correlation universe is the higher-information step.
+2. Stage-2 speed-tilt λ(s_t) — side/forecast layer, genuinely additive to the size-layer
+   risk-shaping tools.
+Both raised to the top of `queue.md`; the size-overlay axis is CLOSED.
+
+**Files changed (metadata layer only; no backtest, no run-dir edit, upstream 0 diff):**
+- `ars/runs/registry.yaml` — smom_us10_capped → registered_path_b (+promotion_path/path_b_note);
+  smom_us10 (uncapped) → superseded_by_smom_us10_capped (reference, leverage artifact).
+- `ars/families/futures_momentum/family.yaml` — TBM 2 cells → relative_pass_absolute_fail
+  (+observed metrics + real run_dir refs); added smom_us10_capped cell + risk_shaping
+  sub-group; N held at 58, expected_max_sharpe_at_N held at 0.3326.
+- `ars/families/futures_momentum/findings.md` — risk-shaping CLOSED section + overlay
+  elasticity row updated.
+- `ars/families/futures_momentum/queue.md` — #1 → completed_with_verdict_no_signal_ZN;
+  Stage-2 speed-tilt + Panel B promoted to top.
+- `ars/LESSONS.md` — Entry 1 self-correction note.
+
+**Multiple-testing invariance.** n_configs_searched = 58 and expected_max_sharpe_at_N = 0.3326
+UNCHANGED. capped sMOM is a remediation re-run of an already-counted config; recording TBM
+verdicts is a status change, not a new config search.
+
+**Registry follow-up (out of scope, noted):** full `registry.yaml` entries for the two TBM
+runs (currently referenced by run_dir in family.yaml) remain a separate follow-up, per the
+2026-05-31 unified-CPC-reporting handoff.
+
+**No upstream-tracked file modified** (`systems/`, `sysdata/`, `sysquant/`, `syscore/` = 0 diff).

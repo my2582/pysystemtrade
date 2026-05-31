@@ -149,7 +149,7 @@ runs:
     label: smom_us10
     timestamp: '2026-05-28T18:15:56Z'
     hypothesis_ref: ars/evidence_packs/smom_us10/smom_us10_preregistration.md
-    status: registered_pending_remediation   # was: promoted (Path A) — downgraded 2026-05-29 post-review (see ars/LESSONS.md)
+    status: superseded_by_smom_us10_capped   # 2026-05-31: pending CLOSED — remediation (capped run 20260530T170606Z) promoted Path B. Uncapped kept as REFERENCE ONLY: 6,439x leverage artifact, unrealizable (LESSONS Entry 1). Was: registered_pending_remediation (downgraded 2026-05-29 from promoted Path A post-review).
     config:
       capital_usd: 50000
       vol_target_pct: 20.0
@@ -505,7 +505,9 @@ runs:
     label: smom_us10_capped
     timestamp: '2026-05-30T17:06:06Z'
     hypothesis_ref: ars/evidence_packs/smom_us10_capped/smom_us10_capped_preregistration.md  # locked @ ec91d20d
-    status: registered                       # pre-reg falsification logic: G4-alone-FAIL with all other PASS → ambiguous; owner sign-off can convert to Path B-style promotion
+    status: registered_path_b                # 2026-05-31 owner sign-off (Minsu): G4-alone-FAIL resolved to MECHANISM_NOTE (LESSONS Entry 3; vol ratio 6.23/24.3=0.26 ≤ 0.7 → rescue is vol-reduction, not return-generation). Promote Path B = crash-mitigator ONLY, NOT alpha. See DECISIONS 2026-05-31 risk-shaping closeout.
+    promotion_path: path_b                    # crash-mitigator only; explicitly NOT alpha-validated
+    path_b_note: "Genuine value = maxDD +11.19pp + skew preserved. The +0.276 Sharpe lift must NOT be read as edge downstream — G4 SP500 MECHANISM_NOTE is the disproof (no-edge control lifts too via vol collapse). Matches Hanauer §3 (overlays = crash-mitigators)."
     config:
       capital_usd: 50000
       vol_target_pct: 20.0
